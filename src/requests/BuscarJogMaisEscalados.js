@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import Jogador from '.././components/Jogador';
+import MostScaledPlayers from '.././components/MostScaledPlayers';
 import axios from 'axios'
 
 class BuscarJogMaisEscalados extends Component{
@@ -53,7 +53,7 @@ class BuscarJogMaisEscalados extends Component{
                         
                         return( 
                             <div className='list-group-item' key={player.Atleta.atleta_id}>
-                                <Jogador clube={player.clube} esc_clube={player.escudo_clube} apelido={player.Atleta.apelido} foto={player.Atleta.foto}/>
+                                <MostScaledPlayers clube={player.clube} esc_clube={player.escudo_clube} apelido={player.Atleta.apelido} foto={player.Atleta.foto}/>
                             </div>
                         )})}
                     </div>

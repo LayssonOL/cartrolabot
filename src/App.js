@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import BuscarClubes from './requests/BuscarClubes'
+import BuscarJogador from './requests/BuscarJogador'
 import BuscarJogMaisEscalados from './requests/BuscarJogMaisEscalados'
 import './App.css'
 
@@ -22,7 +22,7 @@ import './App.css'
         <div className='container'>
           <div className="row">
             <div className="col-sm-6">
-              <BuscarClubes />
+              <BuscarJogador />
             </div>
             <div className="col-sm-6">
               <BuscarJogMaisEscalados />
