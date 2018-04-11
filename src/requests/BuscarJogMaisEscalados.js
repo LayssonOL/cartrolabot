@@ -1,4 +1,8 @@
 import React, {Component} from 'react';
+import RaisedButton from 'material-ui/RaisedButton';
+import {List, ListItem} from 'material-ui/List';
+import Divider from 'material-ui/Divider';
+import {Card, CardActions, CardHeader, CardText} from 'material-ui/Card';
 import MostScaledPlayers from '.././components/MostScaledPlayers';
 import axios from 'axios'
 
@@ -6,7 +10,8 @@ class BuscarJogMaisEscalados extends Component{
     constructor(){
         super();
         this.state = {
-            jogs: []
+            jogs: [],
+            expanded: false
         }
     }
 
@@ -22,43 +27,46 @@ class BuscarJogMaisEscalados extends Component{
                                   window.alert(err);
                                 }
                               });
+        this.setState({
+            expanded: !this.state.expanded
+        });
+    }
+
+    hideDestaques(){
+        this.setState({expanded: false});
     }
 
     render(){
         return(
             <div>
-                {/* <div className='button__container'>
-                    <button className='btn btn-primary' onClick={this.handleClick = this.getJogMaisEscalados.bind(this)}>
-                        Jogadores Destaque
-                    </button>
-                </div> */}
-                <div className="card">
-                    <div className="card-header">
-                        Buscar Jogadores mais Escalados
-                    </div>
-                    <div className="card-body">
-                        <h5 className="card-title">Um jeito fácil de montar seu time!</h5>
-                        <p className="card-text">Aproveite as dicas dos outros jogadores que já escalaram seus times e monte um time com os jogadores mais escalados.</p>
-                        <button className='btn btn-primary' onClick={this.handleClick = this.getJogMaisEscalados.bind(this)}>
-                            Jogadores Destaque
-                        </button>
-                    </div>
-                </div>
-                <br/>
-                <div className='result-list-div'>
-                    {/* <h3 id='content_recovered-list'>Mais Escalados:</h3> */}
-                    <div className="list-group">
-                        
-                        { this.state.jogs.map((player) => {
-                        
-                        return( 
-                            <div className='list-group-item' key={player.Atleta.atleta_id}>
-                                <MostScaledPlayers clube={player.clube} esc_clube={player.escudo_clube} apelido={player.Atleta.apelido} foto={player.Atleta.foto}/>
-                            </div>
-                        )})}
-                    </div>
-                    {/* <p id='result-paragraph'></p> */}
-                </div>
+                <Card expanded={this.state.expanded}>
+                    <CardHeader
+                        title="Jogadores Mais Escalados"
+                        subtitle="O jeito fácil de montar seu time!"
+                        actAsExpander={true}
+                    />
+                    <CardActions>
+                        <RaisedButton label='Destaques' primary={true} onClick={this.handleClick = this.getJogMaisEscalados.bind(this)}/>
+                    </CardActions>
+                    <CardText expandable={true}>
+                        <List>
+                            { this.state.jogs.map((player,index) => {
+                            return( 
+                                <ListItem key={player.Atleta.atleta_id}>
+                                    <MostScaledPlayers 
+                                        clube={player.clube}
+                                        esc_clube={player.escudo_clube} 
+                                        apelido={player.Atleta.apelido} 
+                                        foto={player.Atleta.foto}
+                                        pos={player.posicao}
+                                        rank={index+1}/>
+                                    <Divider />
+                                </ListItem>
+                                )})}
+                        </List>
+                        <RaisedButton label='Hide' primary={true} onClick={this.handleClick = this.hideDestaques.bind(this)}/>
+                    </CardText>
+                </Card>
             </div>
         )
     };

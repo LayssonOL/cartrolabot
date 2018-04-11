@@ -1,14 +1,15 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import theme from './toolbox/theme'
-import { ThemeProvider } from 'react-css-themr';
+import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
+import injectTapEventPlugin from 'react-tap-event-plugin';
 import './index.css';
 import App from './App';
 import registerServiceWorker from './registerServiceWorker';
 
+injectTapEventPlugin()
 ReactDOM.render(
-    <ThemeProvider theme={theme}>
+    <MuiThemeProvider>
         <App />
-    </ThemeProvider>
+    </MuiThemeProvider>
     , document.getElementById('root'));
-registerServiceWorker();
+    registerServiceWorker();

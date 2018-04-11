@@ -1,6 +1,8 @@
 import React, {Component} from 'react';
-import Button from 'react-toolbox/lib/button/Button'
-import Jogador from '.././components/Jogador'
+import RaisedButton from 'material-ui/RaisedButton';
+import Jogador from '.././components/Jogador';
+import {List, ListItem} from 'material-ui/List';
+import {Card, CardActions, CardHeader, CardText} from 'material-ui/Card';
 import axios from 'axios';
 
 class BuscarJogador extends Component{
@@ -10,7 +12,8 @@ class BuscarJogador extends Component{
             clubes: {},
             posicoes: {},
             status: {},
-            jogadores: []
+            jogadores: [],
+            expanded: false
         }
     }
 
@@ -25,43 +28,46 @@ class BuscarJogador extends Component{
                         });
                         console.log(this.state.status);
                         console.log(this.state.clubes);
-                        console.log(this.state.posicoes);
+                        console.log(Object.values(this.state.posicoes));
                         console.log(this.state.jogadores);
                     }).catch(err => {
                         if(err){
                         window.alert(err);
                         }
                     });
+        this.setState({
+            expanded: !this.state.expanded
+        });
+    }
+
+    hidePlayers(){
+        this.setState({expanded: false});
     }
 
     getPlayerClub(clube_id){
         Object.values(this.state.clubes).map((clube) => {
             if(clube.id === clube_id){
                 return clube
-            }else{
-                return null
             }
         }
-        );
+        )
     }
 
     getPlayerPos(posicao_id){
-        Object.values(this.state.posicoes).map((pos) => {
-            if(posicao_id === pos.id){
-                return pos
-            }else{
-                return null
+        var posi = {}
+            Object.values(this.state.posicoes).map((pos) => {
+                if(posicao_id === pos.id){
+                    posi = pos
+                }
             }
-        }
-        );
+        )
+        return posi
     }
 
     getPlayerStat(status_id){
         Object.values(this.state.status).map((stat) => {
             if(status_id === stat.id){
                 return stat
-            }else{
-                return null
             }
         }
         );
@@ -70,31 +76,33 @@ class BuscarJogador extends Component{
     render(){
         return(
             <div>
-                <div className="card">
-                    <div className="card-header">
-                        Buscar Jogadores
-                    </div>
-                    <div className="card-body">
-                        <h5 className="card-title">Estatísticas de cada Jogador</h5>
-                        <p className="card-text">Avalie quais jogadores merecem estar em seu time para essa rodada!</p>
-                        <Button label='Jogadores' className='btn btn-primary' onClick={this.handleClick = this.getPlayers.bind(this)} raised/>
-                    </div>
-                </div>
-                <br/>
-                <div className='result-list-div'>
-                    {/* <h3 id='content_recovered-list'>CLUBES:</h3> */}
-                    <div className="row">
-                        { this.state.jogadores.map((athlt) => { 
-                            return(
-                                <div className='col-sm-6' key={athlt.id}>
-                                    {/* Importa um component Club para cada item do array de clubes escudo={Object.values(time.escudos)[2]}*/}
-                                    <Jogador apelido={athlt.apelido} foto={athlt.foto}/> 
-                                </div>
-                            )
-                        })}
-                    </div>
-                    {/* <p id='result-paragraph'></p> */}
-                </div>
+                <Card expanded={this.state.expanded}>
+                    <CardHeader
+                        title="Buscar Jogadores"
+                        subtitle="Estatísticas de cada Jogador"
+                        actAsExpander={true}
+                    />
+                    <CardActions>
+                        <RaisedButton label='Jogadores' primary={true} onClick={this.handleClick = this.getPlayers.bind(this)}/>
+                        <RaisedButton label='Hide' primary={true} onClick={this.handleClick = this.hidePlayers.bind(this)}/>
+                    </CardActions>
+                    <CardText expandable={true}>
+                        <List>
+                            { this.state.jogadores.map((athlt) => {
+                            return( 
+                                <ListItem key={athlt.atleta_id}>
+                                    <Jogador 
+                                        apelido={athlt.apelido} 
+                                        foto={athlt.foto} 
+                                        // clube={this.getPlayerClub(athlt.clube_id)}
+                                        pos={this.getPlayerPos(athlt.posicao_id)}
+                                        // status={this.getPlayerStat(athlt.status_id)}
+                                        /> 
+                                </ListItem>
+                                )})}
+                        </List>
+                    </CardText>
+                </Card>
             </div>
         )
     }
