@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import { Paper, FlatButton } from 'material-ui';
+// import { Paper, FlatButton } from 'material-ui';
 
 class MostScaledPlayers extends Component{
     render(){

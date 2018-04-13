@@ -5,7 +5,7 @@ import FlatButton from 'material-ui/FlatButton';
 import RaisedButton from 'material-ui/RaisedButton';
 import {RadioButton, RadioButtonGroup} from 'material-ui/RadioButton';
 import { Divider, Slider } from 'material-ui';
-import Club from '../components/Club';
+// import Club from '../components/Club';
 
 class Filters extends Component {
   constructor(props) {

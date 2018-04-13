@@ -52,32 +52,15 @@ class BuscarJogador extends Component{
     }
 
     getPlayerClub(clube_id){
-        Object.values(this.state.clubes).map((clube) => {
-            if(clube.id === clube_id){
-                return clube
-            }
-        }
-        )
+        return (Object.values(this.state.clubes).find((clube) => { return (clube.id === clube_id) }));
     }
 
     getPlayerPos(posicao_id){
-        var posi = {}
-            Object.values(this.state.posicoes).map((pos) => {
-                if(posicao_id === pos.id){
-                    posi = pos
-                }
-            }
-        )
-        return posi
+        return (Object.values(this.state.posicoes).find( (posi) => { return (posi.id === posicao_id)}));
     }
 
     getPlayerStat(status_id){
-        Object.values(this.state.status).map((stat) => {
-            if(status_id === stat.id){
-                return stat
-            }
-        }
-        );
+        return (Object.values(this.state.status).find((stat) => { return (status_id === stat.id)}));
     }
 
     render(){
