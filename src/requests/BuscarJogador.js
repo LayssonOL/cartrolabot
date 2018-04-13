@@ -4,6 +4,13 @@ import Jogador from '.././components/Jogador';
 import {List, ListItem} from 'material-ui/List';
 import {Card, CardActions, CardHeader, CardText} from 'material-ui/Card';
 import axios from 'axios';
+import Filters from '../components/Filters';
+
+const styles = {
+    filter_button:{
+        float: 'right',
+    }       
+}
 
 class BuscarJogador extends Component{
     constructor(){
@@ -84,7 +91,8 @@ class BuscarJogador extends Component{
                     />
                     <CardActions>
                         <RaisedButton label='Jogadores' primary={true} onClick={this.handleClick = this.getPlayers.bind(this)}/>
-                        <RaisedButton label='Hide' primary={true} onClick={this.handleClick = this.hidePlayers.bind(this)}/>
+                        <RaisedButton label='Esconder' primary={true} onClick={this.handleClick = this.hidePlayers.bind(this)}/>
+                        <Filters style={styles.filter_button}/>
                     </CardActions>
                     <CardText expandable={true}>
                         <List>

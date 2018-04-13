@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import Club from './Club';
+import Club from '../components/Club';
 import axios from 'axios'
 
 class BuscarClubes extends Component{
