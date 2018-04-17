@@ -11,7 +11,7 @@ class Filters extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      rodada: 1,
+      rodada: 2,
       clubes: {},
       posicoes: {},
       status: {},
@@ -44,17 +44,6 @@ class Filters extends Component {
     this.handleOpen();
   }
 
-    mode(arr) {
-        return arr.reduce(function(current, item) {
-            var val = current.numMapping[item] = (current.numMapping[item] || 0) + 1;
-            if (val > current.greatestFreq) {
-                current.greatestFreq = val;
-                current.mode = item;
-            }
-            return current;
-        }, {mode: null, greatestFreq: -Infinity, numMapping: {}}, arr).mode;
-    };
-
   getPartidas(){
     axios
     .get("https://api.cartolafc.globo.com/partidas/"+this.state.rodada)
@@ -79,6 +68,8 @@ class Filters extends Component {
     console.log(this.state.partidas)
     console.log('CLUBES')
     console.log(this.state.clubes)
+    console.log('STATUS')
+    console.log(this.state.status)
     this.state.partidas.map(
       (partida) =>  
       {
@@ -94,11 +85,9 @@ class Filters extends Component {
       }
     )
     this.setState({hosts: hosts, guests: guests});
-    console.log('Dentro da função: ')
-    console.log(this.state.hosts)
-    console.log(this.state.guests)
-    // return {hosts: hosts, guests: guests}
   }
+
+
 
 
   handleOpen = () => {
@@ -169,7 +158,7 @@ class Filters extends Component {
           contentStyle={customContentStyle}
           >
           <div className="container">
-            <div className="row border">
+            {/* <div className="row border">
               <div className="col border">
                 <strong>Posição</strong>
                 <Divider />
@@ -184,14 +173,14 @@ class Filters extends Component {
                   {stats}
                 </RadioButtonGroup>
               </div>
-            </div>
-            <div className='row border'>
+            </div> */}
+            {/* <div className='row border'>
               <div className='col'>
                 <strong>Preço</strong>
                 <Divider />
                 <Slider className='border' step={0.04} value={1} defaultValue={1} />
               </div>
-            </div>
+            </div> */}
 
 
             {/* ###################################################################################### */}

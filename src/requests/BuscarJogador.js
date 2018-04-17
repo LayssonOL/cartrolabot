@@ -56,6 +56,19 @@ class BuscarJogador extends Component{
         this.setState({expanded: false});
     }
 
+    getPlayersFromAClub(clube_id){
+        return (Object.values(this.state.clubes).filter((clube) => { return (clube.id === clube_id) }));
+    }
+
+    getPlayersFromAPos(posicao_id){
+        return (Object.values(this.state.posicoes).filter( (posi) => { return (posi.id === posicao_id)}));
+    }
+
+    getPlayersFromAStat(status_id){
+        return (Object.values(this.state.status).filter((stat) => { return (status_id === stat.id)}));
+    }
+
+
     getPlayerClub(clube_id){
         return (Object.values(this.state.clubes).find((clube) => { return (clube.id === clube_id) }));
     }
@@ -90,9 +103,9 @@ class BuscarJogador extends Component{
                                     <Jogador 
                                         apelido={athlt.apelido} 
                                         foto={athlt.foto} 
-                                        // clube={this.getPlayerClub(athlt.clube_id)}
+                                        clube={this.getPlayerClub(athlt.clube_id)}
                                         pos={this.getPlayerPos(athlt.posicao_id)}
-                                        // status={this.getPlayerStat(athlt.status_id)}
+                                        status={this.getPlayerStat(athlt.status_id)}
                                         /> 
                                 </ListItem>
                                 )})}
