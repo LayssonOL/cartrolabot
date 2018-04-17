@@ -3,13 +3,15 @@ import AppBar from 'material-ui/AppBar';
 import BuscarJogador from './requests/BuscarJogador';
 import BuscarJogMaisEscalados from './requests/BuscarJogMaisEscalados';
 import './App.css';
+import Auth from './posts/Auth';
 
   export default class App extends Component {
   
     constructor(props) {
        super(props);
        this.state = {
-         times: []
+          token: '',
+          times: []
        };
      }
      
@@ -25,11 +27,8 @@ import './App.css';
         />
         <div className='container'>
           <div className="row">
-            <div className="col-sm-6">
-              <BuscarJogador />
-            </div>
-            <div className="col-sm-6">
-              <BuscarJogMaisEscalados />
+            <div className="col ">
+              <Auth />
             </div>
           </div>        
         </div>

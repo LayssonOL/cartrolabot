@@ -13,19 +13,24 @@ const styles = {
 }
 
 class BuscarJogador extends Component{
-    constructor(){
-        super();
+    constructor(props){
+        super(props);
         this.state = {
             clubes: {},
             posicoes: {},
             status: {},
             jogadores: [],
+            token: props.token,
             expanded: false
         }
     }
 
     getPlayers(){
-        axios.get('https://api.cartolafc.globo.com/atletas/mercado')
+        axios.get('https://api.cartolafc.globo.com/atletas/mercado',
+                    {
+                        'X-GLB-Token': this.state.token
+                    }
+                    )
                     .then((res) => {
                         this.setState({
                             clubes: res.data.clubes,

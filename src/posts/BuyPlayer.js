@@ -5,13 +5,27 @@ class BuyPLayer extends Component {
   constructor(props) {
     super(props);
     this.state = {
-
+        marketStatus: ''
     };
   }
-
-//   getAuth(){
-//       axios.get()
-//   }
+  
+  getMarketStatus() {
+    axios
+      .get("https://api.cartolafc.globo.com/mercado/status",
+        )
+      .then(res => {
+        this.setState({
+          marketStatus: res.data.status_mercado
+        });
+        this.getHostsAndGuests();
+        // console.log(this.state.partidas)
+      })
+      .catch(err => {
+        if (err) {
+          window.alert(err);
+        }
+      });
+  }
 
   postTeam() {
     axios

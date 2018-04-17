@@ -7,16 +7,21 @@ import MostScaledPlayers from '.././components/MostScaledPlayers';
 import axios from 'axios'
 
 class BuscarJogMaisEscalados extends Component{
-    constructor(){
-        super();
+    constructor(props){
+        super(props);
         this.state = {
+            token: props.token,
             jogs: [],
             expanded: false
         }
     }
 
     getJogMaisEscalados(){
-        axios.get('https://api.cartolafc.globo.com/mercado/destaques')
+        axios.get('https://api.cartolafc.globo.com/mercado/destaques',
+                    {
+                        'X-GLB-Token': this.state.token
+                    }
+                    )
                     .then((res) => {
                         this.setState({
                             jogs: res.data
