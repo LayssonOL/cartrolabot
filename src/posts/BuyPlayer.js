@@ -1,7 +1,8 @@
 import React, { Component } from "react";
 import axios from "axios";
+import { Card, CardHeader, CardActions, RaisedButton } from "material-ui";
 
-class BuyPLayer extends Component {
+class BuyPlayer extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -17,8 +18,7 @@ class BuyPLayer extends Component {
         this.setState({
           marketStatus: res.data.status_mercado
         });
-        this.getHostsAndGuests();
-        // console.log(this.state.partidas)
+        console.log(this.state.marketStatus);
       })
       .catch(err => {
         if (err) {
@@ -45,6 +45,21 @@ class BuyPLayer extends Component {
       });
   }
 
-  render() {}
+  render() {
+    return (
+      <div className='container'>
+          <Card >
+              <CardHeader
+                  title="Market Status"
+                  subtitle=""
+                  actAsExpander={true}
+              />
+              <CardActions>
+                  <RaisedButton label='Market' primary={true} onClick={this.handleClick = this.getMarketStatus.bind(this)}/>
+              </CardActions>
+          </Card>
+      </div>
+    )
+  }
 }
 export default BuyPlayer;

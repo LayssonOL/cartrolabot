@@ -10,7 +10,7 @@ class BuscarJogMaisEscalados extends Component{
     constructor(props){
         super(props);
         this.state = {
-            token: props.token,
+            token: sessionStorage.getItem('token'),
             jogs: [],
             expanded: false
         }

@@ -22,8 +22,12 @@ class Jogador extends Component{
                     <CardActions>
                         <FlatButton label="Comprar" />
                     </CardActions>
-                    <CardText expandable={true}>
-                        
+                    <CardText>
+                        Media = {this.props.media}
+                        <br/>
+                        Variacao = {this.props.variacao}
+                        <br/>
+                        Media Scout = {this.props.scout_mean}
                     </CardText>
                 </Card>
             </div>

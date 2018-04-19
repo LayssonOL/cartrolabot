@@ -2,16 +2,20 @@ import React, { Component } from "react";
 import axios from "axios";
 import { Card, CardHeader, CardActions, RaisedButton, List, ListItem } from "material-ui";
 import Jogador from "./Jogador";
+import BuscarJogador from "../requests/BuscarJogador";
+import IAlgorithms from "../control/IAlgorithms";
 
 class MyTeam extends Component {
   constructor(props) {
     super(props);
     this.state = {
+        ia: new IAlgorithms(),
         authorized: false,
         clubes: [],
         posicoes: [],
         status: [],
         team: {},
+        jogadores: [],
         token: sessionStorage.getItem('token')
     };
   }
@@ -28,8 +32,29 @@ class MyTeam extends Component {
         return (Object.values(this.state.status).find((stat) => { return (status_id === stat.id)}));
     }
 
-  getMyProfile() {
-    const getMyTeamConfig = axios.create(
+    getPlayers(){
+        axios.get('https://api.cartolafc.globo.com/atletas/mercado',
+                    {
+                        'X-GLB-Token': this.state.token
+                    }
+                    )
+                    .then((res) => {
+                        this.setState({
+                            jogadores: res.data.atletas
+                        });
+                        // console.log(this.state.status);
+                        // console.log(this.state.clubes);
+                        // console.log(Object.values(this.state.posicoes));
+                        // console.log(this.state.jogadores);
+                    }).catch(err => {
+                        if(err){
+                        window.alert(err);
+                        }
+                    });
+    }
+
+    getMyProfile() {
+        const getMyTeamConfig = axios.create(
         {
             baseURL: "https://api.cartolafc.globo.com/auth/time",
             headers: {
@@ -44,6 +69,7 @@ class MyTeam extends Component {
             }
         }
     );
+
     getMyTeamConfig(
         {
             method: 'get',
@@ -66,7 +92,80 @@ class MyTeam extends Component {
           console.log(err.response);
         }
       });
+      this.scaleTeam();
   }
+    componentWillMount(){
+        this.getPlayers();
+    }
+
+    scaleTeam(){
+
+        var new_team = { 'esquema_id': 3, 'atletas': []};
+        custo = this.state.team.patrimonio;
+
+        var gole =  this.state.ia.getBestDefenders(
+                    this.state.ia.getBestAppreciation(
+                    this.state.ia.getBestMeanPlayersByPosition(this.state.jogadores, 1, 10)))[0];
+        
+        var lat1 =  this.state.ia.getBestDefenders(
+                    this.state.ia.getBestAppreciation(
+                    this.state.ia.getBestMeanPlayersByPosition(this.state.jogadores, 2, 10)))[0];
+        
+        var lat2 =  this.state.ia.getBestDefenders(
+                    this.state.ia.getBestAppreciation(
+                    this.state.ia.getBestMeanPlayersByPosition(this.state.jogadores, 2, 10)))[1];
+        
+        var zag1 =  this.state.ia.getBestDefenders(
+                    this.state.ia.getBestAppreciation(
+                    this.state.ia.getBestMeanPlayersByPosition(this.state.jogadores, 3, 10)))[0];
+            
+        var zag2 =  this.state.ia.getBestDefenders(
+                    this.state.ia.getBestAppreciation(
+                    this.state.ia.getBestMeanPlayersByPosition(this.state.jogadores, 3, 10)))[1];
+
+        var mei1 =  this.state.ia.getBestDefenders(
+                    this.state.ia.getBestAppreciation(
+                    this.state.ia.getBestMeanPlayersByPosition(this.state.jogadores, 4, 10)))[0];
+        
+        var mei2 =  this.state.ia.getBestDefenders(
+                    this.state.ia.getBestAppreciation(
+                    this.state.ia.getBestMeanPlayersByPosition(this.state.jogadores, 4, 10)))[1];
+
+        var mei3 =  this.state.ia.getBestDefenders(
+                    this.state.ia.getBestAppreciation(
+                    this.state.ia.getBestMeanPlayersByPosition(this.state.jogadores, 4, 10)))[2];
+        
+        var atc1 =  this.state.ia.getBestDefenders(
+                    this.state.ia.getBestAppreciation(
+                    this.state.ia.getBestMeanPlayersByPosition(this.state.jogadores, 5, 10)))[0];
+
+        var atc2 =  this.state.ia.getBestDefenders(
+                    this.state.ia.getBestAppreciation(
+                    this.state.ia.getBestMeanPlayersByPosition(this.state.jogadores, 5, 10)))[1];
+        
+        var atc3 =  this.state.ia.getBestDefenders(
+                    this.state.ia.getBestAppreciation(
+                    this.state.ia.getBestMeanPlayersByPosition(this.state.jogadores, 5, 10)))[2];
+        
+        var tec =  this.state.ia.getBestDefenders(
+                    this.state.ia.getBestAppreciation(
+                    this.state.ia.getBestMeanPlayersByPosition(this.state.jogadores, 5, 10)))[0];
+
+        
+        new_team.atletas.push(gole)
+        new_team.atletas.push(lat1)
+        new_team.atletas.push(lat2)
+        new_team.atletas.push(zag1)
+        new_team.atletas.push(zag2)
+        new_team.atletas.push(mei1)
+        new_team.atletas.push(mei2)
+        new_team.atletas.push(mei3)
+        new_team.atletas.push(atc1)
+        new_team.atletas.push(atc2)
+        new_team.atletas.push(atc3)
+        new_team.atletas.push(tec)
+
+    }
 
   saveTeam(){
     axios

@@ -5,6 +5,7 @@ import BuscarJogador from '../requests/BuscarJogador';
 import BuscarJogMaisEscalados from '../requests/BuscarJogMaisEscalados';
 import App from '../App';
 import MyTeam from '../components/MyTeam';
+import BuyPlayer from './BuyPlayer';
 
 class Auth extends Component{
     constructor(props){
@@ -74,6 +75,9 @@ class Auth extends Component{
                         </div>
                         <div className="col-sm-6 ">
                             <MyTeam />
+                        </div>
+                        <div className="col-sm-6 ">
+                            <BuyPlayer />
                         </div>
                     </div>        
                 </div>

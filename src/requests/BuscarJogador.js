@@ -5,6 +5,9 @@ import {List, ListItem} from 'material-ui/List';
 import {Card, CardActions, CardHeader, CardText} from 'material-ui/Card';
 import axios from 'axios';
 import Filters from '../components/Filters';
+import PlayersList from '../components/PlayersList';
+import IAlgorithms from '../control/IAlgorithms';
+
 
 const styles = {
     filter_button:{
@@ -16,11 +19,12 @@ class BuscarJogador extends Component{
     constructor(props){
         super(props);
         this.state = {
+            ia: new IAlgorithms(),
             clubes: {},
             posicoes: {},
             status: {},
             jogadores: [],
-            token: props.token,
+            token: sessionStorage.getItem('token'),
             expanded: false
         }
     }
@@ -38,10 +42,10 @@ class BuscarJogador extends Component{
                             status: res.data.status,
                             jogadores: res.data.atletas
                         });
-                        console.log(this.state.status);
-                        console.log(this.state.clubes);
-                        console.log(Object.values(this.state.posicoes));
-                        console.log(this.state.jogadores);
+                        // console.log(this.state.status);
+                        // console.log(this.state.clubes);
+                        // console.log(Object.values(this.state.posicoes));
+                        // console.log(this.state.jogadores);
                     }).catch(err => {
                         if(err){
                         window.alert(err);
@@ -56,29 +60,19 @@ class BuscarJogador extends Component{
         this.setState({expanded: false});
     }
 
-    getPlayersFromAClub(clube_id){
-        return (Object.values(this.state.clubes).filter((clube) => { return (clube.id === clube_id) }));
+    //coleta todos os jogadores de um mesmo clube
+    getPlayersFromAClub(jogadores, clube_id){
+        return (jogadores.filter((player) => { return (player.clube.id === clube_id) }));
     }
-
-    getPlayersFromAPos(posicao_id){
-        return (Object.values(this.state.posicoes).filter( (posi) => { return (posi.id === posicao_id)}));
+    
+    //coleta todos os jogadores de uma mesma posicao
+    getPlayersFromAPos(jogadores, posicao_id){
+        return (jogadores.filter((player) => { return (player.posicao.id === posicao_id)}));
     }
-
-    getPlayersFromAStat(status_id){
-        return (Object.values(this.state.status).filter((stat) => { return (status_id === stat.id)}));
-    }
-
-
-    getPlayerClub(clube_id){
-        return (Object.values(this.state.clubes).find((clube) => { return (clube.id === clube_id) }));
-    }
-
-    getPlayerPos(posicao_id){
-        return (Object.values(this.state.posicoes).find( (posi) => { return (posi.id === posicao_id)}));
-    }
-
-    getPlayerStat(status_id){
-        return (Object.values(this.state.status).find((stat) => { return (status_id === stat.id)}));
+    
+    //coleta todos os jogadores com um mesmo status(provavel, duvida, nulo,...)
+    getPlayersFromAStat(jogadores, status_id){
+        return (jogadores.filter((player) => { return (player.status_id === status_id)}));
     }
 
     render(){
@@ -96,20 +90,57 @@ class BuscarJogador extends Component{
                         <Filters style={styles.filter_button}/>
                     </CardActions>
                     <CardText expandable={true}>
-                        <List>
-                            { this.state.jogadores.map((athlt) => {
-                            return( 
-                                <ListItem key={athlt.atleta_id}>
-                                    <Jogador 
-                                        apelido={athlt.apelido} 
-                                        foto={athlt.foto} 
-                                        clube={this.getPlayerClub(athlt.clube_id)}
-                                        pos={this.getPlayerPos(athlt.posicao_id)}
-                                        status={this.getPlayerStat(athlt.status_id)}
-                                        /> 
-                                </ListItem>
-                                )})}
-                        </List>
+                        <div className='row'>
+                            <div className='col-sm'>
+                                <PlayersList jogadores={this.state.ia.getBestDefenders(
+                                                        this.state.ia.getBestAppreciation(
+                                                        this.state.ia.getBestMeanPlayersByPosition(this.state.jogadores, 1, 10)))} 
+                                             clubes={this.state.clubes} 
+                                             posicoes={this.state.posicoes} 
+                                             status={this.state.status}/>
+                            </div>
+                            <div className='col-sm'>
+                                <PlayersList jogadores={this.state.ia.getBestDefenders(
+                                                        this.state.ia.getBestAppreciation(
+                                                        this.state.ia.getBestMeanPlayersByPosition(this.state.jogadores, 2, 10)))} 
+                                             clubes={this.state.clubes} 
+                                             posicoes={this.state.posicoes} 
+                                             status={this.state.status}/>
+                            </div>
+                            <div className='col-sm'>
+                                <PlayersList jogadores={this.state.ia.getBestDefenders(
+                                                        this.state.ia.getBestAppreciation(
+                                                        this.state.ia.getBestMeanPlayersByPosition(this.state.jogadores, 3, 10)))} 
+                                             clubes={this.state.clubes} 
+                                             posicoes={this.state.posicoes} 
+                                             status={this.state.status}/>
+                            </div>
+                        </div>
+                        <div className='row'>
+                            <div className='col-sm'>
+                                <PlayersList jogadores={this.state.ia.getBestAttackers(
+                                                        this.state.ia.getBestAppreciation(
+                                                        this.state.ia.getBestMeanPlayersByPosition(this.state.jogadores, 4, 10)))} 
+                                             clubes={this.state.clubes} 
+                                             posicoes={this.state.posicoes} 
+                                             status={this.state.status}/>
+                            </div>
+                            <div className='col-sm'>
+                                <PlayersList jogadores={this.state.ia.getBestAttackers(
+                                                        this.state.ia.getBestAppreciation(
+                                                        this.state.ia.getBestMeanPlayersByPosition(this.state.jogadores, 5, 10)))} 
+                                             clubes={this.state.clubes} posicoes={this.state.posicoes} 
+                                             status={this.state.status}/>
+                            </div>
+                            <div className='col-sm'>
+                                <PlayersList jogadores={this.state.ia.getBestAppreciation(
+                                                        this.state.ia.getBestMeanPlayersByPosition(this.state.jogadores, 6, 10))} 
+                                             clubes={this.state.clubes} 
+                                             posicoes={this.state.posicoes} 
+                                             status={this.state.status}/>
+                            </div>
+                        </div>
+                        
                     </CardText>
                 </Card>
             </div>
