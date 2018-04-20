@@ -34,7 +34,7 @@ class IAlgorithms extends Component{
         //ordenar os goleiros de maior média
         var plrs = jogadores.filter(
             (jog) => {
-                return ( jog.posicao_id === pos)
+                return (jog.posicao_id === pos)
             }
         );
 
@@ -45,10 +45,10 @@ class IAlgorithms extends Component{
             }
         );
 
-        //ordena da melhor media para a pior
+        //ordena da pior media para a melhor
         peers.sort(
             (first, second) => {
-                return second[1] - first[1];
+                return first[1] - second[1];
             }
         );
 
@@ -77,10 +77,10 @@ class IAlgorithms extends Component{
             }
         );
 
-        //ordena da pior variacao para a melhor
+        //ordena da melhor variacao para a pior
         peers.sort(
             (first, second) => {
-                return first[1] - second[1];
+                return second[1] - first[1];
             }
         );
 
@@ -198,10 +198,10 @@ class IAlgorithms extends Component{
             }
         );
 
-        //ordena da pior variacao para a melhor
+        //ordena da melhor variacao para a pior
         peers.sort(
             (first, second) => {
-                return second[1] - first[1];
+                return first[1] - second[1];
             }
         );
 
@@ -232,7 +232,7 @@ class IAlgorithms extends Component{
         //ordena da pior variacao para a melhor
         peers.sort(
             (first, second) => {
-                return second[1] - first[1];
+                return first[1] - second[1];
             }
         );
 
