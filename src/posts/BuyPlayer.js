@@ -1,12 +1,12 @@
 import React, { Component } from "react";
 import axios from "axios";
-import { Card, CardHeader, CardActions, RaisedButton } from "material-ui";
+import { Card, CardHeader, CardActions, RaisedButton, CardText } from "material-ui";
 
 class BuyPlayer extends Component {
   constructor(props) {
     super(props);
     this.state = {
-        marketStatus: ''
+        marketStatus: 2
     };
   }
   
@@ -18,7 +18,9 @@ class BuyPlayer extends Component {
         this.setState({
           marketStatus: res.data.status_mercado
         });
-        console.log(this.state.marketStatus);
+        
+        this.state.marketStatus === 1 ? window.alert('Mercado Aberto!'):window.alert('Mercado Fechado!')
+        
       })
       .catch(err => {
         if (err) {

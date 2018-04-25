@@ -6,6 +6,7 @@ import BuscarJogMaisEscalados from '../requests/BuscarJogMaisEscalados';
 import App from '../App';
 import MyTeam from '../components/MyTeam';
 import BuyPlayer from './BuyPlayer';
+import ClubsPerformance from '../control/ClubsPerformance';
 
 class Auth extends Component{
     constructor(props){
@@ -67,16 +68,23 @@ class Auth extends Component{
             return(
                 <div className='container'>
                     <div className="row">
-                        <div className="col-sm-6 ">
+                        <div className="col-sm">
                             <BuscarJogador />
                         </div>
-                        <div className="col-sm-6 ">
+                    </div>
+                    <div className="row">
+                        <div className="col-sm">
                             <BuscarJogMaisEscalados />
                         </div>
-                        <div className="col-sm-6 ">
+                        <div className="col-sm">
                             <MyTeam />
                         </div>
-                        <div className="col-sm-6 ">
+                        <div className="col-sm">
+                            <ClubsPerformance />
+                        </div>
+                    </div>
+                    <div className="row">
+                        <div className="col-sm">
                             <BuyPlayer />
                         </div>
                     </div>        

@@ -21,6 +21,12 @@ class MyTeam extends Component {
         token: sessionStorage.getItem('token')
     };
   }
+
+  hideMyTeam(){
+      this.setState({
+        authorized: false
+      });
+  }
   
     getPlayerClub(clube_id){
         return (Object.values(this.state.clubes).find((clube) => { return (clube.id === clube_id) }));
@@ -151,7 +157,7 @@ class MyTeam extends Component {
                             console.log('Preco: ' + jogad.preco_num)
                             console.log('Custo: ' + custo)
                             custo -= jogad.preco_num;
-                            this.state.new_team.atletas.push(jogad);
+                            this.state.new_team.atletas.push(jogad.atleta_id);
                         }
                         count--;
                     }
@@ -170,7 +176,7 @@ class MyTeam extends Component {
                             console.log('Preco: ' + jogad.preco_num)
                             console.log('Custo: ' + custo)
                             custo -= jogad.preco_num;
-                            this.state.new_team.atletas.push(jogad);
+                            this.state.new_team.atletas.push(jogad.atleta_id);
                         }
                         count--;
                     }
@@ -190,7 +196,7 @@ class MyTeam extends Component {
                             console.log('Preco: ' + jogad.preco_num)
                             console.log('Custo: ' + custo)
                             custo -= jogad.preco_num;
-                            this.state.new_team.atletas.push(jogad);
+                            this.state.new_team.atletas.push(jogad.atleta_id);
                         }
                         count--;
                     }
@@ -210,7 +216,7 @@ class MyTeam extends Component {
                             console.log('Preco: ' + jogad.preco_num)
                             console.log('Custo: ' + custo)
                             custo -= jogad.preco_num;
-                            this.state.new_team.atletas.push(jogad);
+                            this.state.new_team.atletas.push(jogad.atleta_id);
                         }
                         count--;
                     }
@@ -229,7 +235,7 @@ class MyTeam extends Component {
                             console.log('Preco: ' + jogad.preco_num)
                             console.log('Custo: ' + custo)
                             custo -= jogad.preco_num;
-                            this.state.new_team.atletas.push(jogad);
+                            this.state.new_team.atletas.push(jogad.atleta_id);
                         }
                         count--;
                     }
@@ -248,7 +254,7 @@ class MyTeam extends Component {
                             console.log('Preco: ' + jogad.preco_num)
                             console.log('Custo: ' + custo)
                             custo -= jogad.preco_num;
-                            this.state.new_team.atletas.push(jogad);
+                            this.state.new_team.atletas.push(jogad.atleta_id);
                         }
                         count--;
                     }
@@ -292,6 +298,7 @@ class MyTeam extends Component {
         return(
             <div>
                 <RaisedButton label='Salvar Time' primary={true} onClick={this.handleClick = this.saveTeam.bind(this)}/>
+                <RaisedButton label='Hide' primary={true} onClick={this.handleClick = this.hideMyTeam.bind(this)}/>
                 <h5>Patrimônio</h5>
                 <p>{this.state.team.patrimonio.toFixed(2)}</p>
                 <h5>Pontos</h5>
