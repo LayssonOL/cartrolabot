@@ -1,7 +1,5 @@
 import React, {Component} from 'react';
 import RaisedButton from 'material-ui/RaisedButton';
-import Jogador from '.././components/Jogador';
-import {List, ListItem} from 'material-ui/List';
 import {Card, CardActions, CardHeader, CardText} from 'material-ui/Card';
 import axios from 'axios';
 import Filters from '../components/Filters';

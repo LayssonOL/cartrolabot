@@ -3,8 +3,7 @@ import axios from 'axios';
 import Dialog from 'material-ui/Dialog';
 import FlatButton from 'material-ui/FlatButton';
 import RaisedButton from 'material-ui/RaisedButton';
-import {RadioButton, RadioButtonGroup} from 'material-ui/RadioButton';
-import { Divider, Slider } from 'material-ui';
+import {RadioButton} from 'material-ui/RadioButton';
 // import Club from '../components/Club';
 
 class Filters extends Component {

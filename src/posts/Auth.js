@@ -1,9 +1,8 @@
 import React, { Component } from 'react'
 import axios from 'axios'
-import { Card, CardHeader, CardText, CardActions, RaisedButton } from 'material-ui';
+import { Card, CardHeader, CardActions, RaisedButton } from 'material-ui';
 import BuscarJogador from '../requests/BuscarJogador';
 import BuscarJogMaisEscalados from '../requests/BuscarJogMaisEscalados';
-import App from '../App';
 import MyTeam from '../components/MyTeam';
 import BuyPlayer from './BuyPlayer';
 import ClubsPerformance from '../control/ClubsPerformance';

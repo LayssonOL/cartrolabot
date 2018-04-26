@@ -1,6 +1,4 @@
 import React, {Component} from 'react';
-import {Card, CardActions, CardText, CardHeader} from 'material-ui/Card';
-import FlatButton from 'material-ui/FlatButton'
 import { List, ListItem } from 'material-ui';
 import Jogador from './Jogador';
 import IAlgorithms from '../control/IAlgorithms';

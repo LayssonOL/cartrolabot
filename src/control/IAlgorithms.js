@@ -34,7 +34,7 @@ class IAlgorithms extends Component{
         //ordenar os goleiros de maior média
         var plrs = jogadores.filter(
             (jog) => {
-                return (jog.posicao_id === pos)
+                return (jog.posicao_id === pos && jog.status_id === 7)
             }
         );
 

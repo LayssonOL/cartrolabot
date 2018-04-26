@@ -1,7 +1,5 @@
 import React, { Component } from 'react';
 import AppBar from 'material-ui/AppBar';
-import BuscarJogador from './requests/BuscarJogador';
-import BuscarJogMaisEscalados from './requests/BuscarJogMaisEscalados';
 import './App.css';
 import Auth from './posts/Auth';
 

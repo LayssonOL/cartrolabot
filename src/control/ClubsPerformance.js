@@ -1,13 +1,13 @@
 import React, { Component } from "react";
 import axios from "axios";
-import { Card, CardHeader, CardActions, RaisedButton, CardText } from "material-ui";
+import { Card, CardHeader, CardActions, RaisedButton } from "material-ui";
 
 class ClubsPerformance extends Component {
   constructor(props) {
     super(props);
     this.state = {
         rodada_atual: null,
-        hist_partidas: [{rodada: null, partidas: []}]
+        hist_partidas: []
     };
   }
   
@@ -15,16 +15,20 @@ class ClubsPerformance extends Component {
     axios
     .get("https://api.cartolafc.globo.com/partidas/"+rodada)
     .then(res => {
-      this.setState({
-        hist_partidas: this.state.hist_partidas.push({rodada: rodada, partidas: res.data.partidas})
-      });
-      // console.log(this.state.partidas)
+        this.state.hist_partidas.push({rodada: rodada, partidas: res.data.partidas})
+    //     console.log('Adicionando partidas:')
+    //     console.log(rodada)
+    //     console.log(res.data.partidas)
     })
     .catch(err => {
       if (err) {
         window.alert(err);
       }
     });
+  }
+
+  componentWillMount(){
+      this.getRodadaAtual();
   }
 
   getRodadaAtual(){
@@ -43,17 +47,17 @@ class ClubsPerformance extends Component {
     });
   }
 
-  getHistPartidas(){
-      var rodada_atual = 0;
-      this.getRodadaAtual().then(
-          (res) => {
-            rodada_atual = res.data.rodada;
-            for (let i = this.state.rodada_atual; i > 0; i--) {
-                this.getPartidas(i);
-            }
-          }
-      );
-  }
+    getHistPartidas(){
+        for (let i = 1; i <= this.state.rodada_atual; i++) {
+            this.getPartidas(i);
+        }
+        console.log(this.state.hist_partidas)
+    }
+
+    accountTeamsStats(){
+        
+    }
+
 
   render() {
     return (

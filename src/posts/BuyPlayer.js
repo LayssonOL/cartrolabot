@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import axios from "axios";
-import { Card, CardHeader, CardActions, RaisedButton, CardText } from "material-ui";
+import { Card, CardHeader, CardActions, RaisedButton } from "material-ui";
 
 class BuyPlayer extends Component {
   constructor(props) {

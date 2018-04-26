@@ -2,7 +2,6 @@ import React, { Component } from "react";
 import axios from "axios";
 import { Card, CardHeader, CardActions, RaisedButton, List, ListItem } from "material-ui";
 import Jogador from "./Jogador";
-import BuscarJogador from "../requests/BuscarJogador";
 import IAlgorithms from "../control/IAlgorithms";
 
 class MyTeam extends Component {
@@ -134,6 +133,7 @@ class MyTeam extends Component {
         var custo = this.state.team.patrimonio;
         console.log(this.state.team.patrimonio)
         var count = 0;
+        var jogad = null;
         var esquema = this.state.esquemas.find(
             (sch) => {
                 return (sch.esquema_id === 3)
@@ -151,13 +151,13 @@ class MyTeam extends Component {
                     console.log('Quantos: '+ count)
                     while (count > 0){
                         console.log(count)
-                        var jogad = atacs.pop()
+                        jogad = atacs.pop()
                         // console.log(jogad)
                         if(jogad.preco_num <= custo){
                             console.log('Preco: ' + jogad.preco_num)
                             console.log('Custo: ' + custo)
                             custo -= jogad.preco_num;
-                            this.state.new_team.atletas.push(jogad.atleta_id);
+                            this.state.new_team.atletas.push(jogad);
                         }
                         count--;
                     }
@@ -170,13 +170,13 @@ class MyTeam extends Component {
                     console.log('Quantos: '+ count)
                     while (count > 0){
                         console.log(count)
-                        var jogad = goleiros.pop()
+                        jogad = goleiros.pop()
                         // console.log(jogad)
                         if(jogad.preco_num <= custo){
                             console.log('Preco: ' + jogad.preco_num)
                             console.log('Custo: ' + custo)
                             custo -= jogad.preco_num;
-                            this.state.new_team.atletas.push(jogad.atleta_id);
+                            this.state.new_team.atletas.push(jogad);
                         }
                         count--;
                     }
@@ -190,13 +190,13 @@ class MyTeam extends Component {
                     console.log('Quantos: '+ count)
                     while (count > 0){
                         console.log(count)
-                        var jogad = lateras.pop()
+                        jogad = lateras.pop()
                         // console.log(jogad)
                         if(jogad.preco_num <= custo){
                             console.log('Preco: ' + jogad.preco_num)
                             console.log('Custo: ' + custo)
                             custo -= jogad.preco_num;
-                            this.state.new_team.atletas.push(jogad.atleta_id);
+                            this.state.new_team.atletas.push(jogad);
                         }
                         count--;
                     }
@@ -210,13 +210,13 @@ class MyTeam extends Component {
                     console.log('Quantos: '+ count)
                     while (count > 0){
                         console.log(count)
-                        var jogad = meias.pop()
+                        jogad = meias.pop()
                         // console.log(jogad)
                         if(jogad.preco_num <= custo){
                             console.log('Preco: ' + jogad.preco_num)
                             console.log('Custo: ' + custo)
                             custo -= jogad.preco_num;
-                            this.state.new_team.atletas.push(jogad.atleta_id);
+                            this.state.new_team.atletas.push(jogad);
                         }
                         count--;
                     }
@@ -229,13 +229,13 @@ class MyTeam extends Component {
                     console.log('Quantos: '+ count)
                     while (count > 0){
                         console.log(count)
-                        var jogad = tecnicos.pop()
+                        jogad = tecnicos.pop()
                         // console.log(jogad)
                         if(jogad.preco_num <= custo){
                             console.log('Preco: ' + jogad.preco_num)
                             console.log('Custo: ' + custo)
                             custo -= jogad.preco_num;
-                            this.state.new_team.atletas.push(jogad.atleta_id);
+                            this.state.new_team.atletas.push(jogad);
                         }
                         count--;
                     }
@@ -248,20 +248,20 @@ class MyTeam extends Component {
                     console.log('Quantos: '+ count)
                     while (count > 0){
                         console.log(count)
-                        var jogad = zagueiros.pop()
+                        jogad = zagueiros.pop()
                         // console.log(jogad)
                         if(jogad.preco_num <= custo){
                             console.log('Preco: ' + jogad.preco_num)
                             console.log('Custo: ' + custo)
                             custo -= jogad.preco_num;
-                            this.state.new_team.atletas.push(jogad.atleta_id);
+                            this.state.new_team.atletas.push(jogad);
                         }
                         count--;
                     }
                 }
             }
         )
-        this.state.new_team.capitao_id = this.state.new_team.atletas[0];
+        this.state.new_team.capitao_id = this.state.new_team.atletas[0].atleta_id;
         console.log(this.state.new_team);
     }
 
@@ -271,16 +271,20 @@ class MyTeam extends Component {
             baseURL: "https://api.cartolafc.globo.com/auth/time/salvar",
             headers: {
                 'X-GLB-Token': this.state.token,
+            },
+            config: {
+                "Content-Type": "application/json; charset=UTF-8",
+                "Accept": "application/json, text/javascript",
             }
         }
     );
+    
     saveTeamConfig(
             {
                 method: 'post',
                 url: this.baseURL,
-                data: {
-                    "payload": this.state.new_team
-                },
+                data: this.state.new_team,
+                // headers: this.config,
                 config: this.headers
             }
         ).then(res => {
