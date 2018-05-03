@@ -12,11 +12,12 @@ class ClubsPerformance extends Component {
     };
   }
   
+  // método para recuperar todos os clubes 
   getClubs(){
     axios.get('https://api.cartolafc.globo.com/clubes')
                 .then((res) => {
                           this.setState({clubes: Object.values(res.data)});
-                          // console.log(this.state.clubes);
+                          console.log(this.state.clubes);
                           }).catch(err => {
                             if(err){
                               window.alert(err);
@@ -24,24 +25,31 @@ class ClubsPerformance extends Component {
                           });
   }
 
+  // método para consultar todas as partidas de cada rodada
   getPartidas(rodada){
-    axios
-    .get("https://api.cartolafc.globo.com/partidas/"+rodada)
-    .then(res => {
-        this.state.hist_partidas.push({rodada: rodada, partidas: res.data.partidas})
-        // console.log('Adicionando partidas:')
-    //     console.log(rodada)
-        // console.log(res.data)
-    })
-    .catch(err => {
-      if (err) {
-        window.alert(err);
+    return new Promise(
+      (resolve, reject) => {
+        resolve(axios.get("https://api.cartolafc.globo.com/partidas/"+rodada).then());
+        reject(axios.get("https://api.cartolafc.globo.com/partidas/"+rodada).catch());
       }
-    });
+    );
+    // axios
+    // .get("https://api.cartolafc.globo.com/partidas/"+rodada)
+    // .then(res => {
+    //     this.state.hist_partidas.push({rodada: rodada, partidas: res.data.partidas})
+    //     // console.log('Adicionando partidas:')
+    // //     console.log(rodada)
+    //     // console.log(res.data)
+    // })
+    // .catch(err => {
+    //   if (err) {
+    //     window.alert(err);
+    //   }
+    // });
   }
 
     componentWillMount(){
-      // this.getClubs();
+      this.getClubs();
       this.getRodadaAtual();
     }
 
@@ -49,6 +57,7 @@ class ClubsPerformance extends Component {
     //   this.getHistPartidas();
     // }
 
+    // método para capturar a rodada atual
   getRodadaAtual(){
     axios
     .get("https://api.cartolafc.globo.com/mercado/status")
@@ -65,7 +74,9 @@ class ClubsPerformance extends Component {
             return obj.rodada === this.state.rodada_atual 
           }
         )){
-          this.getPartidas(i);
+          this.getPartidas(i).then((res) => {
+            this.state.hist_partidas.push({rodada: i, partidas: res.data.partidas})
+          });
         }
       }
     //   console.log(res)
@@ -77,124 +88,182 @@ class ClubsPerformance extends Component {
     });
   }
 
-    // getHistPartidas(){
-    //     for (let i = (this.state.rodada_atual-1); i >= 1; i--) {
-    //         // verifica se a última rodada já foi adicionada na lista de rodadas
-    //         if(!this.state.hist_partidas.find(
-    //           (obj) => {
-    //             return obj.rodada === this.state.rodada_atual 
-    //           }
-    //         )){
-    //           this.getPartidas(i);
-    //         }
-    //     }
-    //     // this.accountTeamsStats();
-    // }
-
+  // método para contabilizar vitórias, derrotas e empates como mandante e como visitante para cada clube
     accountTeamsStats(){
-      var casa;
-      var fora;
-      var clubes = [{club_id: 0, home: {victory: 0, defeat: 0, draw: 0}, away: {victory: 0, defeat: 0, draw: 0}}];
-        this.state.hist_partidas.forEach(
-          (rodada) => {
-            rodada.partidas.forEach(
-              (partida) => {
-                // console.log('PARTIDA')
-                // console.log(partida)
-                // se houver objeto com o mesmo id, recupera-o
-                casa = clubes.find((club) => {return club.club_id === partida.clube_casa_id});
-                // console.log('CASA')
-                // console.log(casa)
-                
-                // se houver objeto com o mesmo id, recupera-o
-                fora = clubes.find((club) => {return club.club_id === partida.clube_visitante_id});
-                // console.log('FORA')
-                // console.log(fora)
+      return new Promise(
+        (resolve, reject) => {
+          var casa;
+          var fora;
+          // {club_id: 0, home: {victory: 0, defeat: 0, draw: 0, points: 0}, away: {victory: 0, defeat: 0, draw: 0, points: 0}}
+          var clubes = [];
+            this.state.hist_partidas.forEach(
+              (rodada) => {
+                rodada.partidas.forEach(
+                  (partida) => {
+                    // console.log('PARTIDA')
+                    // console.log(partida)
+                    // se houver objeto com o mesmo id, recupera-o
+                    casa = clubes.find((club) => {return club.club_id === partida.clube_casa_id});
+                    // console.log('CASA')
+                    // console.log(casa)
+                    
+                    // se houver objeto com o mesmo id, recupera-o
+                    fora = clubes.find((club) => {return club.club_id === partida.clube_visitante_id});
+                    // console.log('FORA')
+                    // console.log(fora)
 
-                // se o clube mandante venceu a partida
-                if(partida.placar_oficial_mandante > partida.placar_oficial_visitante){
-                  if(casa !== undefined & casa !== null){
-                    // console.log('CASA GANHOU')
-                    // console.log(casa)
-                    // se o objeto existe no array, incrementa um atributo
-                    casa.home.victory += 1;
-                  }else{
-                    // console.log('Adicionando ...')
-                    // console.log(partida.clube_casa_id)
-                    // se o objeto não existe no array, adiciona-o
-                    clubes.push({club_id: partida.clube_casa_id, home: {victory: 1, defeat: 0, draw: 0}, away: {victory: 0, defeat: 0, draw: 0}});
-                  }
-                  
-                  if(fora !== undefined & fora !== null){
-                    // console.log('FORA PERDEU')
-                    // console.log(fora)
-                    // se o objeto existe no array, incrementa um atributo
-                    fora.away.defeat += 1;
-                  }else{
-                    // console.log('Adicionando ...')
-                    // console.log(partida.clube_visitante_id)
-                    // se o objeto não existe no array, adiciona-o
-                    clubes.push({club_id: partida.clube_visitante_id, home: {victory: 0, defeat: 0, draw: 0}, away: {victory: 0, defeat: 1, draw: 0}});
-                  }
-                  
-                  // se os clubes empataram
-                }else if(partida.placar_oficial_mandante === partida.placar_oficial_visitante){
-                  if(casa !== undefined & casa !== null){
-                    // console.log('CASA EMPATOU')
-                    // console.log(casa)
-                    // se o objeto existe no array, incrementa um atributo
-                    casa.home.draw += 1;
-                  }else{
-                    // console.log('Adicionando ...')
-                    // console.log(partida.clube_casa_id)
-                    // se o objeto não existe no array, adiciona-o
-                    clubes.push({club_id: partida.clube_casa_id, home: {victory: 0, defeat: 0, draw: 1}, away: {victory: 0, defeat: 0, draw: 0}});
-                  }
-                  
-                  if(fora !== undefined & fora !== null){
-                    // console.log('FORA EMPATOU')
-                    // console.log(fora)
-                    // se o objeto existe no array, incrementa um atributo
-                    fora.away.draw += 1;
-                  }else{
-                    // console.log('Adicionando ...')
-                    // console.log(partida.clube_visitante_id)
-                    // se o objeto não existe no array, adiciona-o
-                    clubes.push({club_id: partida.clube_visitante_id, home: {victory: 0, defeat: 0, draw: 0}, away: {victory: 0, defeat: 0, draw: 1}});
-                  }
-                  
-                  // se o clube visitante venceu a partida
-                }else{
-                  if(casa !== undefined & casa !== null){
-                    // console.log('CASA PERDEU')
-                    // console.log(casa)
-                    // se o objeto existe no array, incrementa um atributo
-                    casa.home.defeat += 1;
-                  }else{
-                    // console.log('Adicionando ...')
-                    // console.log(partida.clube_casa_id)
-                    // se o objeto não existe no array, adiciona-o
-                    clubes.push({club_id: partida.clube_casa_id, home: {victory: 0, defeat: 1, draw: 0}, away: {victory: 0, defeat: 0, draw: 0}});
-                  }
-                  
-                  if(fora !== undefined & fora !== null){
-                    // console.log('FORA GANHOU')
-                    // console.log(fora)
-                    // se o objeto existe no array, incrementa um atributo
-                    fora.away.victory += 1;
-                  }else{
-                    // console.log('Adicionando ...')
-                    // console.log(partida.clube_visitante_id)
-                    // se o objeto não existe no array, adiciona-o
-                    clubes.push({club_id: partida.clube_visitante_id, home: {victory: 0, defeat: 0, draw: 0}, away: {victory: 1, defeat: 0, draw: 0}});
-                  }
+                    // se o clube mandante venceu a partida
+                    if(partida.placar_oficial_mandante > partida.placar_oficial_visitante){
+                      if(casa !== undefined & casa !== null){
+                        // console.log('CASA GANHOU')
+                        // console.log(casa)
+                        // se o objeto existe no array, incrementa um atributo
+                        casa.home.victory += 1;
+                      }else{
+                        // console.log('Adicionando ...')
+                        // console.log(partida.clube_casa_id)
+                        // se o objeto não existe no array, adiciona-o
+                        clubes.push({club_id: partida.clube_casa_id, home: {victory: 1, defeat: 0, draw: 0}, away: {victory: 0, defeat: 0, draw: 0}});
+                      }
+                      
+                      if(fora !== undefined & fora !== null){
+                        // console.log('FORA PERDEU')
+                        // console.log(fora)
+                        // se o objeto existe no array, incrementa um atributo
+                        fora.away.defeat += 1;
+                      }else{
+                        // console.log('Adicionando ...')
+                        // console.log(partida.clube_visitante_id)
+                        // se o objeto não existe no array, adiciona-o
+                        clubes.push({club_id: partida.clube_visitante_id, home: {victory: 0, defeat: 0, draw: 0}, away: {victory: 0, defeat: 1, draw: 0}});
+                      }
+                      
+                      // se os clubes empataram
+                    }else if(partida.placar_oficial_mandante === partida.placar_oficial_visitante){
+                      if(casa !== undefined & casa !== null){
+                        // console.log('CASA EMPATOU')
+                        // console.log(casa)
+                        // se o objeto existe no array, incrementa um atributo
+                        casa.home.draw += 1;
+                      }else{
+                        // console.log('Adicionando ...')
+                        // console.log(partida.clube_casa_id)
+                        // se o objeto não existe no array, adiciona-o
+                        clubes.push({club_id: partida.clube_casa_id, home: {victory: 0, defeat: 0, draw: 1}, away: {victory: 0, defeat: 0, draw: 0}});
+                      }
+                      
+                      if(fora !== undefined & fora !== null){
+                        // console.log('FORA EMPATOU')
+                        // console.log(fora)
+                        // se o objeto existe no array, incrementa um atributo
+                        fora.away.draw += 1;
+                      }else{
+                        // console.log('Adicionando ...')
+                        // console.log(partida.clube_visitante_id)
+                        // se o objeto não existe no array, adiciona-o
+                        clubes.push({club_id: partida.clube_visitante_id, home: {victory: 0, defeat: 0, draw: 0}, away: {victory: 0, defeat: 0, draw: 1}});
+                      }
+                      
+                      // se o clube visitante venceu a partida
+                    }else{
+                      if(casa !== undefined & casa !== null){
+                        // console.log('CASA PERDEU')
+                        // console.log(casa)
+                        // se o objeto existe no array, incrementa um atributo
+                        casa.home.defeat += 1;
+                      }else{
+                        // console.log('Adicionando ...')
+                        // console.log(partida.clube_casa_id)
+                        // se o objeto não existe no array, adiciona-o
+                        clubes.push({club_id: partida.clube_casa_id, home: {victory: 0, defeat: 1, draw: 0}, away: {victory: 0, defeat: 0, draw: 0}});
+                      }
+                      
+                      if(fora !== undefined & fora !== null){
+                        // console.log('FORA GANHOU')
+                        // console.log(fora)
+                        // se o objeto existe no array, incrementa um atributo
+                        fora.away.victory += 1;
+                      }else{
+                        // console.log('Adicionando ...')
+                        // console.log(partida.clube_visitante_id)
+                        // se o objeto não existe no array, adiciona-o
+                        clubes.push({club_id: partida.clube_visitante_id, home: {victory: 0, defeat: 0, draw: 0}, away: {victory: 1, defeat: 0, draw: 0}});
+                      }
 
-                }
+                    }
+                  }
+                );
               }
-            );
-          }
-        )
-        this.setState({clubes: clubes});
+            )
+            this.setState({clubes: clubes});
+            resolve(clubes);
+            reject(null);
+        }
+      );
+    }
+
+    // método para calcular o rendimento de cada time como mandante e como visitante
+    clubsPointsHomeAway(){
+      var clubs = [];
+      this.accountTeamsStats().then(
+        (clubes) => {
+          clubes.forEach(
+            (clube) => {
+              console.log(clube)
+              clubs.push(
+                {
+                  club_id: clube.club_id,
+                  home: {
+                    matches: (clube.home.victory + clube.home.defeat + clube.home.draw), 
+                    points: (3*clube.home.victory + clube.home.draw), 
+                    throughput: ((3*clube.home.victory + clube.home.draw)/(3*(clube.home.victory + clube.home.defeat + clube.home.draw)))
+                  },
+                  away: {
+                    matches: (clube.away.victory + clube.away.defeat + clube.away.draw), 
+                    points: (3*clube.away.victory + clube.away.draw), 
+                    throughput: ((3*clube.away.victory + clube.away.draw)/(3*(clube.away.victory + clube.away.defeat + clube.away.draw)))
+                  }
+                }
+              );
+            }
+          );
+        }
+      );
+      // console.log(clubs);
+      return clubs;
+    }
+    // avalia quais os melhores clubes para se apostar
+    recommendClubByPosition(){
+        var choice = [];
+        var clubes_rend = this.clubsPointsHomeAway();
+        this.getPartidas(this.state.rodada_atual).then((res) => {
+          console.log(res.data.partidas)
+          res.data.partidas.forEach(
+            (partida) => {
+              var mandan = clubes_rend.find(
+                (clube) => {
+                  return clube.club_id === partida.clube_casa_id
+                }
+              );
+
+              var visit = clubes_rend.find(
+                (clube) => {
+                  return clube.club_id === partida.clube_visitante_id
+                }
+              );
+
+              if(mandan.home.throughput >= visit.away.throughput){
+                choice.push(mandan.club_id);
+              }else{
+                choice.push(visit.club_id);
+              }
+
+            }
+          );
+        });
+
+        console.log(choice);
+        return choice;
     }
 
 
@@ -208,7 +277,9 @@ class ClubsPerformance extends Component {
                   actAsExpander={true}
               />
               <CardActions>
-                  <RaisedButton label='Partidas' primary={true} onClick={this.handleClick = this.accountTeamsStats.bind(this)}/>
+                  <RaisedButton label='Stats' primary={true} onClick={this.handleClick = this.accountTeamsStats.bind(this)}/>
+                  <RaisedButton label='Rendimento' primary={true} onClick={this.handleClick = this.clubsPointsHomeAway.bind(this)}/>
+                  <RaisedButton label='Partidas' primary={true} onClick={this.handleClick = this.recommendClubByPosition.bind(this)}/>
               </CardActions>
           </Card>
       </div>
