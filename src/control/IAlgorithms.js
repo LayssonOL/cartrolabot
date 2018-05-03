@@ -73,7 +73,9 @@ class IAlgorithms extends Component{
         //lista tuplas de jogadores com o [id, variacao]
         var peers = jogadores.map(
             (jog) => {
-                return [jog.atleta_id, jog.variacao_num]
+                if(jog){
+                    return [jog.atleta_id, jog.variacao_num]
+                }
             }
         );
 
@@ -101,10 +103,11 @@ class IAlgorithms extends Component{
 
     // calcula a média dos scouts do jogador
     weightedAverageScouts(player){
+        // console.log(player.scout);
         var valores = 0;
         var pesos = 0;
         //verifica se o objeto scout do objeto jogador não é um objeto vazio
-        if(Object.keys(player.scout).length !== 0){
+        if(player.scout){
             //varre o objeto scout procurando seus scouts acumulando os pesos e os valores
             //para fazer uma media ponderada
             Object.keys(player.scout).map(
@@ -136,7 +139,7 @@ class IAlgorithms extends Component{
         var valores = 0;
         var pesos = 0;
         //verifica se o objeto scout do objeto jogador não é um objeto vazio
-        if(Object.keys(player.scout).length !== 0){
+        if(player.scout){
             //varre o objeto scout procurando seus scouts acumulando os pesos e os valores
             //para fazer uma media ponderada
             Object.keys(player.scout).map(
@@ -165,7 +168,7 @@ class IAlgorithms extends Component{
         var valores = 0;
         var pesos = 0;
         //verifica se o objeto scout do objeto jogador não é um objeto vazio
-        if(Object.keys(player.scout).length !== 0){
+        if(player.scout){
             //varre o objeto scout procurando seus scouts acumulando os pesos e os valores
             //para fazer uma media ponderada
             Object.keys(player.scout).map(

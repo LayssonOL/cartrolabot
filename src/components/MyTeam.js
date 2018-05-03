@@ -15,7 +15,7 @@ class MyTeam extends Component {
         status: [],
         esquemas: [],
         team: {},
-        new_team:  { esquema_id: 3, atletas: [], capitao_id: 0},
+        new_team:  { esquema: 3, atletas: [], capitao: 0},
         jogadores: [],
         token: sessionStorage.getItem('token')
     };
@@ -130,6 +130,7 @@ class MyTeam extends Component {
     }
 
     scaleTeam(){
+        var atletas = [];
         var custo = this.state.team.patrimonio;
         console.log(this.state.team.patrimonio)
         var count = 0;
@@ -157,7 +158,7 @@ class MyTeam extends Component {
                             console.log('Preco: ' + jogad.preco_num)
                             console.log('Custo: ' + custo)
                             custo -= jogad.preco_num;
-                            this.state.new_team.atletas.push(jogad);
+                            atletas.push(jogad.atleta_id);
                         }
                         count--;
                     }
@@ -176,7 +177,7 @@ class MyTeam extends Component {
                             console.log('Preco: ' + jogad.preco_num)
                             console.log('Custo: ' + custo)
                             custo -= jogad.preco_num;
-                            this.state.new_team.atletas.push(jogad);
+                            atletas.push(jogad.atleta_id);
                         }
                         count--;
                     }
@@ -196,7 +197,7 @@ class MyTeam extends Component {
                             console.log('Preco: ' + jogad.preco_num)
                             console.log('Custo: ' + custo)
                             custo -= jogad.preco_num;
-                            this.state.new_team.atletas.push(jogad);
+                            atletas.push(jogad.atleta_id);
                         }
                         count--;
                     }
@@ -216,7 +217,7 @@ class MyTeam extends Component {
                             console.log('Preco: ' + jogad.preco_num)
                             console.log('Custo: ' + custo)
                             custo -= jogad.preco_num;
-                            this.state.new_team.atletas.push(jogad);
+                            atletas.push(jogad.atleta_id);
                         }
                         count--;
                     }
@@ -235,7 +236,7 @@ class MyTeam extends Component {
                             console.log('Preco: ' + jogad.preco_num)
                             console.log('Custo: ' + custo)
                             custo -= jogad.preco_num;
-                            this.state.new_team.atletas.push(jogad);
+                            atletas.push(jogad.atleta_id);
                         }
                         count--;
                     }
@@ -254,15 +255,16 @@ class MyTeam extends Component {
                             console.log('Preco: ' + jogad.preco_num)
                             console.log('Custo: ' + custo)
                             custo -= jogad.preco_num;
-                            this.state.new_team.atletas.push(jogad);
+                            atletas.push(jogad.atleta_id);
                         }
                         count--;
                     }
                 }
             }
         )
-        this.state.new_team.capitao_id = this.state.new_team.atletas[0].atleta_id;
-        console.log(this.state.new_team);
+        this.state.new_team.atletas = atletas;
+        this.state.new_team.capitao = atletas[0];
+        console.log(require('util').inspect(this.state.new_team));
     }
 
   saveTeam(){
@@ -312,6 +314,7 @@ class MyTeam extends Component {
                 <h3>Escalação</h3>
                 <List>
                     { this.state.team.atletas.map((athlt) => {
+                        // console.log(athlt);
                     return( 
                         <ListItem key={athlt.atleta_id}>
                             <Jogador 
@@ -320,6 +323,9 @@ class MyTeam extends Component {
                                 clube={this.getPlayerClub(athlt.clube_id)}
                                 pos={this.getPlayerPos(athlt.posicao_id)}
                                 status={this.getPlayerStat(athlt.status_id)}
+                                media={athlt.media_num}
+                                variacao={athlt.variacao_num}
+                                scout_mean={this.state.ia.weightedAverageScouts(athlt)}
                                 /> 
                         </ListItem>
                         )})}
