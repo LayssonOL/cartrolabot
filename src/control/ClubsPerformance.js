@@ -50,7 +50,7 @@ class ClubsPerformance extends Component {
 
     componentWillMount(){
       // this.getClubs();
-      // this.getRodadaAtual();
+      // this.getHistPartidas();
     }
 
     // componentDidMount(){
@@ -63,10 +63,10 @@ class ClubsPerformance extends Component {
       (resolve, reject) => {
         axios.get("https://api.cartolafc.globo.com/mercado/status").then( res => {
           var rodada = res.data.rodada_atual;
-          this.setState({
-            // recebe a info de em que rodada se encontra
-            rodada_atual: res.data.rodada_atual
-          });
+          // this.setState({
+          //   // recebe a info de em que rodada se encontra
+          //   rodada_atual: res.data.rodada_atual
+          // });
           resolve(rodada)
           reject(null)
         })
@@ -79,20 +79,18 @@ class ClubsPerformance extends Component {
     );
   }
 
-  getHistPartidas(){
+  getHistPartidas(rodada_atual){
     return new Promise(
       (resolve, reject) => {
-        var hist_part = [];  
-        this.getRodadaAtual().then(
-          (rodada_atual) => {
-            console.log('RODADA_ATUAL')
-            console.log(rodada_atual)
+        // this.getRodadaAtual().then(
+          // (rodada_atual) => {
+            var hist_part = [];  
             // chama getPartidas para cada rodada passada, excetuando a atual pois a mesma ainda não aconteceu
             for (let i = (rodada_atual-1); i >= 1; i--) {
               // verifica se a última rodada já foi adicionada na lista de rodadas
               var ult_rod = hist_part.find(
                 (obj) => {
-                  return obj.rodada === rodada_atual 
+                  return obj.rodada === rodada_atual
                 }
               );
               
@@ -105,32 +103,36 @@ class ClubsPerformance extends Component {
             this.setState({hist_partidas: hist_part});
             resolve(hist_part);
             reject(null);
-          }
-        );
+          // }
+        // );
       }
     );
   }
 
   // método para contabilizar vitórias, derrotas e empates como mandante e como visitante para cada clube
-    accountTeamsStats(){
+    accountTeamsStats(hist_partidas){
       return new Promise(
         (resolve, reject) => {
           var casa;
           var fora;
+          var hist_part = {hist: hist_partidas}
           var clubes = [];
-          // {club_id: 0, home: {victory: 0, defeat: 0, draw: 0, points: 0}, away: {victory: 0, defeat: 0, draw: 0, points: 0}}
-          this.getHistPartidas().then(
-            (hist_partidas) => {
-                console.log('HIST_PARTIDAS')
-                console.log(hist_partidas)
-                hist_partidas.forEach(
+          // console.log('ENTROU accountTeamStats')
+          // console.log(hist_partidas)
+          // this.getHistPartidas().then(
+            // this.state.hist_partidas.forEach( => {
+                // console.log('HIST_PARTIDAS')
+                // console.log(hist_partidas)
+                
+                hist_part.hist.forEach(
                   (rodada) => {
                     console.log('RODADA')
                     console.log(rodada)
+                    if(rodada.partidas)
                     rodada.partidas.forEach(
                       (partida) => {
-                        console.log('PARTIDA')
-                        console.log(partida)
+                        // console.log('PARTIDA')
+                        // console.log(partida)
                         // se houver objeto com o mesmo id, recupera-o
                         casa = clubes.find((club) => {return club.club_id === partida.clube_casa_id});
                         // console.log('CASA')
@@ -222,30 +224,28 @@ class ClubsPerformance extends Component {
                       }
                     );
                   }
-                )
-                console.log('SALTOU')
-                console.log('CLUBES')
-                console.log(clubes)
+                );
                 this.setState({clubes: clubes});
                 resolve(clubes);
                 reject(null);
-              }
-            );
+              // }
+            // );
         }
       );
     }
 
     // método para calcular o rendimento de cada time como mandante e como visitante
-    clubsPointsHomeAway(){
+    clubsPointsHomeAway(clubes){
       var clubs = [];
-      this.accountTeamsStats().then(
-        (clubes) => {
+      // this.accountTeamsStats().then(
+        // console.log(clubes)
+        // clubes => {
           // console.log('CLUBES')
           // console.log(clubes)
           clubes.forEach(
             (clube) => {
-              console.log('CLUBE')
-              console.log(clube)
+              // console.log('CLUBE')
+              // console.log(clube)
               clubs.push(
                 {
                   club_id: clube.club_id,
@@ -263,45 +263,69 @@ class ClubsPerformance extends Component {
               );
             }
           );
-        }
-      );
+        // }
+      // );
       // console.log(clubs);
       return clubs;
     }
+
     // avalia quais os melhores clubes para se apostar
     recommendClubByPosition(){
         var choice = [];
-        var clubes_rend = this.clubsPointsHomeAway();
-        // this.getRodadaAtual().then(
-        // (rodada_atual) => {
-        //   this.getPartidas(rodada_atual).then((res) => {
-        //     // console.log(res.data.partidas)
-        //     res.data.partidas.forEach(
-        //       (partida) => {
-        //         var mandan = clubes_rend.find(
-        //           (clube) => {
-        //             return clube.club_id === partida.clube_casa_id
-        //           }
-        //         );
+      var clubes_rend = this.getRodadaAtual().then(
+        rodada_atual => {
+          console.log('Rodada Atual')
+          console.log(rodada_atual)
+          return this.getHistPartidas(rodada_atual).then(
+            (hist_partidas) => {
+              console.log('Historico de Partidas')
+              console.log(hist_partidas)
+              
+              return this.accountTeamsStats(hist_partidas).then(
+                (clubes) => {
+                  console.log('Clubes')
+                  console.log(clubes)
+                  return this.clubsPointsHomeAway(clubes)
+                }
+              )
+            }
+          )
+        }
+      );
+        console.log(clubes_rend)
+        this.getRodadaAtual().then(
+        (rodada_atual) => {
+          this.getPartidas(rodada_atual).then((res) => {
+            console.log(res.data.partidas)
+            res.data.partidas.forEach(
+              (partida) => {
+                var mandan = clubes_rend.find(
+                  (clube) => {
+                    return clube.club_id === partida.clube_casa_id
+                  }
+                );
 
-        //         var visit = clubes_rend.find(
-        //           (clube) => {
-        //             return clube.club_id === partida.clube_visitante_id
-        //           }
-        //         );
+                var visit = clubes_rend.find(
+                  (clube) => {
+                    return clube.club_id === partida.clube_visitante_id
+                  }
+                );
+                console.log('MANDANTE')
+                console.log(mandan)
+                console.log('VISITANTE')
+                console.log(visit)
+                if(mandan.home.throughput >= visit.away.throughput){
+                  choice.push(mandan.club_id);
+                }else{
+                  choice.push(visit.club_id);
+                }
 
-        //         if(mandan.home.throughput >= visit.away.throughput){
-        //           choice.push(mandan.club_id);
-        //         }else{
-        //           choice.push(visit.club_id);
-        //         }
+              }
+            );
+          });
+        });
 
-        //       }
-        //     );
-        //   });
-        // });
-
-        console.log(choice);
+        
         return choice;
     }
 
