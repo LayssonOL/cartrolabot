@@ -132,7 +132,7 @@ class MyTeam extends Component {
         this.getPlayers();
     }
 
-    chooseGoalKeepers(esquema, patrimonio, atletas, best_clubs_to_beg) {
+    chooseGoalKeepers(esquema, patrimonio, atletas) {
         var count = 0;
         var jogad = null;
         
@@ -146,7 +146,7 @@ class MyTeam extends Component {
             console.log(count)
             jogad = goleiros.pop()
             console.log(jogad)
-            if (jogad.preco_num <= patrimonio && best_clubs_to_beg.includes(jogad.clube_id)) {
+            if (jogad.preco_num <= patrimonio ) { //&& best_clubs_to_beg.includes(jogad.clube_id)
                 console.log('Preco: ' + jogad.preco_num)
                 console.log('Patrimonio: ' + patrimonio)
                 patrimonio -= jogad.preco_num;
@@ -156,7 +156,7 @@ class MyTeam extends Component {
         }
     }
 
-    chooseCenterDefenders(esquema, patrimonio, atletas, best_clubs_to_beg) {
+    chooseCenterDefenders(esquema, patrimonio, atletas) {
         var count = 0;
         var jogad = null;
         console.log('Escolhendo Zagueiros')
@@ -179,7 +179,7 @@ class MyTeam extends Component {
         }
     }
 
-    chooseSideDefenders(esquema, patrimonio, atletas, best_clubs_to_beg) {
+    chooseSideDefenders(esquema, patrimonio, atletas) {
         var count = 0;
         var jogad = null;
         console.log('Escolhendo Laterais')
@@ -202,7 +202,7 @@ class MyTeam extends Component {
         }
     }
 
-    chooseMidfielders(esquema, patrimonio, atletas, best_clubs_to_beg) {
+    chooseMidfielders(esquema, patrimonio, atletas) {
         var count = 0;
         var jogad = null;
         console.log('Escolhendo Meio-Campistas')
@@ -225,7 +225,7 @@ class MyTeam extends Component {
         }
     }
 
-    chooseAttackers(esquema, patrimonio, atletas, best_clubs_to_beg) {
+    chooseAttackers(esquema, patrimonio, atletas) {
         var count = 0;
         var jogad = null;
         console.log('Escolhendo Atacantes')
@@ -248,7 +248,7 @@ class MyTeam extends Component {
         }
     }
 
-    chooseManager(esquema, patrimonio, atletas, best_clubs_to_beg) {
+    chooseManager(esquema, patrimonio, atletas) {
         var count = 0;
         var jogad = null;
         
@@ -272,6 +272,7 @@ class MyTeam extends Component {
     }
 
     scaleTeam(){
+        console.log('Inicio Escala Time')
         var best_clubs_to_beg = this.state.clubes_throughput.recommendClubByPosition();
         console.log('Best Begs')
         console.log(best_clubs_to_beg)
@@ -284,12 +285,12 @@ class MyTeam extends Component {
         var patrimonio = this.state.team.patrimonio;
         console.log(this.state.team.patrimonio)
 
-        this.chooseAttackers(esquema, patrimonio, atletas, best_clubs_to_beg);
-        this.chooseGoalKeepers(esquema, patrimonio, atletas, best_clubs_to_beg);
-        this.chooseMidfielders(esquema, patrimonio, atletas, best_clubs_to_beg);
-        this.chooseCenterDefenders(esquema, patrimonio, atletas, best_clubs_to_beg);
-        this.chooseSideDefenders(esquema, patrimonio, atletas, best_clubs_to_beg);
-        this.chooseManager(esquema, patrimonio, atletas, best_clubs_to_beg);
+        this.chooseAttackers(esquema, patrimonio, atletas);
+        this.chooseGoalKeepers(esquema, patrimonio, atletas);
+        this.chooseMidfielders(esquema, patrimonio, atletas);
+        this.chooseCenterDefenders(esquema, patrimonio, atletas);
+        this.chooseSideDefenders(esquema, patrimonio, atletas);
+        this.chooseManager(esquema, patrimonio, atletas);
 
         this.state.new_team.atletas = atletas;
         this.state.new_team.capitao = atletas[0];
@@ -377,7 +378,7 @@ class MyTeam extends Component {
                 </Card>
             </div>
         )
-      }
+    }
   }
 }
 export default MyTeam;

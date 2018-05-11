@@ -29,8 +29,12 @@ class ClubsPerformance extends Component {
   getPartidas(rodada){
     return new Promise(
       (resolve, reject) => {
-        resolve(axios.get("https://api.cartolafc.globo.com/partidas/"+rodada).then());
-        reject(axios.get("https://api.cartolafc.globo.com/partidas/"+rodada).catch());
+        axios.get("https://api.cartolafc.globo.com/partidas/"+rodada).then(
+          (res) => {
+            resolve(res.data.partidas)
+          }
+        );
+        // reject(axios.get("https://api.cartolafc.globo.com/partidas/"+rodada).catch());
       }
     );
     // axios
@@ -50,15 +54,14 @@ class ClubsPerformance extends Component {
 
     componentWillMount(){
       // this.getClubs();
-      // this.getHistPartidas();
+      this.getHistPartidas();
     }
 
-    // componentDidMount(){
-    //   this.getHistPartidas();
-    // }
 
     // método para capturar a rodada atual
   getRodadaAtual(){
+    
+    console.log('Get Rodada Atual')
     return new Promise(
       (resolve, reject) => {
         axios.get("https://api.cartolafc.globo.com/mercado/status").then( res => {
@@ -68,7 +71,6 @@ class ClubsPerformance extends Component {
           //   rodada_atual: res.data.rodada_atual
           // });
           resolve(rodada)
-          reject(null)
         })
         .catch(err => {
           if (err) {
@@ -82,8 +84,11 @@ class ClubsPerformance extends Component {
   getHistPartidas(rodada_atual){
     return new Promise(
       (resolve, reject) => {
-        // this.getRodadaAtual().then(
-          // (rodada_atual) => {
+        console.log('Get Hist Partidas')
+        this.getRodadaAtual().then(
+          (rodada_atual) => {
+          // () => {
+            var clubes = [];
             var hist_part = [];  
             // chama getPartidas para cada rodada passada, excetuando a atual pois a mesma ainda não aconteceu
             for (let i = (rodada_atual-1); i >= 1; i--) {
@@ -95,28 +100,26 @@ class ClubsPerformance extends Component {
               );
               
               if(!ult_rod){
-                this.getPartidas(i).then((res) => {
-                  hist_part.push({rodada: i, partidas: res.data.partidas})
+                this.getPartidas(i).then((partidas) => {
+                  clubes = this.accountTeamsStats(partidas, clubes)
                 });
               }
             }
-            this.setState({hist_partidas: hist_part});
-            resolve(hist_part);
-            reject(null);
-          // }
-        // );
+            // this.setState({hist_partidas: hist_part});
+            resolve(choice);
+            // reject(null);
+          }
+        );
       }
     );
   }
 
   // método para contabilizar vitórias, derrotas e empates como mandante e como visitante para cada clube
-    accountTeamsStats(hist_partidas){
-      return new Promise(
-        (resolve, reject) => {
+    accountTeamsStats(partidas, clubes){
+      // return new Promise(
+        // (resolve, reject) => {
           var casa;
           var fora;
-          var hist_part = {hist: hist_partidas}
-          var clubes = [];
           // console.log('ENTROU accountTeamStats')
           // console.log(hist_partidas)
           // this.getHistPartidas().then(
@@ -124,12 +127,12 @@ class ClubsPerformance extends Component {
                 // console.log('HIST_PARTIDAS')
                 // console.log(hist_partidas)
                 
-                hist_part.hist.forEach(
-                  (rodada) => {
-                    console.log('RODADA')
-                    console.log(rodada)
-                    if(rodada.partidas)
-                    rodada.partidas.forEach(
+                // hist_partidas.map(
+                //   (rodada) => {
+                //     console.log('RODADA')
+                //     console.log(rodada)
+                    if(partidas)
+                    partidas.forEach(
                       (partida) => {
                         // console.log('PARTIDA')
                         // console.log(partida)
@@ -223,15 +226,16 @@ class ClubsPerformance extends Component {
                         }
                       }
                     );
-                  }
-                );
-                this.setState({clubes: clubes});
-                resolve(clubes);
-                reject(null);
+                  // }
+                // );
+                // this.setState({clubes: clubes});
+                // resolve(clubes);
+                return clubes;
+                // reject(null);
               // }
             // );
-        }
-      );
+        // }
+      // );
     }
 
     // método para calcular o rendimento de cada time como mandante e como visitante
@@ -240,12 +244,12 @@ class ClubsPerformance extends Component {
       // this.accountTeamsStats().then(
         // console.log(clubes)
         // clubes => {
-          // console.log('CLUBES')
-          // console.log(clubes)
+          console.log('CLUBES')
+          console.log(clubes)
           clubes.forEach(
             (clube) => {
-              // console.log('CLUBE')
-              // console.log(clube)
+              console.log('CLUBE')
+              console.log(clube)
               clubs.push(
                 {
                   club_id: clube.club_id,
@@ -270,64 +274,58 @@ class ClubsPerformance extends Component {
     }
 
     // avalia quais os melhores clubes para se apostar
-    recommendClubByPosition(){
-        var choice = [];
-      var clubes_rend = this.getRodadaAtual().then(
-        rodada_atual => {
-          console.log('Rodada Atual')
-          console.log(rodada_atual)
-          return this.getHistPartidas(rodada_atual).then(
-            (hist_partidas) => {
-              console.log('Historico de Partidas')
-              console.log(hist_partidas)
-              
-              return this.accountTeamsStats(hist_partidas).then(
-                (clubes) => {
-                  console.log('Clubes')
-                  console.log(clubes)
-                  return this.clubsPointsHomeAway(clubes)
-                }
-              )
-            }
-          )
-        }
-      );
+  recommendClubByPosition() {
+    var choice = [];
+    // var clubes_rend = 0;
+    console.log('Entrou recomendClubByPosition')
+    this.getHistPartidas().then(
+      (clubes_rend) => {
+        console.log('Clubes Rend')
         console.log(clubes_rend)
+        // clubes_rend = this.clubsPointsHomeAway(clubes)
+        // console.log('CLUBS_REND')
+        // console.log(clubes_rend)
         this.getRodadaAtual().then(
-        (rodada_atual) => {
-          this.getPartidas(rodada_atual).then((res) => {
-            console.log(res.data.partidas)
-            res.data.partidas.forEach(
-              (partida) => {
-                var mandan = clubes_rend.find(
-                  (clube) => {
-                    return clube.club_id === partida.clube_casa_id
-                  }
-                );
+          (rodada_atual) => {
+            this.getPartidas(rodada_atual).then((partidas) => {
+              // console.log(res.data.partidas)
+              partidas.forEach(
+                (partida) => {
+                  var mandan = clubes_rend.find(
+                    (clube) => {
+                      return clube.club_id === partida.clube_casa_id
+                    }
+                  );
 
-                var visit = clubes_rend.find(
-                  (clube) => {
-                    return clube.club_id === partida.clube_visitante_id
+                  var visit = clubes_rend.find(
+                    (clube) => {
+                      return clube.club_id === partida.clube_visitante_id
+                    }
+                  );
+                  console.log('MANDANTE')
+                  console.log(mandan)
+                  console.log('VISITANTE')
+                  console.log(visit)
+                  if (mandan.home.throughput >= visit.away.throughput) {
+                    choice.push(mandan.club_id);
+                  } else {
+                    choice.push(visit.club_id);
                   }
-                );
-                console.log('MANDANTE')
-                console.log(mandan)
-                console.log('VISITANTE')
-                console.log(visit)
-                if(mandan.home.throughput >= visit.away.throughput){
-                  choice.push(mandan.club_id);
-                }else{
-                  choice.push(visit.club_id);
+
                 }
-
-              }
-            );
+              );
+            });
           });
-        });
+      }
+    )
 
-        
-        return choice;
-    }
+
+
+
+
+
+    return choice;
+  }
 
 
   render() {
