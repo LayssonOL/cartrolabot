@@ -318,7 +318,7 @@ class ClubsPerformance extends Component {
   }
 
   orderingByPosition(choice){
-
+    
   }
 
 
