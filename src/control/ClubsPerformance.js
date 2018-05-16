@@ -268,8 +268,8 @@ class ClubsPerformance extends Component {
           (clubes) => {
           this.clubsPointsHomeAway(clubes).then(
             (clubes_rend) => {
-              // console.log('Clubes Rend')
-              // console.log(clubes_rend)
+              console.log('Clubes Rend')
+              console.log(clubes_rend)
               this.getRodadaAtual().then(
                 (rodada_atual) => {
                   this.getPartidas(rodada_atual).then((rodada) => {
@@ -294,11 +294,11 @@ class ClubsPerformance extends Component {
                         // console.log(visit)
                         // console.log(visit.away.throughput)
                         if (mandan.home.throughput >= visit.away.throughput) {
-                          choice.push(mandan.club_id);
+                          choice.push({club_id: mandan.club_id, score: (mandan.home.throughput-visit.away.throughput)});
                           // console.log('ESCOLHIDO');
                           // console.log(mandan.club_id);
                         } else {
-                          choice.push(visit.club_id);
+                          choice.push({club_id: visit.club_id, score: (visit.away.throughput-mandan.home.throughput)});
                           // console.log('ESCOLHIDO');
                           // console.log(visit.club_id);
                         }
@@ -318,7 +318,7 @@ class ClubsPerformance extends Component {
   }
 
   orderingByPosition(choice){
-    
+
   }
 
 
