@@ -283,18 +283,18 @@ class MyTeam extends Component {
             }
         )
         var patrimonio = this.state.team.patrimonio;
-        // console.log(this.state.team.patrimonio)
+        console.log(this.state.team.patrimonio)
 
-        // this.chooseAttackers(esquema, patrimonio, atletas, best_clubs_to_beg);
-        // this.chooseGoalKeepers(esquema, patrimonio, atletas, best_clubs_to_beg);
-        // this.chooseMidfielders(esquema, patrimonio, atletas, best_clubs_to_beg);
-        // this.chooseCenterDefenders(esquema, patrimonio, atletas, best_clubs_to_beg);
-        // this.chooseSideDefenders(esquema, patrimonio, atletas, best_clubs_to_beg);
-        // this.chooseManager(esquema, patrimonio, atletas, best_clubs_to_beg);
+        this.chooseAttackers(esquema, patrimonio, atletas, best_clubs_to_beg);
+        this.chooseGoalKeepers(esquema, patrimonio, atletas, best_clubs_to_beg);
+        this.chooseMidfielders(esquema, patrimonio, atletas, best_clubs_to_beg);
+        this.chooseCenterDefenders(esquema, patrimonio, atletas, best_clubs_to_beg);
+        this.chooseSideDefenders(esquema, patrimonio, atletas, best_clubs_to_beg);
+        this.chooseManager(esquema, patrimonio, atletas, best_clubs_to_beg);
 
         this.state.new_team.atletas = atletas;
         this.state.new_team.capitao = atletas[0];
-        // console.log(require('util').inspect(this.state.new_team));
+        console.log(require('util').inspect(this.state.new_team));
     }
 
     saveTeam() {
