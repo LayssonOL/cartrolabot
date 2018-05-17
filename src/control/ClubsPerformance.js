@@ -31,7 +31,7 @@ class ClubsPerformance extends Component {
       (resolve, reject) => {
         axios.get("https://api.cartolafc.globo.com/partidas/" + rodada).then(
           (res) => {
-            resolve({rodada: rodada, partidas: res.data.partidas})
+            resolve({ rodada: rodada, partidas: res.data.partidas })
           }
         ).catch(
           (err) => {
@@ -60,9 +60,9 @@ class ClubsPerformance extends Component {
           //   rodada_atual: res.data.rodada_atual
           // });
         }).catch(err => {
-            reject(err)
-          });
-        }
+          reject(err)
+        });
+      }
     );
   }
 
@@ -256,69 +256,108 @@ class ClubsPerformance extends Component {
 
   // avalia quais os melhores clubes para se apostar
   recommendClubByPosition() {
-    var choice = [];
     // var clubes_rend = 0;
     // console.log('Entrou recomendClubByPosition')
-    this.getHistPartidas().then(
-      (hist_partidas) => {
-        // console.log('Hist_Part')
-        // console.log(hist_partidas)
-        // console.log(require('util').inspect(hist_partidas))
-        this.accountTeamsStats(hist_partidas).then(
-          (clubes) => {
-          this.clubsPointsHomeAway(clubes).then(
-            (clubes_rend) => {
-              console.log('Clubes Rend')
-              console.log(clubes_rend)
-              this.getRodadaAtual().then(
-                (rodada_atual) => {
-                  this.getPartidas(rodada_atual).then((rodada) => {
-                    // console.log(res.data.partidas)
-                    rodada.partidas.forEach(
-                      (partida) => {
-                        var mandan = clubes_rend.find(
-                          (clube) => {
-                            return clube.club_id === partida.clube_casa_id
-                          }
-                        );
+    return new Promise(
+      (resolve, reject) => {
+        var choice = [];
+        this.getHistPartidas().then(
+          (hist_partidas) => {
+            // console.log('Hist_Part')
+            // console.log(hist_partidas)
+            // console.log(require('util').inspect(hist_partidas))
+            this.accountTeamsStats(hist_partidas).then(
+              (clubes) => {
+                this.clubsPointsHomeAway(clubes).then(
+                  (clubes_rend) => {
+                    // console.log('Clubes Rend')
+                    // console.log(clubes_rend)
+                    this.getRodadaAtual().then(
+                      (rodada_atual) => {
+                        this.getPartidas(rodada_atual).then((rodada) => {
+                          // console.log(res.data.partidas)
+                          rodada.partidas.forEach(
+                            (partida) => {
+                              var mandan = clubes_rend.find(
+                                (clube) => {
+                                  return clube.club_id === partida.clube_casa_id
+                                }
+                              );
 
-                        var visit = clubes_rend.find(
-                          (clube) => {
-                            return clube.club_id === partida.clube_visitante_id
-                          }
-                        );
-                        // console.log('MANDANTE')
-                        // console.log(mandan)
-                        // console.log(mandan.home.throughput)
-                        // console.log('VISITANTE')
-                        // console.log(visit)
-                        // console.log(visit.away.throughput)
-                        if (mandan.home.throughput >= visit.away.throughput) {
-                          choice.push({club_id: mandan.club_id, score: (mandan.home.throughput-visit.away.throughput)});
-                          // console.log('ESCOLHIDO');
-                          // console.log(mandan.club_id);
-                        } else {
-                          choice.push({club_id: visit.club_id, score: (visit.away.throughput-mandan.home.throughput)});
-                          // console.log('ESCOLHIDO');
-                          // console.log(visit.club_id);
-                        }
+                              var visit = clubes_rend.find(
+                                (clube) => {
+                                  return clube.club_id === partida.clube_visitante_id
+                                }
+                              );
+                              // console.log('MANDANTE')
+                              // console.log(mandan)
+                              // console.log(mandan.home.throughput)
+                              // console.log('VISITANTE')
+                              // console.log(visit)
+                              // console.log(visit.away.throughput)
+                              if (mandan.home.throughput >= visit.away.throughput) {
+                                choice.push({club_id: mandan.club_id, score: (mandan.home.throughput - visit.away.throughput) });
+                                // console.log('ESCOLHIDO');
+                                // console.log(mandan);
+                              } else {
+                                choice.push({ club_id: visit.club_id, score: (visit.away.throughput - mandan.home.throughput) });
+                                // console.log('ESCOLHIDO');
+                                // console.log(visit);
+                              }
 
-                      }
-                    );
-                  });
-                });
-            })
-        })
-      }
-    )
-    // console.log('CHOICE')
-    // console.log(choice)
+                            }
+                          );
+                          //sempre observar se o resolve é feito quando o objeto a ser retornado está atualizado (IMPORTANTE)
+                          resolve(choice)
+                        });
+                      });
+                  })
+              })
+          }
+        )
+        // console.log('CHOICE')
+        // console.log(choice)
 
-    return choice;
+        // resolve(choice);
+      })
   }
 
-  orderingByPosition(choice){
-
+  orderingChoiceByPosition() {
+    return this.recommendClubByPosition().then(
+      (choice) => {
+        // console.log('DENTRO')
+        // console.log(choice)
+        //lista tuplas de times com o [id, score]
+        var teams = choice.map(
+          (team) => {
+            return [team.club_id, team.score]
+          }
+        );
+        // console.log(teams)
+        //ordena do melhor score para o pior
+        teams.sort(
+          (first, second) => {
+            return second[1] - first[1];
+          }
+        );
+        
+        // console.log(teams)
+        //ordena o array de objetos de acordo com o array de tuplas
+        var choice_ordered = [];
+        teams.map(
+          (t) => {
+            choice.map(choi => {
+              if (choi.score === t[1] && !choice_ordered.includes(choi.club_id)) {
+                choice_ordered.push(choi.club_id)
+              }
+            });
+          }
+        );
+        // console.log(choice_ordered)
+        return choice_ordered
+      })
+      
+    // console.log(choice_ordered)
   }
 
 

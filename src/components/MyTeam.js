@@ -139,7 +139,7 @@ class MyTeam extends Component {
         console.log('Escolhendo Goleiro')
         var goleiros = this.state.ia.getBestDefenders(
             this.state.ia.getBestAppreciation(
-                this.state.ia.getBestMeanPlayersByPosition(this.state.jogadores, 1, 10)))
+                this.state.ia.getBestMeanPlayersByPosition(this.state.jogadores, 1, 10,best_clubs_to_beg)))
         count = esquema.posicoes['gol'];
         console.log('Quantos: ' + count)
         while (count > 0) {
@@ -162,7 +162,7 @@ class MyTeam extends Component {
         console.log('Escolhendo Zagueiros')
         var zagueiros = this.state.ia.getBestDefenders(
             this.state.ia.getBestAppreciation(
-                this.state.ia.getBestMeanPlayersByPosition(this.state.jogadores, 3, 10)))
+                this.state.ia.getBestMeanPlayersByPosition(this.state.jogadores, 3, 10,best_clubs_to_beg)))
         count = esquema.posicoes['zag'];
         console.log('Quantos: ' + count)
         while (count > 0) {
@@ -185,7 +185,7 @@ class MyTeam extends Component {
         console.log('Escolhendo Laterais')
         var laterais = this.state.ia.getBestDefenders(
             this.state.ia.getBestAppreciation(
-                this.state.ia.getBestMeanPlayersByPosition(this.state.jogadores, 2, 10)))
+                this.state.ia.getBestMeanPlayersByPosition(this.state.jogadores, 2, 10, best_clubs_to_beg)))
         count = esquema.posicoes['lat'];
         console.log('Quantos: ' + count)
         while (count > 0) {
@@ -208,7 +208,7 @@ class MyTeam extends Component {
         console.log('Escolhendo Meio-Campistas')
         var meias = this.state.ia.getBestAttackers(
             this.state.ia.getBestAppreciation(
-                this.state.ia.getBestMeanPlayersByPosition(this.state.jogadores, 4, 10)))
+                this.state.ia.getBestMeanPlayersByPosition(this.state.jogadores, 4, 10, best_clubs_to_beg)))
         count = esquema.posicoes['mei'];
         console.log('Quantos: ' + count)
         while (count > 0) {
@@ -231,7 +231,14 @@ class MyTeam extends Component {
         console.log('Escolhendo Atacantes')
         var atacantes = this.state.ia.getBestAttackers(
             this.state.ia.getBestAppreciation(
-                this.state.ia.getBestMeanPlayersByPosition(this.state.jogadores, 5, 10)))
+                this.state.ia.getBestMeanPlayersByPosition(this.state.jogadores, 5, 10,best_clubs_to_beg)))
+        console.log(atacantes)
+
+        var atacantes2 = this.state.ia.getBestAttackers(
+            // this.state.ia.getBestAppreciation(
+                this.state.ia.getBestMeanPlayersByPosition(this.state.jogadores, 5, 10,best_clubs_to_beg))
+        console.log(atacantes2)
+        
         count = esquema.posicoes['ata'];
         console.log('Quantos: ' + count)
         while (count > 0) {
@@ -254,7 +261,7 @@ class MyTeam extends Component {
 
         console.log('Escolhendo Tecnico')
         var tecnicos = this.state.ia.getBestAppreciation(
-            this.state.ia.getBestMeanPlayersByPosition(this.state.jogadores, 6, 10))
+            this.state.ia.getBestMeanPlayersByPosition(this.state.jogadores, 6, 10, best_clubs_to_beg))
         count = esquema.posicoes['tec'];
         console.log('Quantos: ' + count)
         while (count > 0) {
@@ -273,28 +280,34 @@ class MyTeam extends Component {
 
     scaleTeam() {
         console.log('Inicio Escala Time')
-        var best_clubs_to_beg = this.state.clubes_throughput.recommendClubByPosition();
-        console.log('Best Begs')
-        console.log(best_clubs_to_beg)
-        var atletas = [];
-        var esquema = this.state.esquemas.find(
-            (sch) => {
-                return (sch.esquema_id === 3)
+        this.state.clubes_throughput.orderingChoiceByPosition().then(
+            best_clubs_to_beg => {
+                console.log('Promessa Resolvida')
+                console.log(best_clubs_to_beg);
+                var atletas = [];
+                var esquema = this.state.esquemas.find(
+                    (sch) => {
+                        return (sch.esquema_id === 3)
+                    }
+                )
+                var patrimonio = this.state.team.patrimonio;
+                console.log(this.state.team.patrimonio)
+
+                this.chooseAttackers(esquema, patrimonio, atletas, best_clubs_to_beg);
+                // this.chooseGoalKeepers(esquema, patrimonio, atletas, best_clubs_to_beg);
+                // this.chooseMidfielders(esquema, patrimonio, atletas, best_clubs_to_beg);
+                // this.chooseCenterDefenders(esquema, patrimonio, atletas, best_clubs_to_beg);
+                // this.chooseSideDefenders(esquema, patrimonio, atletas, best_clubs_to_beg);
+                // this.chooseManager(esquema, patrimonio, atletas, best_clubs_to_beg);
+
+                this.state.new_team.atletas = atletas;
+                this.state.new_team.capitao = atletas[0];
+                // console.log(require('util').inspect(this.state.new_team));
             }
-        )
-        var patrimonio = this.state.team.patrimonio;
-        console.log(this.state.team.patrimonio)
-
-        this.chooseAttackers(esquema, patrimonio, atletas, best_clubs_to_beg);
-        this.chooseGoalKeepers(esquema, patrimonio, atletas, best_clubs_to_beg);
-        this.chooseMidfielders(esquema, patrimonio, atletas, best_clubs_to_beg);
-        this.chooseCenterDefenders(esquema, patrimonio, atletas, best_clubs_to_beg);
-        this.chooseSideDefenders(esquema, patrimonio, atletas, best_clubs_to_beg);
-        this.chooseManager(esquema, patrimonio, atletas, best_clubs_to_beg);
-
-        this.state.new_team.atletas = atletas;
-        this.state.new_team.capitao = atletas[0];
-        console.log(require('util').inspect(this.state.new_team));
+        );
+        // console.log('Best Begs')
+        // console.log(best_clubs_to_beg)
+        // console.log(this.state.clubes_throughput.orderingChoiceByPosition(best_clubs_to_beg))
     }
 
     saveTeam() {
