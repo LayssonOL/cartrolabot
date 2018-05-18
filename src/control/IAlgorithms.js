@@ -30,11 +30,21 @@ class IAlgorithms extends Component{
     }
 
     //pega os jogadores com as melhores medias por posicao
-    getBestMeanPlayersByPosition(jogadores, pos, qnt, clubs){
-        //ordenar os goleiros de maior média
+    getBestMeanPlayersByPosition(jogadores, pos, qnt, clubs, rodada_atual){
+        // calcula um limite minimo para a quantidade de partidas do jogador
+        var qnt_matches = (rodada_atual/2)
+        // console.log("RODADA")
+        // console.log(rodada_atual)
+        // console.log("QUANTIDADE DE PARTIDAS!")
+        // console.log(qnt_matches)
+        //ordenar os jogadores de maior média
         var plrs = jogadores.filter(
             (jog) => {
-                return (jog.posicao_id === pos && jog.status_id === 7 && clubs.includes(jog.clube_id))
+                return (jog.posicao_id === pos // captura jogadores pela position passada
+                        && jog.status_id === 7 // só jogadores prováveis
+                        && clubs.includes(jog.clube_id) // ,  e que pertencam a um dos clubes recomendados
+                        && jog.jogos_num > qnt_matches // jogadores que jogaram pelo menos metade do numero de rodadas
+                        && jog.media_num >= 2.5) // jogadores com media superior a 2,5
             }
         );
 
@@ -209,6 +219,9 @@ class IAlgorithms extends Component{
                 return first[1] - second[1];
             }
         );
+
+        console.log(peers)
+        console.log(jogadores)
         
         //ordena o array de objetos de acordo com o array de tuplas
         var plrs_ordered = [];
@@ -242,7 +255,6 @@ class IAlgorithms extends Component{
                 return first[1] - second[1];
             }
         );
-        
         //ordena o array de objetos de acordo com o array de tuplas
         var plrs_ordered = [];
         console.log(peers)
@@ -257,6 +269,111 @@ class IAlgorithms extends Component{
             }
         );
         console.log('MELHORES JOGADORES DE ATAQUE')
+        console.log(plrs_ordered)
+        return plrs_ordered;
+    }
+
+    calculatePlayerAllMetricsAttack(jogadores){
+        //lista tuplas de jogadores com o [id, scout_mean]
+        var peers = jogadores.map(
+            (jog) => {
+                return [jog.atleta_id, 
+                        (((this.weightedAverageAttackScouts(jog)*3) + (jog.media_num*2) - (jog.variacao_num))/6)
+                        ]
+            }
+        );
+
+        //ordena da pior variacao para a melhor
+        peers.sort(
+            (first, second) => {
+                return first[1] - second[1];
+            }
+        );
+
+        //ordena o array de objetos de acordo com o array de tuplas
+        var plrs_ordered = [];
+        console.log(peers)
+        console.log(jogadores)
+        peers.map(
+            (p) => {
+                jogadores.map(plr => {
+                    if(plr.atleta_id === p[0]){
+                        plrs_ordered.push(plr)
+                    }
+                });
+            }
+        );
+        console.log('MELHORES JOGADORES DE ATAQUE')
+        console.log(plrs_ordered)
+        return plrs_ordered;
+    }
+
+    calculatePlayerAllMetricsDefense(jogadores){
+        //lista tuplas de jogadores com o [id, scout_mean]
+        var peers = jogadores.map(
+            (jog) => {
+                return [jog.atleta_id, 
+                        (((this.weightedAverageDefenseScouts(jog)*3) + (jog.media_num*2) - (jog.variacao_num))/6)
+                        ]
+            }
+        );
+
+        //ordena da pior variacao para a melhor
+        peers.sort(
+            (first, second) => {
+                return first[1] - second[1];
+            }
+        );
+
+        //ordena o array de objetos de acordo com o array de tuplas
+        var plrs_ordered = [];
+        console.log(peers)
+        console.log(jogadores)
+        peers.map(
+            (p) => {
+                jogadores.map(plr => {
+                    if(plr.atleta_id === p[0]){
+                        plrs_ordered.push(plr)
+                    }
+                });
+            }
+        );
+        console.log('MELHORES JOGADORES DE DEFESA')
+        console.log(plrs_ordered)
+        return plrs_ordered;
+    }
+
+    calculatePlayerAllMetricsMidfielders(jogadores){
+        //lista tuplas de jogadores com o [id, scout_mean]
+        var peers = jogadores.map(
+            (jog) => {
+                return [jog.atleta_id, 
+                        (((this.weightedAverageScouts(jog)*3) + (jog.media_num*2) - (jog.variacao_num))/6)
+                        ]
+            }
+        );
+
+        //ordena da pior variacao para a melhor
+        peers.sort(
+            (first, second) => {
+                return first[1] - second[1];
+            }
+        );
+
+        //ordena o array de objetos de acordo com o array de tuplas
+        var plrs_ordered = [];
+        console.log(peers)
+        console.log(jogadores)
+        peers.map(
+            (p) => {
+                jogadores.map(plr => {
+                    if(plr.atleta_id === p[0]){
+                        plrs_ordered.push(plr)
+                    }
+                });
+            }
+        );
+        console.log('MELHORES JOGADORES DE MEIO')
         console.log(plrs_ordered)
         return plrs_ordered;
     }
