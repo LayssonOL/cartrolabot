@@ -30,7 +30,7 @@ class IAlgorithms extends Component{
     }
 
     //pega os jogadores com as melhores medias por posicao
-    getBestMeanPlayersByPosition(jogadores, pos, qnt, clubs, rodada_atual){
+    getBestMeanPlayersByPosition(jogadores, pos, qnt, clubs, rodada_atual, max_price){
         // calcula um limite minimo para a quantidade de partidas do jogador
         var qnt_matches = (rodada_atual/2)
         // console.log("RODADA")
@@ -42,6 +42,7 @@ class IAlgorithms extends Component{
             (jog) => {
                 return (jog.posicao_id === pos // captura jogadores pela position passada
                         && jog.status_id === 7 // só jogadores prováveis
+                        && jog.preco_num <= max_price
                         && clubs.includes(jog.clube_id) // ,  e que pertencam a um dos clubes recomendados
                         && jog.jogos_num > qnt_matches // jogadores que jogaram pelo menos metade do numero de rodadas
                         && jog.media_num >= 2.5) // jogadores com media superior a 2,5
