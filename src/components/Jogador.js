@@ -23,9 +23,9 @@ class Jogador extends Component{
                         avatar={<Avatar alt={this.props.apelido} src={foto}/>}
                         actAsExpander={true}>
                     </CardHeader>
-                    <CardActions>
-                        <Button variant='flat' label="Comprar" />
-                    </CardActions>
+                    {/* <CardActions>
+                        <Button variant='flat' color='secondary'>Comprar</Button>
+                    </CardActions> */}
                     <CardContent>
                         Media = {this.props.media}
                         <br/>

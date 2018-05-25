@@ -53,7 +53,7 @@ class BuscarJogMaisEscalados extends Component{
                     <CardHeader
                         title="Jogadores Mais Escalados"
                         subtitle="O jeito fácil de montar seu time!"
-                        actAsExpander={true}
+                        // actAsExpander={true}
                     />
                     <CardActions>
                         <Button variant='raised' color="primary" onClick={this.handleClick = this.getJogMaisEscalados.bind(this)}>
