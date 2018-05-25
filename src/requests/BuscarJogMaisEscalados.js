@@ -1,10 +1,15 @@
 import React, {Component} from 'react';
-import RaisedButton from 'material-ui/RaisedButton';
-import {List, ListItem} from 'material-ui/List';
-import Divider from 'material-ui/Divider';
-import {Card, CardActions, CardHeader, CardText} from 'material-ui/Card';
+import Button from '@material-ui/core/Button';
+import List from '@material-ui/core/List';
+import ListItem from '@material-ui/core/ListItem';
+import Divider from '@material-ui/core/Divider';
+import Card from '@material-ui/core/Card';
+import CardActions from '@material-ui/core/CardActions';
+import CardHeader from '@material-ui/core/CardHeader';
+import CardContent from '@material-ui/core/CardContent';
 import MostScaledPlayers from '.././components/MostScaledPlayers';
 import axios from 'axios'
+import { Collapse } from '@material-ui/core';
 
 class BuscarJogMaisEscalados extends Component{
     constructor(props){
@@ -44,33 +49,39 @@ class BuscarJogMaisEscalados extends Component{
     render(){
         return(
             <div>
-                <Card expanded={this.state.expanded}>
+                <Card>
                     <CardHeader
                         title="Jogadores Mais Escalados"
                         subtitle="O jeito fácil de montar seu time!"
                         actAsExpander={true}
                     />
                     <CardActions>
-                        <RaisedButton label='Destaques' primary={true} onClick={this.handleClick = this.getJogMaisEscalados.bind(this)}/>
+                        <Button variant='raised' color="primary" onClick={this.handleClick = this.getJogMaisEscalados.bind(this)}>
+                            Destaques
+                        </Button>
                     </CardActions>
-                    <CardText expandable={true}>
-                        <List>
-                            { this.state.jogs.map((player,index) => {
-                            return( 
-                                <ListItem key={player.Atleta.atleta_id}>
-                                    <MostScaledPlayers 
-                                        clube={player.clube}
-                                        esc_clube={player.escudo_clube} 
-                                        apelido={player.Atleta.apelido} 
-                                        foto={player.Atleta.foto}
-                                        pos={player.posicao}
-                                        rank={index+1}/>
-                                    <Divider />
-                                </ListItem>
-                                )})}
-                        </List>
-                        <RaisedButton label='Hide' primary={true} onClick={this.handleClick = this.hideDestaques.bind(this)}/>
-                    </CardText>
+                    <Collapse in={this.state.expanded} timeout="auto">
+                        <CardContent>
+                            <List>
+                                { this.state.jogs.map((player,index) => {
+                                return( 
+                                    <ListItem key={player.Atleta.atleta_id}>
+                                        <MostScaledPlayers 
+                                            clube={player.clube}
+                                            esc_clube={player.escudo_clube} 
+                                            apelido={player.Atleta.apelido} 
+                                            foto={player.Atleta.foto}
+                                            pos={player.posicao}
+                                            rank={index+1}/>
+                                        <Divider />
+                                    </ListItem>
+                                    )})}
+                            </List>
+                            <Button variant='raised' color="primary" onClick={this.handleClick = this.hideDestaques.bind(this)}>
+                                Esconder
+                            </Button>
+                        </CardContent>
+                    </Collapse>
                 </Card>
             </div>
         )

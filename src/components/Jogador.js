@@ -1,6 +1,10 @@
 import React, {Component} from 'react';
-import {Card, CardActions, CardText, CardHeader} from 'material-ui/Card';
-import FlatButton from 'material-ui/FlatButton'
+import Card from '@material-ui/core/Card';
+import CardActions from '@material-ui/core/CardActions';
+import CardHeader from '@material-ui/core/CardHeader';
+import CardContent from '@material-ui/core/CardContent';
+import Button from '@material-ui/core/Button'
+import Avatar from '@material-ui/core/Avatar';
 
 class Jogador extends Component{
     render(){
@@ -16,19 +20,19 @@ class Jogador extends Component{
                     <CardHeader
                         title={this.props.apelido}
                         subtitle={this.props.pos.nome}
-                        avatar={foto}
+                        avatar={<Avatar alt={this.props.apelido} src={foto}/>}
                         actAsExpander={true}>
                     </CardHeader>
                     <CardActions>
-                        <FlatButton label="Comprar" />
+                        <Button variant='flat' label="Comprar" />
                     </CardActions>
-                    <CardText>
+                    <CardContent>
                         Media = {this.props.media}
                         <br/>
                         Variacao = {this.props.variacao}
                         <br/>
                         Media Scout = {this.props.scout_mean}
-                    </CardText>
+                    </CardContent>
                 </Card>
             </div>
         )

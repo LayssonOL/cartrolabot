@@ -1,18 +1,36 @@
 import React, { Component } from 'react'
 import axios from 'axios'
-import { Card, CardHeader, CardActions, RaisedButton } from 'material-ui';
+import { Card, CardHeader, CardActions, Button, TextField, CardText, ActionLabel, CardMedia, CardContent } from '@material-ui/core';
 import BuscarJogador from '../requests/BuscarJogador';
 import BuscarJogMaisEscalados from '../requests/BuscarJogMaisEscalados';
 import MyTeam from '../components/MyTeam';
 import BuyPlayer from './BuyPlayer';
 import ClubsPerformance from '../control/ClubsPerformance';
+import { withStyles } from '@material-ui/core/styles';
 
-class Auth extends Component{
-    constructor(props){
+
+const styles = {
+    card: {
+        position: 'relative',
+        top: 250,
+        bottom: 500,
+        left: 300,
+        right: 300,
+        width: '50%',
+    },
+    media: {
+        height: 0,
+        paddingTop: '56.25%', // 16:9
+      },
+
+}
+
+class Auth extends Component {
+    constructor(props) {
         super(props);
         this.state = {
-            email: 'layssonol@hotmail.com',
-            password: 'n0th1ng1mp',
+            email: '',
+            password: '',
             serviceId: 438,
             headers: {
                 "Content-Type": "application/json; charset=UTF-8",
@@ -28,32 +46,32 @@ class Auth extends Component{
             connected: false
         }
     }
-    componentWillMount(){
+    componentWillMount() {
         const myToken = sessionStorage.getItem('token');
-        if(myToken){
-            this.setState({token: myToken, connected: true})
+        if (myToken) {
+            this.setState({ token: myToken, connected: true })
         }
     }
-    getAuthentication(){
+    getAuthentication() {
         axios.post(
             this.state.url,
             {
                 'payload':
-                {
-                    "email": this.state.email,
-                    "password": this.state.password,
-                    "serviceId": 438
-                }
+                    {
+                        "email": this.state.email,
+                        "password": this.state.password,
+                        "serviceId": 438
+                    }
             },
             this.state.headers,
-            
+
         ).then(
             (response) => {
                 console.log(response);
                 sessionStorage.setItem('token', response.data.glbId);
-                this.setState({token: response.data.glbId});
-                this.setState({statusText: response.statusText});
-                this.setState({connected: true});
+                this.setState({ token: response.data.glbId });
+                this.setState({ statusText: response.statusText });
+                this.setState({ connected: true });
             }
         ).catch(
             (err) => {
@@ -62,12 +80,19 @@ class Auth extends Component{
         )
     }
 
-    render(){
-        if(this.state.connected){
-            return(
-                <div className='container'>
+    handleChange = name => event => {
+        this.setState({
+            [name]: event.target.value,
+        });
+    };
+
+    render() {
+
+        if (this.state.connected) {
+            return (
+                <div >
                     <div className="row">
-                        <div className="col-sm">
+                        <div className="col-sm" >
                             <BuscarJogador />
                         </div>
                     </div>
@@ -78,28 +103,44 @@ class Auth extends Component{
                         <div className="col-sm">
                             <MyTeam />
                         </div>
-                        <div className="col-sm">
+                        {/* <div className="col-sm">
                             <ClubsPerformance />
-                        </div>
+                        </div> */}
                     </div>
                     <div className="row">
                         <div className="col-sm">
                             <BuyPlayer />
                         </div>
-                    </div>        
+                    </div>
                 </div>
             )
-        }else{
-            return(
-                <div className='container'>
-                    <Card >
-                        <CardHeader
-                            title="Conectar com o Cartola"
-                            subtitle=""
-                            actAsExpander={true}
+        } else {
+            const { classes } = this.props;
+            return (
+                <div >
+                    <Card className={classes.card}>
+                        <CardMedia
+                            className={classes.media}
+                            image="../../img/cartrolaBot.png"
+                            title="CartrolaBot"
                         />
+                        <CardContent>
+                            <TextField id="email"
+                                label="Email"
+                                value={this.state.email}
+                                onChange={this.handleChange('email')}
+                                margin="normal" />
+                            <TextField id="psswd"
+                                label="Password"
+                                value={this.state.password}
+                                type="password"
+                                onChange={this.handleChange('password')}
+                                margin="normal" />
+                        </CardContent>
                         <CardActions>
-                            <RaisedButton label='Conectar' primary={true} onClick={this.handleClick = this.getAuthentication.bind(this)}/>
+                            <Button variant="raised" color="primary" onClick={this.handleClick = this.getAuthentication.bind(this)}>
+                                Conectar
+                            </Button>
                         </CardActions>
                     </Card>
                 </div>
@@ -107,4 +148,4 @@ class Auth extends Component{
         }
     }
 }
-export default Auth;
+export default withStyles(styles)(Auth);

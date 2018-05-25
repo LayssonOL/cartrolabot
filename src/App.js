@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import AppBar from 'material-ui/AppBar';
+import AppBar from '@material-ui/core/AppBar';
 import './App.css';
 import Auth from './posts/Auth';
 
@@ -14,21 +14,42 @@ import Auth from './posts/Auth';
      }
      
     render() {
+      
       return (
         <div id='request-query-result'>
-        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossOrigin="anonymous"/>
+        {/* <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossOrigin="anonymous"/> */}
         {/* <nav className="navbar navbar-expand-lg navbar-light bg-primary">
           <a className="navbar-brand mb-0 h1 text-white" >CartolaFC AutoManager</a>
         </nav> */}
-        <AppBar 
+        {/* <AppBar 
           title='CartolaFC AutoManager'
-        />
+        /> */}
         <div className='container'>
           <div className="row">
             <div className="col ">
+            </div>
+            <div className="col ">
+            </div>
+            <div className="col ">
+            </div>
+          </div>
+          <div className="row">
+            <div className="col ">
+            </div>
+            <div className="col ">
               <Auth />
             </div>
-          </div>        
+            <div className="col ">
+            </div>
+          </div>
+          <div className="row">
+            <div className="col ">
+            </div>
+            <div className="col ">
+            </div>
+            <div className="col ">
+            </div>
+          </div>
         </div>
         <br/>
       </div>

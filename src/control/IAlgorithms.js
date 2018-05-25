@@ -74,8 +74,8 @@ class IAlgorithms extends Component{
                 });
             }
         );
-        console.log('JOGADORES DE MELHOR MEDIA')
-        console.log(plrs_ordered)
+        // console.log('JOGADORES DE MELHOR MEDIA')
+        // console.log(plrs_ordered)
         //retorna os qnt melhores goleiros
         return plrs_ordered;
     }
@@ -109,8 +109,8 @@ class IAlgorithms extends Component{
                 });
             }
         );
-        console.log('JOGADORES COM A PIOR VARIACAO')
-        console.log(plrs_ordered)
+        // console.log('JOGADORES COM A PIOR VARIACAO')
+        // console.log(plrs_ordered)
         return plrs_ordered;
     }
 
@@ -221,8 +221,8 @@ class IAlgorithms extends Component{
             }
         );
 
-        console.log(peers)
-        console.log(jogadores)
+        // console.log(peers)
+        // console.log(jogadores)
         
         //ordena o array de objetos de acordo com o array de tuplas
         var plrs_ordered = [];
@@ -236,8 +236,8 @@ class IAlgorithms extends Component{
             }
         );
         
-        console.log('MELHORES JOGADORES DE DEFESA')
-        console.log(plrs_ordered)
+        // console.log('MELHORES JOGADORES DE DEFESA')
+        // console.log(plrs_ordered)
         return plrs_ordered;
     }
     
@@ -258,8 +258,8 @@ class IAlgorithms extends Component{
         );
         //ordena o array de objetos de acordo com o array de tuplas
         var plrs_ordered = [];
-        console.log(peers)
-        console.log(jogadores)
+        // console.log(peers)
+        // console.log(jogadores)
         peers.map(
             (p) => {
                 jogadores.map(plr => {
@@ -269,8 +269,8 @@ class IAlgorithms extends Component{
                 });
             }
         );
-        console.log('MELHORES JOGADORES DE ATAQUE')
-        console.log(plrs_ordered)
+        // console.log('MELHORES JOGADORES DE ATAQUE')
+        // console.log(plrs_ordered)
         return plrs_ordered;
     }
 
@@ -293,8 +293,8 @@ class IAlgorithms extends Component{
 
         //ordena o array de objetos de acordo com o array de tuplas
         var plrs_ordered = [];
-        console.log(peers)
-        console.log(jogadores)
+        // console.log(peers)
+        // console.log(jogadores)
         peers.map(
             (p) => {
                 jogadores.map(plr => {
@@ -328,8 +328,8 @@ class IAlgorithms extends Component{
 
         //ordena o array de objetos de acordo com o array de tuplas
         var plrs_ordered = [];
-        console.log(peers)
-        console.log(jogadores)
+        // console.log(peers)
+        // console.log(jogadores)
         peers.map(
             (p) => {
                 jogadores.map(plr => {
@@ -363,8 +363,8 @@ class IAlgorithms extends Component{
 
         //ordena o array de objetos de acordo com o array de tuplas
         var plrs_ordered = [];
-        console.log(peers)
-        console.log(jogadores)
+        // console.log(peers)
+        // console.log(jogadores)
         peers.map(
             (p) => {
                 jogadores.map(plr => {

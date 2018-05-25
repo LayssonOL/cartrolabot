@@ -1,9 +1,7 @@
 import React, { Component } from 'react';
 import axios from 'axios';
-import Dialog from 'material-ui/Dialog';
-import FlatButton from 'material-ui/FlatButton';
-import RaisedButton from 'material-ui/RaisedButton';
-import {RadioButton} from 'material-ui/RadioButton';
+import Dialog from '@material-ui/core/Dialog';
+import Button from '@material-ui/core/Button';
 // import Club from '../components/Club';
 
 class Filters extends Component {
@@ -103,8 +101,9 @@ class Filters extends Component {
       maxWidth: 'none',
     };
     const actions = [
-      <FlatButton label="Cancelar" primary={true} onClick={this.handleClose} />,
-      <FlatButton
+      <Button variant='flat' label="Cancelar" primary={true} onClick={this.handleClose} />,
+      <Button
+        variant='flat'
         label="Filtrar"
         primary={true}
         keyboardFocused={true}
@@ -116,7 +115,7 @@ class Filters extends Component {
     Object.values(this.state.posicoes).map(
         (pos) => {
             poss.push(
-                <RadioButton className='border-bottom'
+                <Button variant='radio' className='border-bottom'
                     key={pos.id}
                     value={pos.nome}
                     label={pos.nome}
@@ -129,7 +128,7 @@ class Filters extends Component {
     Object.values(this.state.status).map(
         (stat) => {
             stats.push(
-                <RadioButton className='border-bottom'
+                <Button variant='radio' className='border-bottom'
                     key={stat.id}
                     value={stat.nome}
                     label={stat.nome}
@@ -140,7 +139,8 @@ class Filters extends Component {
 
     return (
       <div>
-        <RaisedButton
+        <Button
+          variant='raised'
           label="Filtros"
           primary={true}
           onClick={this.getFilters.bind(this)}

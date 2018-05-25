@@ -1,6 +1,9 @@
 import React, { Component } from "react";
 import axios from "axios";
-import { Card, CardHeader, CardActions, RaisedButton } from "material-ui";
+import Card from "@material-ui/core/Card";
+import CardHeader from "@material-ui/core/CardHeader";
+import CardActions from "@material-ui/core/CardActions";
+import Button from "@material-ui/core/Button";
 
 class BuyPlayer extends Component {
   constructor(props) {
@@ -49,7 +52,7 @@ class BuyPlayer extends Component {
 
   render() {
     return (
-      <div className='container'>
+      <div>
           <Card >
               <CardHeader
                   title="Market Status"
@@ -57,7 +60,7 @@ class BuyPlayer extends Component {
                   actAsExpander={true}
               />
               <CardActions>
-                  <RaisedButton label='Market' primary={true} onClick={this.handleClick = this.getMarketStatus.bind(this)}/>
+                  <Button variant='raised' color='primary' onClick={this.handleClick = this.getMarketStatus.bind(this)}>Market</Button>
               </CardActions>
           </Card>
       </div>

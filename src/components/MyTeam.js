@@ -1,9 +1,15 @@
 import React, { Component } from "react";
 import axios from "axios";
-import { Card, CardHeader, CardActions, RaisedButton, List, ListItem } from "material-ui";
+import Card from '@material-ui/core/Card';
+import CardActions from '@material-ui/core/CardActions';
+import CardHeader from '@material-ui/core/CardHeader';
+import CardContent from '@material-ui/core/CardContent';
 import Jogador from "./Jogador";
 import IAlgorithms from "../control/IAlgorithms";
 import ClubsPerformance from "../control/ClubsPerformance";
+import Button from '@material-ui/core/Button';
+import List from '@material-ui/core/List';
+import ListItem from '@material-ui/core/ListItem';
 
 class MyTeam extends Component {
     constructor(props) {
@@ -152,6 +158,13 @@ class MyTeam extends Component {
         // this.state.ia.getBestDefenders(
             // this.state.ia.getBestAppreciation(
                 this.state.ia.getBestMeanPlayersByPosition(this.state.jogadores, 1, 10, best_clubs_to_beg, rodada_atual, max_price))
+                goleiros.map(
+                    gol => {
+                        
+                        console.log(gol.apelido +' - '+ this.getPlayerClub(gol.clube_id).nome)
+                        
+                    }
+                );
         // get the quantity of goalkeepers must be selected
         count = esquema.posicoes['gol'];
         // calculate the quantity of goalkeepers still must be choosed minus that 
@@ -164,7 +177,7 @@ class MyTeam extends Component {
             jogad = goleiros.pop()
             console.log(jogad)
             if(jogad !== null && jogad !== undefined){
-                if (jogad.preco_num <= patrimonio.valor) {
+                if (jogad.preco_num <= patrimonio.valor && !atletas.includes(jogad)) {
                     console.log('Preco: ' + jogad.preco_num)
                     console.log('Patrimonio: ' + patrimonio.valor)
                     patrimonio.valor -= jogad.preco_num;
@@ -188,6 +201,12 @@ class MyTeam extends Component {
         // this.state.ia.getBestDefenders(
             // this.state.ia.getBestAppreciation(
                 this.state.ia.getBestMeanPlayersByPosition(this.state.jogadores, 3, 10, best_clubs_to_beg, rodada_atual, max_price))
+                zagueiros.map(
+                    zag => {
+                        console.log(zag.apelido +' - '+ this.getPlayerClub(zag.clube_id).nome)
+                    }
+                );
+        
         count = esquema.posicoes['zag'];
         var jaTem = this.howMuchAthletesByPos(atletas, 3);
         count = count - jaTem;
@@ -197,7 +216,7 @@ class MyTeam extends Component {
             jogad = zagueiros.pop()
             console.log(jogad)
             if(jogad !== null && jogad !== undefined){
-                if (jogad.preco_num <= patrimonio.valor) {
+                if (jogad.preco_num <= patrimonio.valor && !atletas.includes(jogad)) {
                     console.log('Preco: ' + jogad.preco_num)
                     console.log('Patrimonio: ' + patrimonio.valor)
                     patrimonio.valor -= jogad.preco_num;
@@ -221,6 +240,12 @@ class MyTeam extends Component {
         // this.state.ia.getBestDefenders(
             // this.state.ia.getBestAppreciation(
                 this.state.ia.getBestMeanPlayersByPosition(this.state.jogadores, 2, 10, best_clubs_to_beg, rodada_atual, patrimonio.valor, max_price))
+        
+                laterais.map(
+                    lat => {
+                        console.log(lat.apelido +' - '+ this.getPlayerClub(lat.clube_id).nome)
+                    }
+                );
         count = esquema.posicoes['lat'];
         var jaTem = this.howMuchAthletesByPos(atletas, 2);
         count = count - jaTem;
@@ -230,7 +255,7 @@ class MyTeam extends Component {
             jogad = laterais.pop()
             console.log(jogad)
             if(jogad !== null && jogad !== undefined){
-                if (jogad.preco_num <= patrimonio.valor) {
+                if (jogad.preco_num <= patrimonio.valor && !atletas.includes(jogad)) {
                     console.log('Preco: ' + jogad.preco_num)
                     console.log('Patrimonio: ' + patrimonio.valor)
                     patrimonio.valor -= jogad.preco_num;
@@ -254,6 +279,12 @@ class MyTeam extends Component {
         // this.state.ia.getBestAttackers(
             // this.state.ia.getBestAppreciation(
                 this.state.ia.getBestMeanPlayersByPosition(this.state.jogadores, 4, 10, best_clubs_to_beg, rodada_atual, patrimonio.valor, max_price))
+
+                meias.map(
+                    meia => {
+                        console.log(meia.apelido +' - '+ this.getPlayerClub(meia.clube_id).nome)
+                    }
+                );
         count = esquema.posicoes['mei'];
         var jaTem = this.howMuchAthletesByPos(atletas, 4);
         count = count - jaTem;
@@ -263,7 +294,7 @@ class MyTeam extends Component {
             jogad = meias.pop()
             console.log(jogad)
             if(jogad !== null && jogad !== undefined){
-                if (jogad.preco_num <= patrimonio.valor) {
+                if (jogad.preco_num <= patrimonio.valor && !atletas.includes(jogad)) {
                     console.log('Preco: ' + jogad.preco_num)
                     console.log('Patrimonio: ' + patrimonio.valor)
                     patrimonio.valor -= jogad.preco_num;
@@ -288,7 +319,11 @@ class MyTeam extends Component {
             // this.state.ia.getBestAppreciation(
                 this.state.ia.getBestMeanPlayersByPosition(this.state.jogadores, 5, 10, best_clubs_to_beg, rodada_atual, max_price))
         // console.log(atacantes)
-        
+        atacantes.map(
+            ata => {
+                console.log(ata.apelido +' - '+ this.getPlayerClub(ata.clube_id).nome)
+            }
+        );
         count = esquema.posicoes['ata'];
         var jaTem = this.howMuchAthletesByPos(atletas, 5);
         count = count - jaTem;
@@ -298,7 +333,7 @@ class MyTeam extends Component {
             jogad = atacantes.pop()
             console.log(jogad)
             if(jogad !== null && jogad !== undefined){
-                if (jogad.preco_num <= patrimonio.valor) {
+                if (jogad.preco_num <= patrimonio.valor && !atletas.includes(jogad)) {
                     console.log('Preco: ' + jogad.preco_num)
                     console.log('Patrimonio: ' + patrimonio.valor)
                     patrimonio.valor -= jogad.preco_num;
@@ -321,6 +356,12 @@ class MyTeam extends Component {
         console.log('Escolhendo Tecnico')
         var tecnicos = this.state.ia.getBestAppreciation(
             this.state.ia.getBestMeanPlayersByPosition(this.state.jogadores, 6, 10, best_clubs_to_beg, rodada_atual, max_price))
+
+            tecnicos.map(
+                tec => {
+                    console.log(tec.apelido +' - '+ this.getPlayerClub(tec.clube_id).nome)
+                }
+            );
         count = esquema.posicoes['tec'];
         var jaTem = this.howMuchAthletesByPos(atletas, 6);
         count = count - jaTem;
@@ -330,7 +371,7 @@ class MyTeam extends Component {
             jogad = tecnicos.pop()
             console.log(jogad)
             if(jogad !== null && jogad !== undefined){
-                if (jogad.preco_num <= patrimonio.valor) {
+                if (jogad.preco_num <= patrimonio.valor && !atletas.includes(jogad)) {
                     console.log('Preco: ' + jogad.preco_num)
                     console.log('Patrimonio: ' + patrimonio.valor)
                     patrimonio.valor -= jogad.preco_num;
@@ -376,7 +417,6 @@ class MyTeam extends Component {
             console.log('VAI COLOCAR GOLEIRO')
             var goleiros = this.state.ia.calculatePlayerAllMetricsDefense(
                         this.state.ia.getBestMeanPlayersByPosition(this.state.jogadores, 1, 10, best_clubs_to_beg, rodada_atual, expen.preco_num))
-                    
                     while(count > 0){
                         jogad = goleiros.pop()
                         console.log(jogad)
@@ -397,6 +437,8 @@ class MyTeam extends Component {
                     while(count > 0){
                         jogad = laterais.pop()
                         console.log(jogad)
+                        console.log("JOGADOR JA ESTA NA LISTA?")
+                        console.log(atletas.includes(jogad))
                         if (jogad.preco_num < expen.preco_num && !atletas.includes(jogad)) {
                             console.log('Preco: ' + jogad.preco_num)
                             console.log('Patrimonio: ' + patrimonio.valor)
@@ -414,6 +456,8 @@ class MyTeam extends Component {
                     while(count > 0){
                         jogad = zagueiros.pop()
                         console.log(jogad)
+                        console.log("JOGADOR JA ESTA NA LISTA?")
+                        console.log(atletas.includes(jogad))
                         if (jogad.preco_num < expen.preco_num && !atletas.includes(jogad)) {
                             console.log('Preco: ' + jogad.preco_num)
                             console.log('Patrimonio: ' + patrimonio.valor)
@@ -431,6 +475,8 @@ class MyTeam extends Component {
                     while(count > 0){
                         jogad = meias.pop()
                         console.log(jogad)
+                        console.log("JOGADOR JA ESTA NA LISTA?")
+                        console.log(atletas.includes(jogad))
                         if (jogad.preco_num < expen.preco_num && !atletas.includes(jogad)) {
                             console.log('Preco: ' + jogad.preco_num)
                             console.log('Patrimonio: ' + patrimonio.valor)
@@ -444,10 +490,12 @@ class MyTeam extends Component {
             console.log('VAI COLOCAR ATACANTES')
             var atacantes = this.state.ia.calculatePlayerAllMetricsAttack(
                         this.state.ia.getBestMeanPlayersByPosition(this.state.jogadores, 5, 10, best_clubs_to_beg, rodada_atual, expen.preco_num))
-                   
+                    
                     while(count > 0){
                         jogad = atacantes.pop()
                         console.log(jogad)
+                        console.log("JOGADOR JA ESTA NA LISTA?")
+                        console.log(atletas.includes(jogad))
                         if (jogad.preco_num < expen.preco_num && !atletas.includes(jogad)) {
                             console.log('Preco: ' + jogad.preco_num)
                             console.log('Patrimonio: ' + patrimonio.valor)
@@ -474,7 +522,11 @@ class MyTeam extends Component {
                         }
                     }
         }
+        console.log('ATLETAS')
+        console.log(atletas)
     }
+
+
 
     convertAthletesArray(atletas){
         var attas = [];
@@ -525,10 +577,15 @@ class MyTeam extends Component {
                 console.log('Possíveis Captães')
                 console.log(ordered_ply_captain)
 
+                console.log(atletas);
                 atletas = this.convertAthletesArray(atletas);
 
                 this.state.new_team.atletas = atletas;
-                this.state.new_team.capitao = ordered_ply_captain.pop().atleta_id;
+                if(ordered_ply_captain.pop().posicao_id !== 6){
+                    this.state.new_team.capitao = ordered_ply_captain.pop().atleta_id;
+                }else{
+                    this.state.new_team.capitao = ordered_ply_captain.pop().atleta_id;
+                }
                 console.log(require('util').inspect(this.state.new_team));
             }
         );
@@ -573,8 +630,8 @@ class MyTeam extends Component {
         if (this.state.authorized) {
             return (
                 <div>
-                    <RaisedButton label='Salvar Time' primary={true} onClick={this.handleClick = this.saveTeam.bind(this)} />
-                    <RaisedButton label='Hide' primary={true} onClick={this.handleClick = this.hideMyTeam.bind(this)} />
+                    <Button variant='raised' color='primary' onClick={this.handleClick = this.saveTeam.bind(this)}>Salvar Time</Button>
+                    <Button variant='raised' color='primary' onClick={this.handleClick = this.hideMyTeam.bind(this)}> Esconder </Button>
                     <h5>Patrimônio</h5>
                     <p>{this.state.team.patrimonio.toFixed(2)}</p>
                     <h5>Pontos</h5>
@@ -613,8 +670,9 @@ class MyTeam extends Component {
                             actAsExpander={true}
                         />
                         <CardActions>
-                            <RaisedButton label='Ver Time' primary={true} onClick={this.handleClick = this.getMyProfile.bind(this)} />
-                            {/* <RaisedButton label='Salvar Time' primary={true} onClick={this.handleClick = this.saveTeam.bind(this)}/> */}
+                            <Button variant='raised' color="primary" onClick={this.handleClick = this.getMyProfile.bind(this)}>
+                                Ver Time
+                            </Button>
                         </CardActions>
                     </Card>
                 </div>

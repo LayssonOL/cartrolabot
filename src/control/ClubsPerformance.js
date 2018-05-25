@@ -1,6 +1,9 @@
 import React, { Component } from "react";
 import axios from "axios";
-import { Card, CardHeader, CardActions, RaisedButton } from "material-ui";
+import Button from "@material-ui/core/Button";
+import Card from "@material-ui/core/Card";
+import CardHeader from "@material-ui/core/CardHeader";
+import CardActions from "@material-ui/core/CardActions";
 
 class ClubsPerformance extends Component {
   constructor(props) {
@@ -17,7 +20,7 @@ class ClubsPerformance extends Component {
     axios.get('https://api.cartolafc.globo.com/clubes')
       .then((res) => {
         this.setState({ clubes: Object.values(res.data) });
-        console.log(this.state.clubes);
+        // console.log(this.state.clubes);
       }).catch(err => {
         if (err) {
           window.alert(err);
@@ -371,9 +374,9 @@ class ClubsPerformance extends Component {
             actAsExpander={true}
           />
           <CardActions>
-            <RaisedButton label='Stats' primary={true} onClick={this.handleClick = this.accountTeamsStats.bind(this)} />
-            <RaisedButton label='Rendimento' primary={true} onClick={this.handleClick = this.clubsPointsHomeAway.bind(this)} />
-            <RaisedButton label='Partidas' primary={true} onClick={this.handleClick = this.recommendClubByPosition.bind(this)} />
+            <Button variant='raised' color='primary' onClick={this.handleClick = this.accountTeamsStats.bind(this)}>Stats</Button>
+            <Button variant='raised' color='primary' onClick={this.handleClick = this.clubsPointsHomeAway.bind(this)}>Rendimento</Button>
+            <Button variant='raised' color='primary' onClick={this.handleClick = this.recommendClubByPosition.bind(this)}>Partidas</Button>
           </CardActions>
         </Card>
       </div>

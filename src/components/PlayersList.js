@@ -1,5 +1,6 @@
 import React, {Component} from 'react';
-import { List, ListItem } from 'material-ui';
+import List from '@material-ui/core/List';
+import ListItem from '@material-ui/core/ListItem';
 import Jogador from './Jogador';
 import IAlgorithms from '../control/IAlgorithms';
 
