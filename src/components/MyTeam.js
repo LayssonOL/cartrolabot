@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { Component, Fragment } from "react";
 import axios from "axios";
 import Card from '@material-ui/core/Card';
 import CardActions from '@material-ui/core/CardActions';
@@ -10,6 +10,15 @@ import ClubsPerformance from "../control/ClubsPerformance";
 import Button from '@material-ui/core/Button';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
+import { withStyles, Grid } from "@material-ui/core";
+
+const styles = {
+    card_layout:{
+        // position: 'relative',
+        // height: '25%',
+        // width: '50%',
+    },
+}
 
 class MyTeam extends Component {
     constructor(props) {
@@ -627,9 +636,10 @@ class MyTeam extends Component {
     }
 
     render() {
+        const { classes } = this.props
         if (this.state.authorized) {
             return (
-                <div>
+                <Fragment>
                     <Button variant='raised' color='primary' onClick={this.handleClick = this.saveTeam.bind(this)}>Salvar Time</Button>
                     <Button variant='raised' color='primary' onClick={this.handleClick = this.hideMyTeam.bind(this)}> Esconder </Button>
                     <h5>Patrimônio</h5>
@@ -639,11 +649,11 @@ class MyTeam extends Component {
                     <h5>Valor do Time</h5>
                     <p>{this.state.team.valor_time.toFixed(2)}</p>
                     <h3>Escalação</h3>
-                    <List>
+                    <Grid container spacing={8}>
                         {this.state.team.atletas.map((athlt) => {
                             // console.log(athlt);
                             return (
-                                <ListItem key={athlt.atleta_id}>
+                                <Grid item key={athlt.atleta_id}>
                                     <Jogador
                                         apelido={athlt.apelido}
                                         foto={athlt.foto}
@@ -654,16 +664,16 @@ class MyTeam extends Component {
                                         variacao={athlt.variacao_num}
                                         scout_mean={this.state.ia.weightedAverageScouts(athlt)}
                                     />
-                                </ListItem>
+                                </Grid>
                             )
                         })}
-                    </List>
-                </div>
+                    </Grid>
+                </Fragment>
             )
         } else {
             return (
-                <div className='container'>
-                    <Card >
+                <Fragment>
+                    <Card>
                         <CardHeader
                             title="Meu Time"
                             subtitle="Vejamos como estamos"
@@ -675,9 +685,9 @@ class MyTeam extends Component {
                             </Button>
                         </CardActions>
                     </Card>
-                </div>
+                </Fragment>
             )
         }
     }
 }
-export default MyTeam;
+export default withStyles(styles)(MyTeam);

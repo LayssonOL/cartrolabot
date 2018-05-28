@@ -1,10 +1,11 @@
-import React, {Component} from 'react';
+import React, {Component, Fragment} from 'react';
 import Card from '@material-ui/core/Card';
 import CardActions from '@material-ui/core/CardActions';
 import CardHeader from '@material-ui/core/CardHeader';
 import CardContent from '@material-ui/core/CardContent';
 import Button from '@material-ui/core/Button'
 import Avatar from '@material-ui/core/Avatar';
+import Typography from '@material-ui/core/Typography';
 
 class Jogador extends Component{
     render(){
@@ -15,7 +16,7 @@ class Jogador extends Component{
         // console.log('POSICAO: '+this.props.pos);
         return(
             
-            <div>
+            <Fragment>
                 <Card>
                     <CardHeader
                         title={this.props.apelido}
@@ -27,14 +28,18 @@ class Jogador extends Component{
                         <Button variant='flat' color='secondary'>Comprar</Button>
                     </CardActions> */}
                     <CardContent>
-                        Media = {this.props.media}
-                        <br/>
-                        Variacao = {this.props.variacao}
-                        <br/>
-                        Media Scout = {this.props.scout_mean}
+                        <Typography variant="body2">
+                            Media = {this.props.media}
+                        </Typography>
+                        <Typography variant="body2">
+                            Variacao = {this.props.variacao}
+                        </Typography>
+                        <Typography variant="body2">
+                            Media Scout = {this.props.scout_mean}
+                        </Typography>
                     </CardContent>
                 </Card>
-            </div>
+            </Fragment>
         )
     }
 }

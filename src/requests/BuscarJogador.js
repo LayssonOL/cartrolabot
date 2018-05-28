@@ -9,13 +9,18 @@ import Filters from '../components/Filters';
 import PlayersList from '../components/PlayersList';
 import IAlgorithms from '../control/IAlgorithms';
 import { withStyles } from '@material-ui/core/styles';
-import { Collapse } from '@material-ui/core';
-import Typography from '@material-ui/core/styles';
+import { Collapse, Grid } from '@material-ui/core';
+import Typography from '@material-ui/core/Typography';
+import ClubsPerformance from '../control/ClubsPerformance';
 
 
 const styles = {
     filter_button: {
         float: 'right',
+    },
+    card_layout:{
+        position: 'relative',
+        width: '100%',
     }
 }
 
@@ -24,10 +29,13 @@ class BuscarJogador extends Component {
         super(props);
         this.state = {
             ia: new IAlgorithms(),
+            clubes_throughput: new ClubsPerformance(),
             clubes: {},
             posicoes: {},
             status: {},
             jogadores: [],
+            rodada_atual: null,
+            best_clubs: [],
             token: sessionStorage.getItem('token'),
             expanded: false
         }
@@ -48,8 +56,8 @@ class BuscarJogador extends Component {
                 });
                 console.log(this.state.status);
                 console.log(this.state.clubes);
-                // console.log(Object.values(this.state.posicoes));
-                // console.log(this.state.jogadores);
+                console.log(Object.values(this.state.posicoes));
+                console.log(this.state.jogadores);
             }).catch(err => {
                 if (err) {
                     window.alert(err);
@@ -58,6 +66,20 @@ class BuscarJogador extends Component {
         this.setState({
             expanded: !this.state.expanded
         });
+    }
+
+    componentDidMount(){
+        this.state.clubes_throughput.getRodadaAtual().then(
+            (resolve) => {
+                this.setState({rodada_atual: resolve})
+            }
+        )
+
+        this.state.best_clubs = this.state.clubes_throughput.orderingChoiceByPosition().then(
+            (resolve) => {
+                this.setState({best_clubs: resolve})
+            }
+        )
     }
 
     hidePlayers() {
@@ -81,11 +103,12 @@ class BuscarJogador extends Component {
 
     render() {
         const { classes } = this.props;
+
         return (
             <div>
-                <Card>
+                <Card className={classes.card_layout}>
                     <CardHeader
-                        title="Buscar Jogadores"
+                        title="Boas Opções"
                         subtitle="Estatísticas de cada Jogador"
                     />
                     <CardActions>
@@ -98,63 +121,67 @@ class BuscarJogador extends Component {
                     </CardActions>
                     <Collapse in={this.state.expanded} timeout="auto">
                         <CardContent >
-                            <PlayersList jogadores={this.state.ia.getBestDefenders(
-                                                    this.state.ia.getBestAppreciation(
-                                                    this.state.ia.getBestMeanPlayersByPosition(this.state.jogadores, 1, 10)))}
-                                clubes={this.state.clubes}
-                                posicoes={this.state.posicoes}
-                                status={this.state.status}/>
-                            {/* <div className='row'>
-                                <div className='col-sm'>
-                                    <PlayersList jogadores={this.state.ia.getBestDefenders(
-                                        this.state.ia.getBestAppreciation(
-                                            this.state.ia.getBestMeanPlayersByPosition(this.state.jogadores, 1, 10)))}
+                            <Grid container spacing={12}>
+                                <Grid item sm>
+                                    <Typography variant='title'>
+                                        Goleiros
+                                    </Typography>
+                                    <PlayersList jogadores={this.state.ia.calculatePlayerAllMetricsDefense(
+                                        this.state.ia.getBestMeanPlayersByPositionWithoutPrice(this.state.jogadores, 1, 10, this.state.best_clubs, this.state.rodada_atual))}
                                         clubes={this.state.clubes}
                                         posicoes={this.state.posicoes}
                                         status={this.state.status} />
-                                </div>
-                                <div className='col-sm'>
-                                    <PlayersList jogadores={this.state.ia.getBestDefenders(
-                                        this.state.ia.getBestAppreciation(
-                                            this.state.ia.getBestMeanPlayersByPosition(this.state.jogadores, 2, 10)))}
+                                    </Grid>
+                                <Grid item sm>
+                                    <Typography variant='title'>
+                                        Laterais
+                                    </Typography>
+                                    <PlayersList jogadores={this.state.ia.calculatePlayerAllMetricsDefense(
+                                        this.state.ia.getBestMeanPlayersByPositionWithoutPrice(this.state.jogadores, 2, 10, this.state.best_clubs, this.state.rodada_atual))}
                                         clubes={this.state.clubes}
                                         posicoes={this.state.posicoes}
                                         status={this.state.status} />
-                                </div>
-                                <div className='col-sm'>
-                                    <PlayersList jogadores={this.state.ia.getBestDefenders(
-                                        this.state.ia.getBestAppreciation(
-                                            this.state.ia.getBestMeanPlayersByPosition(this.state.jogadores, 3, 10)))}
+                                </Grid>
+                                <Grid item sm>
+                                    <Typography variant='title'>
+                                        Zagueiros
+                                    </Typography>
+                                    <PlayersList jogadores={this.state.ia.calculatePlayerAllMetricsDefense(
+                                        this.state.ia.getBestMeanPlayersByPositionWithoutPrice(this.state.jogadores, 3, 10, this.state.best_clubs, this.state.rodada_atual))}
                                         clubes={this.state.clubes}
                                         posicoes={this.state.posicoes}
                                         status={this.state.status} />
-                                </div>
-                            </div>
-                            <div className='row'>
-                                <div className='col-sm'>
-                                    <PlayersList jogadores={this.state.ia.getBestAttackers(
-                                        this.state.ia.getBestAppreciation(
-                                            this.state.ia.getBestMeanPlayersByPosition(this.state.jogadores, 4, 10)))}
+                                </Grid>
+                                <Grid item sm>
+                                    <Typography variant='title'>
+                                        Meio-Campistas
+                                    </Typography>
+                                    <PlayersList jogadores={this.state.ia.calculatePlayerAllMetricsMidfielders(
+                                        this.state.ia.getBestMeanPlayersByPositionWithoutPrice(this.state.jogadores, 4, 10, this.state.best_clubs, this.state.rodada_atual))}
                                         clubes={this.state.clubes}
                                         posicoes={this.state.posicoes}
                                         status={this.state.status} />
-                                </div>
-                                <div className='col-sm'>
-                                    <PlayersList jogadores={this.state.ia.getBestAttackers(
-                                        this.state.ia.getBestAppreciation(
-                                            this.state.ia.getBestMeanPlayersByPosition(this.state.jogadores, 5, 10)))}
+                                </Grid>
+                                <Grid item sm>
+                                    <Typography variant='title'>
+                                        Atacantes
+                                    </Typography>
+                                    <PlayersList jogadores={this.state.ia.calculatePlayerAllMetricsAttack(
+                                        this.state.ia.getBestMeanPlayersByPositionWithoutPrice(this.state.jogadores, 5, 10, this.state.best_clubs, this.state.rodada_atual))}
                                         clubes={this.state.clubes} posicoes={this.state.posicoes}
                                         status={this.state.status} />
-                                </div>
-                                <div className='col-sm'>
+                                </Grid>
+                                <Grid item sm>
+                                    <Typography variant='title'>
+                                        Técnicos
+                                    </Typography>
                                     <PlayersList jogadores={this.state.ia.getBestAppreciation(
-                                        this.state.ia.getBestMeanPlayersByPosition(this.state.jogadores, 6, 10))}
+                                        this.state.ia.getBestMeanPlayersByPositionWithoutPrice(this.state.jogadores, 6, 10, this.state.best_clubs, this.state.rodada_atual))}
                                         clubes={this.state.clubes}
                                         posicoes={this.state.posicoes}
                                         status={this.state.status} />
-                                </div>
-                            </div> */}
-
+                                </Grid>
+                            </Grid>
                         </CardContent>
                     </Collapse>
                 </Card>

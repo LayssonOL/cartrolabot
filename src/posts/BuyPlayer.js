@@ -4,6 +4,12 @@ import Card from "@material-ui/core/Card";
 import CardHeader from "@material-ui/core/CardHeader";
 import CardActions from "@material-ui/core/CardActions";
 import Button from "@material-ui/core/Button";
+import { withStyles } from "@material-ui/core";
+
+const styles = {
+  card_layout:{
+  },
+}
 
 class BuyPlayer extends Component {
   constructor(props) {
@@ -51,9 +57,10 @@ class BuyPlayer extends Component {
   }
 
   render() {
+    const { classes } = this.props
     return (
       <div>
-          <Card >
+          <Card className={classes.card_layout}>
               <CardHeader
                   title="Market Status"
                   subtitle=""
@@ -67,4 +74,4 @@ class BuyPlayer extends Component {
     )
   }
 }
-export default BuyPlayer;
+export default withStyles(styles)(BuyPlayer);

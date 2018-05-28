@@ -1,6 +1,6 @@
-import React, { Component } from 'react'
+import React, { Component, Fragment } from 'react'
 import axios from 'axios'
-import { Card, CardHeader, CardActions, Button, TextField, CardText, ActionLabel, CardMedia, CardContent } from '@material-ui/core';
+import { Card, CardHeader, CardActions, Button, TextField, CardText, ActionLabel, CardMedia, CardContent, Grid } from '@material-ui/core';
 import BuscarJogador from '../requests/BuscarJogador';
 import BuscarJogMaisEscalados from '../requests/BuscarJogMaisEscalados';
 import MyTeam from '../components/MyTeam';
@@ -12,16 +12,43 @@ import { withStyles } from '@material-ui/core/styles';
 const styles = {
     card: {
         position: 'relative',
-        top: 250,
-        bottom: 500,
-        left: 300,
-        right: 300,
+        top: '7%',
+        left: '25%',
         width: '50%',
+        bottom: '20%',
+        padding: '10',
+    },
+    email:{
+        position: 'relative',
+        top: '-25%',
+        left: '-2%',
+    },
+    password:{
+        position: 'relative',
+        top: '-25%',
+        left: '15%',
     },
     media: {
         height: 0,
         paddingTop: '56.25%', // 16:9
-      },
+    },
+    myTeam: {
+        position: 'relative',
+        height: '25%',
+        width: '50%',
+    },
+    searchMostScaled:{
+        position: 'relative',
+        height: '25%',
+        width: '50%',
+    },
+    firstCard:{
+
+    },
+    secondCard:{
+
+    }
+
 
 }
 
@@ -87,51 +114,50 @@ class Auth extends Component {
     };
 
     render() {
-
+        const { classes } = this.props
         if (this.state.connected) {
             return (
-                <div >
-                    <div className="row">
-                        <div className="col-sm" >
-                            <BuscarJogador />
-                        </div>
-                    </div>
-                    <div className="row">
-                        <div className="col-sm">
-                            <BuscarJogMaisEscalados />
-                        </div>
-                        <div className="col-sm">
-                            <MyTeam />
-                        </div>
+                <Fragment>
+                    <Grid container spacing={12}>
+                        <Grid item xs={6}>
+                            <BuscarJogMaisEscalados className={classes.searchMostScaled}/>
+                        </Grid>
+                        <Grid item xs={6}>
+                            <MyTeam className={classes.myTeam}/>
+                        </Grid>
+                        <Grid item xs={12}>
+                            <BuscarJogador className={classes.secondCard}/>
+                        </Grid>
+                    </Grid>
                         {/* <div className="col-sm">
                             <ClubsPerformance />
                         </div> */}
-                    </div>
-                    <div className="row">
+                    {/* <div className="row">
                         <div className="col-sm">
                             <BuyPlayer />
                         </div>
-                    </div>
-                </div>
+                    </div> */}
+                </Fragment>
             )
         } else {
-            const { classes } = this.props;
             return (
                 <div >
                     <Card className={classes.card}>
                         <CardMedia
                             className={classes.media}
-                            image="../../img/cartrolaBot.png"
+                            image={require('./../img/cartrolaBot.png')}
                             title="CartrolaBot"
                         />
                         <CardContent>
                             <TextField id="email"
                                 label="Email"
+                                className={classes.email}
                                 value={this.state.email}
                                 onChange={this.handleChange('email')}
                                 margin="normal" />
                             <TextField id="psswd"
                                 label="Password"
+                                className={classes.password}
                                 value={this.state.password}
                                 type="password"
                                 onChange={this.handleChange('password')}

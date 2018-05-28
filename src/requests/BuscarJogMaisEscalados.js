@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import React, {Component, Fragment} from 'react';
 import Button from '@material-ui/core/Button';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
@@ -9,7 +9,15 @@ import CardHeader from '@material-ui/core/CardHeader';
 import CardContent from '@material-ui/core/CardContent';
 import MostScaledPlayers from '.././components/MostScaledPlayers';
 import axios from 'axios'
-import { Collapse } from '@material-ui/core';
+import { Collapse, withStyles, Grid } from '@material-ui/core';
+
+const styles = {
+    card_layout:{
+        // position: 'relative',
+        // height: '25%',
+        // width: '50%',
+    },
+}
 
 class BuscarJogMaisEscalados extends Component{
     constructor(props){
@@ -47,9 +55,10 @@ class BuscarJogMaisEscalados extends Component{
     }
 
     render(){
+        const { classes } = this.props
         return(
-            <div>
-                <Card>
+            <Fragment>
+                <Card className={classes.card_layout}>
                     <CardHeader
                         title="Jogadores Mais Escalados"
                         subtitle="O jeito fácil de montar seu time!"
@@ -62,10 +71,10 @@ class BuscarJogMaisEscalados extends Component{
                     </CardActions>
                     <Collapse in={this.state.expanded} timeout="auto">
                         <CardContent>
-                            <List>
+                             <Grid container spacing={8}>
                                 { this.state.jogs.map((player,index) => {
                                 return( 
-                                    <ListItem key={player.Atleta.atleta_id}>
+                                    <Grid item key={player.Atleta.atleta_id}>
                                         <MostScaledPlayers 
                                             clube={player.clube}
                                             esc_clube={player.escudo_clube} 
@@ -74,17 +83,17 @@ class BuscarJogMaisEscalados extends Component{
                                             pos={player.posicao}
                                             rank={index+1}/>
                                         <Divider />
-                                    </ListItem>
+                                    </Grid>
                                     )})}
-                            </List>
+                            </Grid>
                             <Button variant='raised' color="primary" onClick={this.handleClick = this.hideDestaques.bind(this)}>
                                 Esconder
                             </Button>
                         </CardContent>
                     </Collapse>
                 </Card>
-            </div>
+            </Fragment>
         )
     };
 }
-export default BuscarJogMaisEscalados;
+export default withStyles(styles)(BuscarJogMaisEscalados);
