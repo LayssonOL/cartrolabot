@@ -10,13 +10,18 @@ import ClubsPerformance from "../control/ClubsPerformance";
 import Button from '@material-ui/core/Button';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
-import { withStyles, Grid } from "@material-ui/core";
+import { withStyles, Grid, Typography } from "@material-ui/core";
+import PanelMyTeam from './Panel_Jogadores_My_Team';
+import Team_Info from "./Team_Info";
 
 const styles = {
     card_layout:{
         // position: 'relative',
         // height: '25%',
         // width: '50%',
+    },
+    title:{
+        fontWeight: 'bold',
     },
 }
 
@@ -642,13 +647,16 @@ class MyTeam extends Component {
                 <Fragment>
                     <Button variant='raised' color='primary' onClick={this.handleClick = this.saveTeam.bind(this)}>Salvar Time</Button>
                     <Button variant='raised' color='primary' onClick={this.handleClick = this.hideMyTeam.bind(this)}> Esconder </Button>
-                    <h5>Patrimônio</h5>
-                    <p>{this.state.team.patrimonio.toFixed(2)}</p>
-                    <h5>Pontos</h5>
-                    <p>{this.state.team.pontos.toFixed(2)}</p>
-                    <h5>Valor do Time</h5>
-                    <p>{this.state.team.valor_time.toFixed(2)}</p>
-                    <h3>Escalação</h3>
+                    <Team_Info 
+                        patrimonio={this.state.team.patrimonio}
+                        valor_time={this.state.team.valor_time}
+                        pontos={this.state.team.pontos} />
+                    <br />
+                    <Typography className={classes.title} variant='title' align='left'>
+                        Escalação
+                    </Typography>
+                    <br />
+                    <PanelMyTeam />
                     <Grid container spacing={8}>
                         {this.state.team.atletas.map((athlt) => {
                             // console.log(athlt);

@@ -12,9 +12,9 @@ import { withStyles } from '@material-ui/core/styles';
 const styles = {
     card: {
         position: 'relative',
-        top: '7%',
+        top: '10%',
         left: '25%',
-        width: '50%',
+        width: '37%',
         bottom: '20%',
         padding: '10',
     },
@@ -29,7 +29,10 @@ const styles = {
         left: '15%',
     },
     media: {
-        height: 0,
+        position: 'relative',
+        width: '50%',
+        left: '28%',
+        height: 'auto',
         paddingTop: '56.25%', // 16:9
     },
     myTeam: {
@@ -123,10 +126,10 @@ class Auth extends Component {
                             <BuscarJogMaisEscalados className={classes.searchMostScaled}/>
                         </Grid>
                         <Grid item xs={6}>
-                            <MyTeam className={classes.myTeam}/>
+                            <BuscarJogador className={classes.secondCard}/>
                         </Grid>
                         <Grid item xs={12}>
-                            <BuscarJogador className={classes.secondCard}/>
+                            <MyTeam className={classes.myTeam}/>
                         </Grid>
                     </Grid>
                         {/* <div className="col-sm">

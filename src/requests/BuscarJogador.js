@@ -123,7 +123,7 @@ class BuscarJogador extends Component {
                         <CardContent >
                             <Grid container spacing={12}>
                                 <Grid item sm>
-                                    <Typography variant='title'>
+                                    <Typography variant='title' align='justify'>
                                         Goleiros
                                     </Typography>
                                     <PlayersList jogadores={this.state.ia.calculatePlayerAllMetricsDefense(

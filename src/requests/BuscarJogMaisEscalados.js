@@ -13,9 +13,14 @@ import { Collapse, withStyles, Grid } from '@material-ui/core';
 
 const styles = {
     card_layout:{
-        // position: 'relative',
-        // height: '25%',
-        // width: '50%',
+        
+    },
+    destaque:{
+        margin_bottom: '10px',
+        width: '100%',
+        border_bottom: '2px solid #f1f1ef',
+        border_bottom_width: '2px',
+        border_bottom_style: 'solid',
     },
 }
 
@@ -71,10 +76,10 @@ class BuscarJogMaisEscalados extends Component{
                     </CardActions>
                     <Collapse in={this.state.expanded} timeout="auto">
                         <CardContent>
-                             <Grid container spacing={8}>
+                             <List >
                                 { this.state.jogs.map((player,index) => {
                                 return( 
-                                    <Grid item key={player.Atleta.atleta_id}>
+                                    <ListItem className={classes.destaque} key={player.Atleta.atleta_id}>
                                         <MostScaledPlayers 
                                             clube={player.clube}
                                             esc_clube={player.escudo_clube} 
@@ -83,9 +88,9 @@ class BuscarJogMaisEscalados extends Component{
                                             pos={player.posicao}
                                             rank={index+1}/>
                                         <Divider />
-                                    </Grid>
+                                    </ListItem>
                                     )})}
-                            </Grid>
+                            </List>
                             <Button variant='raised' color="primary" onClick={this.handleClick = this.hideDestaques.bind(this)}>
                                 Esconder
                             </Button>
