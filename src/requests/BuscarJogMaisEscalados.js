@@ -18,6 +18,7 @@ const styles = {
     destaque:{
         margin_bottom: '10px',
         width: '100%',
+        height: 'auto',
         border_bottom: '2px solid #f1f1ef',
         border_bottom_width: '2px',
         border_bottom_style: 'solid',

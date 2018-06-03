@@ -13,14 +13,16 @@ import ListItem from '@material-ui/core/ListItem';
 import { withStyles, Grid, Typography } from "@material-ui/core";
 import PanelMyTeam from './Panel_Jogadores_My_Team';
 import Team_Info from "./Team_Info";
+import BuscarJogMaisEscalados from "../requests/BuscarJogMaisEscalados";
+import BuscarJogador from "../requests/BuscarJogador";
 
 const styles = {
-    card_layout:{
+    card_layout: {
         // position: 'relative',
         // height: '25%',
         // width: '50%',
     },
-    title:{
+    title: {
         fontWeight: 'bold',
     },
 }
@@ -38,6 +40,7 @@ class MyTeam extends Component {
             status: [],
             esquemas: [],
             team: {},
+            new_team_view: {},
             new_team: { esquema: 3, atletas: [], capitao: 0 },
             jogadores: [],
             token: sessionStorage.getItem('token')
@@ -76,6 +79,7 @@ class MyTeam extends Component {
                 this.setState({
                     jogadores: res.data.atletas
                 });
+                // return Promise.resolve(res.data.atletas)
                 // console.log(this.state.status);
                 // console.log(this.state.clubes);
                 // console.log(Object.values(this.state.posicoes));
@@ -98,7 +102,8 @@ class MyTeam extends Component {
                 this.setState({
                     esquemas: res.data
                 });
-                // console.log(this.state.esquemas);
+                // return Promise.resolve(res.data)
+                // console.log(res.data);
                 // console.log(this.state.status);
                 // console.log(this.state.clubes);
                 // console.log(Object.values(this.state.posicoes));
@@ -140,12 +145,17 @@ class MyTeam extends Component {
                 this.setState({
                     authorized: true,
                     team: res.data,
+                    new_team_view: res.data.atletas,
                     clubes: Object.values(res.data.clubes),
                     posicoes: Object.values(res.data.posicoes),
                     status: Object.values(res.data.status),
                     rodada_atual: res.data.rodada_atual
                 })
-                // console.log(res)
+                // this.shouldComponentUpdate();
+                // return Promise.resolve(res);
+                console.log('MEUS DADOS')
+                console.log(res)
+                console.log(this.state)
                 this.scaleTeam();
             })
             .catch(err => {
@@ -154,11 +164,43 @@ class MyTeam extends Component {
                 }
             });
     }
-    componentWillMount() {
+
+    // isInTeam(atleta_id){
+    //     if(this.state.new_team.atletas.includes(atleta_id)){
+    //         return true
+    //     }else{
+
+    //     }
+    // }
+
+    componentDidMount() {
         // this.state.clubes_throughput.render()
         this.getSchemas();
         this.getPlayers();
+        // console.log(this.state)
+        this.getMyProfile();
+        // setTimeout(
+        //     () => {
+        //         this.setState({new_team: sessionStorage.getItem('newTeam')});
+        //         console.log(this.state.new_team)
+        //     }, 1000
+        // )
     }
+
+    // getData(){
+    //     setTimeout(
+    //         () => {
+    //             var self = this;
+    //             this.getMyProfile()
+    //         }, 1000
+    //     )
+    // }
+
+
+    // componentDidMount() {
+    //     this.getData()
+    // }
+
 
     // method to choose a list of goalkeepers
     chooseGoalKeepers(esquema, patrimonio, atletas, best_clubs_to_beg, rodada_atual, max_price) {
@@ -169,16 +211,16 @@ class MyTeam extends Component {
         // return all goalkeepers that must to play in the next round passing a list of clubs that they must belong
         // and the max price they can costs
         var goleiros = this.state.ia.calculatePlayerAllMetricsDefense(
-        // this.state.ia.getBestDefenders(
+            // this.state.ia.getBestDefenders(
             // this.state.ia.getBestAppreciation(
-                this.state.ia.getBestMeanPlayersByPosition(this.state.jogadores, 1, 10, best_clubs_to_beg, rodada_atual, max_price))
-                goleiros.map(
-                    gol => {
-                        
-                        console.log(gol.apelido +' - '+ this.getPlayerClub(gol.clube_id).nome)
-                        
-                    }
-                );
+            this.state.ia.getBestMeanPlayersByPosition(this.state.jogadores, 1, 10, best_clubs_to_beg, rodada_atual, max_price))
+        goleiros.map(
+            gol => {
+
+                console.log(gol.apelido + ' - ' + this.getPlayerClub(gol.clube_id).nome)
+
+            }
+        );
         // get the quantity of goalkeepers must be selected
         count = esquema.posicoes['gol'];
         // calculate the quantity of goalkeepers still must be choosed minus that 
@@ -190,7 +232,7 @@ class MyTeam extends Component {
             console.log(count)
             jogad = goleiros.pop()
             console.log(jogad)
-            if(jogad !== null && jogad !== undefined){
+            if (jogad !== null && jogad !== undefined) {
                 if (jogad.preco_num <= patrimonio.valor && !atletas.includes(jogad)) {
                     console.log('Preco: ' + jogad.preco_num)
                     console.log('Patrimonio: ' + patrimonio.valor)
@@ -198,7 +240,7 @@ class MyTeam extends Component {
                     atletas.push(jogad);
                     count--;
                 }
-            }else{
+            } else {
                 this.removeExpensivePlayer(atletas, patrimonio, rodada_atual, best_clubs_to_beg);
                 this.chooseGoalKeepers(esquema, patrimonio, atletas, best_clubs_to_beg, rodada_atual, patrimonio.valor);
                 count--;
@@ -212,15 +254,15 @@ class MyTeam extends Component {
         var jogad = null;
         console.log('Escolhendo Zagueiros')
         var zagueiros = this.state.ia.calculatePlayerAllMetricsDefense(
-        // this.state.ia.getBestDefenders(
+            // this.state.ia.getBestDefenders(
             // this.state.ia.getBestAppreciation(
-                this.state.ia.getBestMeanPlayersByPosition(this.state.jogadores, 3, 10, best_clubs_to_beg, rodada_atual, max_price))
-                zagueiros.map(
-                    zag => {
-                        console.log(zag.apelido +' - '+ this.getPlayerClub(zag.clube_id).nome)
-                    }
-                );
-        
+            this.state.ia.getBestMeanPlayersByPosition(this.state.jogadores, 3, 10, best_clubs_to_beg, rodada_atual, max_price))
+        zagueiros.map(
+            zag => {
+                console.log(zag.apelido + ' - ' + this.getPlayerClub(zag.clube_id).nome)
+            }
+        );
+
         count = esquema.posicoes['zag'];
         var jaTem = this.howMuchAthletesByPos(atletas, 3);
         count = count - jaTem;
@@ -229,7 +271,7 @@ class MyTeam extends Component {
             console.log(count)
             jogad = zagueiros.pop()
             console.log(jogad)
-            if(jogad !== null && jogad !== undefined){
+            if (jogad !== null && jogad !== undefined) {
                 if (jogad.preco_num <= patrimonio.valor && !atletas.includes(jogad)) {
                     console.log('Preco: ' + jogad.preco_num)
                     console.log('Patrimonio: ' + patrimonio.valor)
@@ -237,7 +279,7 @@ class MyTeam extends Component {
                     atletas.push(jogad);
                     count--;
                 }
-            }else{
+            } else {
                 this.removeExpensivePlayer(atletas, patrimonio, rodada_atual, best_clubs_to_beg);
                 this.chooseCenterDefenders(esquema, patrimonio, atletas, best_clubs_to_beg, rodada_atual, patrimonio.valor)
                 count--;
@@ -251,15 +293,15 @@ class MyTeam extends Component {
         var jogad = null;
         console.log('Escolhendo Laterais')
         var laterais = this.state.ia.calculatePlayerAllMetricsDefense(
-        // this.state.ia.getBestDefenders(
+            // this.state.ia.getBestDefenders(
             // this.state.ia.getBestAppreciation(
-                this.state.ia.getBestMeanPlayersByPosition(this.state.jogadores, 2, 10, best_clubs_to_beg, rodada_atual, patrimonio.valor, max_price))
-        
-                laterais.map(
-                    lat => {
-                        console.log(lat.apelido +' - '+ this.getPlayerClub(lat.clube_id).nome)
-                    }
-                );
+            this.state.ia.getBestMeanPlayersByPosition(this.state.jogadores, 2, 10, best_clubs_to_beg, rodada_atual, patrimonio.valor, max_price))
+
+        laterais.map(
+            lat => {
+                console.log(lat.apelido + ' - ' + this.getPlayerClub(lat.clube_id).nome)
+            }
+        );
         count = esquema.posicoes['lat'];
         var jaTem = this.howMuchAthletesByPos(atletas, 2);
         count = count - jaTem;
@@ -268,7 +310,7 @@ class MyTeam extends Component {
             console.log(count)
             jogad = laterais.pop()
             console.log(jogad)
-            if(jogad !== null && jogad !== undefined){
+            if (jogad !== null && jogad !== undefined) {
                 if (jogad.preco_num <= patrimonio.valor && !atletas.includes(jogad)) {
                     console.log('Preco: ' + jogad.preco_num)
                     console.log('Patrimonio: ' + patrimonio.valor)
@@ -276,7 +318,7 @@ class MyTeam extends Component {
                     atletas.push(jogad);
                     count--;
                 }
-            }else{
+            } else {
                 this.removeExpensivePlayer(atletas, patrimonio, rodada_atual, best_clubs_to_beg);
                 this.chooseSideDefenders(esquema, patrimonio, atletas, best_clubs_to_beg, rodada_atual, patrimonio.valor);
                 count--;
@@ -290,15 +332,15 @@ class MyTeam extends Component {
         var jogad = null;
         console.log('Escolhendo Meio-Campistas')
         var meias = this.state.ia.calculatePlayerAllMetricsMidfielders(
-        // this.state.ia.getBestAttackers(
+            // this.state.ia.getBestAttackers(
             // this.state.ia.getBestAppreciation(
-                this.state.ia.getBestMeanPlayersByPosition(this.state.jogadores, 4, 10, best_clubs_to_beg, rodada_atual, patrimonio.valor, max_price))
+            this.state.ia.getBestMeanPlayersByPosition(this.state.jogadores, 4, 10, best_clubs_to_beg, rodada_atual, patrimonio.valor, max_price))
 
-                meias.map(
-                    meia => {
-                        console.log(meia.apelido +' - '+ this.getPlayerClub(meia.clube_id).nome)
-                    }
-                );
+        meias.map(
+            meia => {
+                console.log(meia.apelido + ' - ' + this.getPlayerClub(meia.clube_id).nome)
+            }
+        );
         count = esquema.posicoes['mei'];
         var jaTem = this.howMuchAthletesByPos(atletas, 4);
         count = count - jaTem;
@@ -307,7 +349,7 @@ class MyTeam extends Component {
             console.log(count)
             jogad = meias.pop()
             console.log(jogad)
-            if(jogad !== null && jogad !== undefined){
+            if (jogad !== null && jogad !== undefined) {
                 if (jogad.preco_num <= patrimonio.valor && !atletas.includes(jogad)) {
                     console.log('Preco: ' + jogad.preco_num)
                     console.log('Patrimonio: ' + patrimonio.valor)
@@ -315,7 +357,7 @@ class MyTeam extends Component {
                     atletas.push(jogad);
                     count--;
                 }
-            }else{
+            } else {
                 this.removeExpensivePlayer(atletas, patrimonio, rodada_atual, best_clubs_to_beg);
                 this.chooseMidfielders(esquema, patrimonio, atletas, best_clubs_to_beg, rodada_atual, patrimonio.valor);
                 count--;
@@ -328,14 +370,18 @@ class MyTeam extends Component {
         var count = 0;
         var jogad = null;
         console.log('Escolhendo Atacantes')
+        // console.log(this.state.jogadores)
+        // console.log(best_clubs_to_beg)
+        // console.log(rodada_atual)
+        // console.log(max_price)
         var atacantes = this.state.ia.calculatePlayerAllMetricsAttack(
-        // this.state.ia.getBestAttackers(
+            // this.state.ia.getBestAttackers(
             // this.state.ia.getBestAppreciation(
-                this.state.ia.getBestMeanPlayersByPosition(this.state.jogadores, 5, 10, best_clubs_to_beg, rodada_atual, max_price))
-        // console.log(atacantes)
+            this.state.ia.getBestMeanPlayersByPosition(this.state.jogadores, 5, 10, best_clubs_to_beg, rodada_atual, max_price))
+        console.log(atacantes)
         atacantes.map(
             ata => {
-                console.log(ata.apelido +' - '+ this.getPlayerClub(ata.clube_id).nome)
+                console.log(ata.apelido + ' - ' + this.getPlayerClub(ata.clube_id).nome)
             }
         );
         count = esquema.posicoes['ata'];
@@ -346,7 +392,7 @@ class MyTeam extends Component {
             console.log(count)
             jogad = atacantes.pop()
             console.log(jogad)
-            if(jogad !== null && jogad !== undefined){
+            if (jogad !== null && jogad !== undefined) {
                 if (jogad.preco_num <= patrimonio.valor && !atletas.includes(jogad)) {
                     console.log('Preco: ' + jogad.preco_num)
                     console.log('Patrimonio: ' + patrimonio.valor)
@@ -354,7 +400,7 @@ class MyTeam extends Component {
                     atletas.push(jogad);
                     count--;
                 }
-            }else{
+            } else {
                 this.removeExpensivePlayer(atletas, patrimonio, rodada_atual, best_clubs_to_beg);
                 this.chooseAttackers(esquema, patrimonio, atletas, best_clubs_to_beg, rodada_atual, patrimonio.valor);
                 count--;
@@ -366,16 +412,15 @@ class MyTeam extends Component {
     chooseManager(esquema, patrimonio, atletas, best_clubs_to_beg, rodada_atual, max_price) {
         var count = 0;
         var jogad = null;
-
         console.log('Escolhendo Tecnico')
+
         var tecnicos = this.state.ia.getBestAppreciation(
             this.state.ia.getBestMeanPlayersByPosition(this.state.jogadores, 6, 10, best_clubs_to_beg, rodada_atual, max_price))
-
-            tecnicos.map(
-                tec => {
-                    console.log(tec.apelido +' - '+ this.getPlayerClub(tec.clube_id).nome)
-                }
-            );
+        tecnicos.map(
+            tec => {
+                console.log(tec.apelido + ' - ' + this.getPlayerClub(tec.clube_id).nome)
+            }
+        );
         count = esquema.posicoes['tec'];
         var jaTem = this.howMuchAthletesByPos(atletas, 6);
         count = count - jaTem;
@@ -384,7 +429,7 @@ class MyTeam extends Component {
             console.log(count)
             jogad = tecnicos.pop()
             console.log(jogad)
-            if(jogad !== null && jogad !== undefined){
+            if (jogad !== null && jogad !== undefined) {
                 if (jogad.preco_num <= patrimonio.valor && !atletas.includes(jogad)) {
                     console.log('Preco: ' + jogad.preco_num)
                     console.log('Patrimonio: ' + patrimonio.valor)
@@ -392,7 +437,7 @@ class MyTeam extends Component {
                     atletas.push(jogad);
                     count--;
                 }
-            }else{
+            } else {
                 this.removeExpensivePlayer(atletas, patrimonio, rodada_atual, best_clubs_to_beg);
                 this.chooseManager(esquema, patrimonio, atletas, best_clubs_to_beg, rodada_atual, patrimonio.valor);
                 count--;
@@ -402,16 +447,17 @@ class MyTeam extends Component {
     }
 
     // a method to change a expensive player by other more cheaper to mount a complete team
-    removeExpensivePlayer(atletas, patrimonio, rodada_atual, best_clubs_to_beg){
+    removeExpensivePlayer(atletas, patrimonio, rodada_atual, best_clubs_to_beg) {
         console.log('SUBSTITUINDO JOGADOR:')
         var jogad = null;
-        var expen = {preco_num: 0};
+        var expen = { preco_num: 0 };
         var count = 1;
+        // console.log(atletas)
         atletas.map(
             (atleta) => {
                 // console.log(atleta)
                 // console.log(expen)
-                if(atleta.preco_num > expen.preco_num){
+                if (atleta.preco_num > expen.preco_num) {
                     console.log('TROCOU')
                     expen = atleta
                 }
@@ -426,115 +472,115 @@ class MyTeam extends Component {
         console.log('INDEX TO PUSH')
         console.log(indexToPush)
 
-        if(expen.posicao_id === 1){
+        if (expen.posicao_id === 1) {
             //goleiros
             console.log('VAI COLOCAR GOLEIRO')
             var goleiros = this.state.ia.calculatePlayerAllMetricsDefense(
-                        this.state.ia.getBestMeanPlayersByPosition(this.state.jogadores, 1, 10, best_clubs_to_beg, rodada_atual, expen.preco_num))
-                    while(count > 0){
-                        jogad = goleiros.pop()
-                        console.log(jogad)
-                        if (jogad.preco_num < expen.preco_num && !atletas.includes(jogad)) {
-                            console.log('Preco: ' + jogad.preco_num)
-                            console.log('Patrimonio: ' + patrimonio.valor)
-                            patrimonio.valor -= jogad.preco_num;
-                            atletas[indexToPush] = jogad;
-                            count--;
-                        }
-                    }
-        }else if(expen.posicao_id === 2){
+                this.state.ia.getBestMeanPlayersByPosition(this.state.jogadores, 1, 10, best_clubs_to_beg, rodada_atual, expen.preco_num))
+            while (count > 0) {
+                jogad = goleiros.pop()
+                console.log(jogad)
+                if (jogad.preco_num < expen.preco_num && !atletas.includes(jogad)) {
+                    console.log('Preco: ' + jogad.preco_num)
+                    console.log('Patrimonio: ' + patrimonio.valor)
+                    patrimonio.valor -= jogad.preco_num;
+                    atletas[indexToPush] = jogad;
+                    count--;
+                }
+            }
+        } else if (expen.posicao_id === 2) {
             //laterais
             console.log('VAI COLOCAR LATERAL')
             var laterais = this.state.ia.calculatePlayerAllMetricsDefense(
-                        this.state.ia.getBestMeanPlayersByPosition(this.state.jogadores, 2, 10, best_clubs_to_beg, rodada_atual, expen.preco_num))
-                    
-                    while(count > 0){
-                        jogad = laterais.pop()
-                        console.log(jogad)
-                        console.log("JOGADOR JA ESTA NA LISTA?")
-                        console.log(atletas.includes(jogad))
-                        if (jogad.preco_num < expen.preco_num && !atletas.includes(jogad)) {
-                            console.log('Preco: ' + jogad.preco_num)
-                            console.log('Patrimonio: ' + patrimonio.valor)
-                            patrimonio.valor -= jogad.preco_num;
-                            atletas[indexToPush] = jogad;
-                            count--;
-                        }
-                    }
-        }else if(expen.posicao_id === 3){
+                this.state.ia.getBestMeanPlayersByPosition(this.state.jogadores, 2, 10, best_clubs_to_beg, rodada_atual, expen.preco_num))
+
+            while (count > 0) {
+                jogad = laterais.pop()
+                console.log(jogad)
+                console.log("JOGADOR JA ESTA NA LISTA?")
+                console.log(atletas.includes(jogad))
+                if (jogad.preco_num < expen.preco_num && !atletas.includes(jogad)) {
+                    console.log('Preco: ' + jogad.preco_num)
+                    console.log('Patrimonio: ' + patrimonio.valor)
+                    patrimonio.valor -= jogad.preco_num;
+                    atletas[indexToPush] = jogad;
+                    count--;
+                }
+            }
+        } else if (expen.posicao_id === 3) {
             //zagueiros
             console.log('VAI COLOCAR ZAGUEIROS')
             var zagueiros = this.state.ia.calculatePlayerAllMetricsDefense(
-                        this.state.ia.getBestMeanPlayersByPosition(this.state.jogadores, 3, 10, best_clubs_to_beg, rodada_atual, expen.preco_num))
-                    
-                    while(count > 0){
-                        jogad = zagueiros.pop()
-                        console.log(jogad)
-                        console.log("JOGADOR JA ESTA NA LISTA?")
-                        console.log(atletas.includes(jogad))
-                        if (jogad.preco_num < expen.preco_num && !atletas.includes(jogad)) {
-                            console.log('Preco: ' + jogad.preco_num)
-                            console.log('Patrimonio: ' + patrimonio.valor)
-                            patrimonio.valor -= jogad.preco_num;
-                            atletas[indexToPush] = jogad;
-                            count--;
-                        }
-                    }
-        }else if(expen.posicao_id === 4){
+                this.state.ia.getBestMeanPlayersByPosition(this.state.jogadores, 3, 10, best_clubs_to_beg, rodada_atual, expen.preco_num))
+
+            while (count > 0) {
+                jogad = zagueiros.pop()
+                console.log(jogad)
+                console.log("JOGADOR JA ESTA NA LISTA?")
+                console.log(atletas.includes(jogad))
+                if (jogad.preco_num < expen.preco_num && !atletas.includes(jogad)) {
+                    console.log('Preco: ' + jogad.preco_num)
+                    console.log('Patrimonio: ' + patrimonio.valor)
+                    patrimonio.valor -= jogad.preco_num;
+                    atletas[indexToPush] = jogad;
+                    count--;
+                }
+            }
+        } else if (expen.posicao_id === 4) {
             //meias
             console.log('VAI COLOCAR MEIAS')
             var meias = this.state.ia.calculatePlayerAllMetricsMidfielders(
-                        this.state.ia.getBestMeanPlayersByPosition(this.state.jogadores, 4, 10, best_clubs_to_beg, rodada_atual, expen.preco_num))
-                    
-                    while(count > 0){
-                        jogad = meias.pop()
-                        console.log(jogad)
-                        console.log("JOGADOR JA ESTA NA LISTA?")
-                        console.log(atletas.includes(jogad))
-                        if (jogad.preco_num < expen.preco_num && !atletas.includes(jogad)) {
-                            console.log('Preco: ' + jogad.preco_num)
-                            console.log('Patrimonio: ' + patrimonio.valor)
-                            patrimonio.valor -= jogad.preco_num;
-                            atletas[indexToPush] = jogad;
-                            count--;
-                        }
-                    }
-        }else if(expen.posicao_id === 5){
+                this.state.ia.getBestMeanPlayersByPosition(this.state.jogadores, 4, 10, best_clubs_to_beg, rodada_atual, expen.preco_num))
+
+            while (count > 0) {
+                jogad = meias.pop()
+                console.log(jogad)
+                console.log("JOGADOR JA ESTA NA LISTA?")
+                console.log(atletas.includes(jogad))
+                if (jogad.preco_num < expen.preco_num && !atletas.includes(jogad)) {
+                    console.log('Preco: ' + jogad.preco_num)
+                    console.log('Patrimonio: ' + patrimonio.valor)
+                    patrimonio.valor -= jogad.preco_num;
+                    atletas[indexToPush] = jogad;
+                    count--;
+                }
+            }
+        } else if (expen.posicao_id === 5) {
             //atacantes
             console.log('VAI COLOCAR ATACANTES')
             var atacantes = this.state.ia.calculatePlayerAllMetricsAttack(
-                        this.state.ia.getBestMeanPlayersByPosition(this.state.jogadores, 5, 10, best_clubs_to_beg, rodada_atual, expen.preco_num))
-                    
-                    while(count > 0){
-                        jogad = atacantes.pop()
-                        console.log(jogad)
-                        console.log("JOGADOR JA ESTA NA LISTA?")
-                        console.log(atletas.includes(jogad))
-                        if (jogad.preco_num < expen.preco_num && !atletas.includes(jogad)) {
-                            console.log('Preco: ' + jogad.preco_num)
-                            console.log('Patrimonio: ' + patrimonio.valor)
-                            patrimonio.valor -= jogad.preco_num;
-                            atletas[indexToPush] = jogad;
-                            count--;
-                        }
-                    }
-        }else{
+                this.state.ia.getBestMeanPlayersByPosition(this.state.jogadores, 5, 10, best_clubs_to_beg, rodada_atual, expen.preco_num))
+
+            while (count > 0) {
+                jogad = atacantes.pop()
+                console.log(jogad)
+                console.log("JOGADOR JA ESTA NA LISTA?")
+                console.log(atletas.includes(jogad))
+                if (jogad.preco_num < expen.preco_num && !atletas.includes(jogad)) {
+                    console.log('Preco: ' + jogad.preco_num)
+                    console.log('Patrimonio: ' + patrimonio.valor)
+                    patrimonio.valor -= jogad.preco_num;
+                    atletas[indexToPush] = jogad;
+                    count--;
+                }
+            }
+        } else {
             //tecnicos
             console.log('VAI COLOCAR TECNICO')
             var tecnicos = this.state.ia.getBestAppreciation(
-                        this.state.ia.getBestMeanPlayersByPosition(this.state.jogadores, 6, 10, best_clubs_to_beg, rodada_atual, expen.preco_num))
-                    
-                    while(count > 0){
-                        jogad = tecnicos.pop()
-                        console.log(jogad)
-                        if (jogad.preco_num < expen.preco_num && !atletas.includes(jogad)) {
-                            console.log('Preco: ' + jogad.preco_num)
-                            console.log('Patrimonio: ' + patrimonio.valor)
-                            patrimonio.valor -= jogad.preco_num;
-                            atletas[indexToPush] = jogad;
-                            count--;
-                        }
-                    }
+                this.state.ia.getBestMeanPlayersByPosition(this.state.jogadores, 6, 10, best_clubs_to_beg, rodada_atual, expen.preco_num))
+
+            while (count > 0) {
+                jogad = tecnicos.pop()
+                console.log(jogad)
+                if (jogad.preco_num < expen.preco_num && !atletas.includes(jogad)) {
+                    console.log('Preco: ' + jogad.preco_num)
+                    console.log('Patrimonio: ' + patrimonio.valor)
+                    patrimonio.valor -= jogad.preco_num;
+                    atletas[indexToPush] = jogad;
+                    count--;
+                }
+            }
         }
         console.log('ATLETAS')
         console.log(atletas)
@@ -542,7 +588,7 @@ class MyTeam extends Component {
 
 
 
-    convertAthletesArray(atletas){
+    convertAthletesArray(atletas) {
         var attas = [];
         atletas.map(
             (atleta) => {
@@ -552,11 +598,11 @@ class MyTeam extends Component {
         return attas;
     }
 
-    howMuchAthletesByPos(atletas, pos){
+    howMuchAthletesByPos(atletas, pos) {
         var count = 0;
         atletas.map(
             (atleta) => {
-                if(atleta.posicao_id === pos){
+                if (atleta.posicao_id === pos) {
                     count++;
                 }
             }
@@ -568,39 +614,64 @@ class MyTeam extends Component {
         console.log('Inicio Escala Time')
         this.state.clubes_throughput.orderingChoiceByPosition().then(
             best_clubs_to_beg => {
+                // return this.getPlayers().then(
+                //     (players) => {                        
+                // return this.getSchemas().then(
+                //     (esquemas) => {
                 console.log('Promessa Resolvida')
                 console.log(best_clubs_to_beg);
+                console.log(this.state.esquemas)
+                console.log(this.state.rodada_atual)
                 var atletas = [];
+                // var esq_id = this.state.team.esquema_id
                 var esquema = this.state.esquemas.find(
                     (sch) => {
-                        return (sch.esquema_id === 3)
+                        return (sch.esquema_id === this.state.team.esquema_id)
                     }
                 )
-                var patrimonio = {valor: this.state.team.patrimonio};
+                console.log(esquema)
+                var patrimonio = { valor: this.state.team.patrimonio };
                 var const_max_price = patrimonio.valor;
                 console.log(this.state.team.patrimonio)
 
-                this.chooseAttackers(esquema, patrimonio, atletas, best_clubs_to_beg, this.state.rodada_atual, const_max_price);
-                this.chooseGoalKeepers(esquema, patrimonio, atletas, best_clubs_to_beg, this.state.rodada_atual, const_max_price);
-                this.chooseMidfielders(esquema, patrimonio, atletas, best_clubs_to_beg, this.state.rodada_atual, const_max_price);
-                this.chooseCenterDefenders(esquema, patrimonio, atletas, best_clubs_to_beg, this.state.rodada_atual, const_max_price);
-                this.chooseSideDefenders(esquema, patrimonio, atletas, best_clubs_to_beg, this.state.rodada_atual, const_max_price);
-                this.chooseManager(esquema, patrimonio, atletas, best_clubs_to_beg, this.state.rodada_atual, const_max_price);
+                this.chooseAttackers(esquema, patrimonio, atletas, best_clubs_to_beg,
+                    this.state.rodada_atual, const_max_price);
+                this.chooseGoalKeepers(esquema, patrimonio, atletas, best_clubs_to_beg,
+                    this.state.rodada_atual, const_max_price);
+                this.chooseMidfielders(esquema, patrimonio, atletas, best_clubs_to_beg,
+                    this.state.rodada_atual, const_max_price);
+                this.chooseCenterDefenders(esquema, patrimonio, atletas, best_clubs_to_beg,
+                    this.state.rodada_atual, const_max_price);
+                this.chooseSideDefenders(esquema, patrimonio, atletas, best_clubs_to_beg,
+                    this.state.rodada_atual, const_max_price);
+                this.chooseManager(esquema, patrimonio, atletas, best_clubs_to_beg,
+                    this.state.rodada_atual, const_max_price);
 
                 var ordered_ply_captain = this.state.ia.calculatePlayerAllMetricsAttack(atletas);
                 console.log('Possíveis Captães')
                 console.log(ordered_ply_captain)
 
                 console.log(atletas);
+                this.setState({ new_team_view: atletas })
+                // var athelets = atletas;
                 atletas = this.convertAthletesArray(atletas);
 
-                this.state.new_team.atletas = atletas;
-                if(ordered_ply_captain.pop().posicao_id !== 6){
-                    this.state.new_team.capitao = ordered_ply_captain.pop().atleta_id;
-                }else{
-                    this.state.new_team.capitao = ordered_ply_captain.pop().atleta_id;
+                var capita = null;
+                // this.state.new_team.atletas = atletas;
+                if (ordered_ply_captain.pop().posicao_id !== 6) {
+                    capita = ordered_ply_captain.pop().atleta_id;
+                    // capita = ordered_ply_captain.pop().atleta_id;
+                } else {
+                    capita = ordered_ply_captain.pop().atleta_id;
+                    // capita = ordered_ply_captain.pop().atleta_id;
                 }
+                this.setState({ new_team: { esquema: 3, atletas: atletas, capitao: capita } })
+                sessionStorage.setItem('newTeam', { new_team: { esquema: 3, atletas: atletas, capitao: capita } })
+                // return Promise.resolve({ atletas: athelets, capitao: capita });
                 console.log(require('util').inspect(this.state.new_team));
+                // return atle
+                // })
+                // })
             }
         );
         // console.log('Best Begs')
@@ -642,60 +713,194 @@ class MyTeam extends Component {
 
     render() {
         const { classes } = this.props
-        if (this.state.authorized) {
+        // if (this.state.authorized) {
+        //     return (
+        //         <Fragment>
+        //             <Button variant='raised' color='primary' onClick={this.handleClick = this.saveTeam.bind(this)}>Salvar Time</Button>
+        //             <Button variant='raised' color='primary' onClick={this.handleClick = this.hideMyTeam.bind(this)}> Esconder </Button>
+        //             <Team_Info
+        //                 patrimonio={this.state.team.patrimonio}
+        //                 valor_time={this.state.team.valor_time}
+        //                 pontos={this.state.team.pontos} />
+        //             <br />
+        //             <Grid container spacing={8}>
+        //                 <Grid item xs={6}>
+        //                     <Typography className={classes.title} variant='title' align='left'>
+        //                         Escalação Atual
+        //                     </Typography>
+        //                     <br />
+        //                     <PanelMyTeam />
+        //                     <List spacing={8}>
+        //                         {
+        //                             this.state.team.atletas.map((athlt) => {
+        //                                 // console.log(athlt);
+        //                                 // console.log(this.state)
+        //                                 return (
+        //                                     <ListItem key={athlt.atleta_id}>
+        //                                         <Jogador
+        //                                             apelido={athlt.apelido}
+        //                                             foto={athlt.foto}
+        //                                             clube={this.getPlayerClub(athlt.clube_id)}
+        //                                             pos={this.getPlayerPos(athlt.posicao_id)}
+        //                                             status={this.getPlayerStat(athlt.status_id)}
+        //                                             media={athlt.media_num}
+        //                                             ult={athlt.pontos_num}
+        //                                             variacao={athlt.variacao_num}
+        //                                             preco={athlt.preco_num}
+        //                                             scout_mean={this.state.ia.weightedAverageScouts(athlt)}
+        //                                             inTeam={true}
+        //                                             timeAtual={true}
+        //                                         />
+        //                                     </ListItem>
+        //                                 )
+        //                             })}
+        //                     </List>
+        //                 </Grid>
+        //                 <Grid item xs={6}>
+        //                     <Typography className={classes.title} variant='title' align='left'>
+        //                         Sugestão para próxima rodada
+        //                     </Typography>
+        //                     <br />
+        //                     <PanelMyTeam />
+        //                     <List spacing={8}>
+        //                         {this.state.new_team_view.map((athlt) => {
+        //                             // console.log(athlt);
+        //                             return (
+        //                                 <ListItem key={athlt.atleta_id}>
+        //                                     <Jogador
+        //                                         apelido={athlt.apelido}
+        //                                         foto={athlt.foto}
+        //                                         clube={this.getPlayerClub(athlt.clube_id)}
+        //                                         pos={this.getPlayerPos(athlt.posicao_id)}
+        //                                         status={this.getPlayerStat(athlt.status_id)}
+        //                                         media={athlt.media_num}
+        //                                         ult={athlt.pontos_num}
+        //                                         variacao={athlt.variacao_num}
+        //                                         preco={athlt.preco_num}
+        //                                         scout_mean={this.state.ia.weightedAverageScouts(athlt)}
+        //                                         inTeam={true}
+        //                                         timeAtual={false}
+        //                                     />
+        //                                 </ListItem>
+        //                             )
+        //                         })}
+        //                     </List>
+        //                 </Grid>
+        //             </Grid>
+        //         </Fragment>
+        //     )
+        // } else {
             return (
                 <Fragment>
-                    <Button variant='raised' color='primary' onClick={this.handleClick = this.saveTeam.bind(this)}>Salvar Time</Button>
-                    <Button variant='raised' color='primary' onClick={this.handleClick = this.hideMyTeam.bind(this)}> Esconder </Button>
-                    <Team_Info 
-                        patrimonio={this.state.team.patrimonio}
-                        valor_time={this.state.team.valor_time}
-                        pontos={this.state.team.pontos} />
-                    <br />
-                    <Typography className={classes.title} variant='title' align='left'>
-                        Escalação
-                    </Typography>
-                    <br />
-                    <PanelMyTeam />
-                    <Grid container spacing={8}>
-                        {this.state.team.atletas.map((athlt) => {
-                            // console.log(athlt);
-                            return (
-                                <Grid item key={athlt.atleta_id}>
-                                    <Jogador
-                                        apelido={athlt.apelido}
-                                        foto={athlt.foto}
-                                        clube={this.getPlayerClub(athlt.clube_id)}
-                                        pos={this.getPlayerPos(athlt.posicao_id)}
-                                        status={this.getPlayerStat(athlt.status_id)}
-                                        media={athlt.media_num}
-                                        variacao={athlt.variacao_num}
-                                        scout_mean={this.state.ia.weightedAverageScouts(athlt)}
-                                    />
-                                </Grid>
-                            )
-                        })}
+                    <Grid container xs={12}>
+                        <Grid item xs={6}>
+                            <BuscarJogMaisEscalados className={classes.searchMostScaled} />
+                        </Grid>
+                        <Grid item xs={6}>
+                            <BuscarJogador className={classes.secondCard} new_team={this.state.new_team}/>
+                        </Grid>
+                        <Grid item xs={12}>
+                            <Card>
+                                <CardHeader
+                                    title="Meu Time"
+                                    subtitle="Vejamos como estamos"
+                                // actAsExpander={true}
+                                />
+                                <CardActions>
+                                    {/* <Button variant='raised' color="primary" onClick={this.handleClick = this.getMyProfile.bind(this)}>
+                                        Ver Time
+                                    </Button> */}
+                                </CardActions>
+                                <CardContent>
+                                    {
+                                        this.state.authorized ?
+                                            <Fragment>
+                                                <Button variant='raised' color='primary' onClick={this.handleClick = this.saveTeam.bind(this)}>Salvar Time</Button>
+                                                {/* <Button variant='raised' color='primary' onClick={this.handleClick = this.hideMyTeam.bind(this)}> Esconder </Button> */}
+                                                <Team_Info
+                                                    patrimonio={this.state.team.patrimonio}
+                                                    valor_time={this.state.team.valor_time}
+                                                    pontos={this.state.team.pontos} />
+                                                <br />
+                                                <Grid container spacing={8}>
+                                                    <Grid item xs={6}>
+                                                        <Typography className={classes.title} variant='title' align='left'>
+                                                            Escalação Atual
+                                                </Typography>
+                                                        <br />
+                                                        <PanelMyTeam />
+                                                        <List spacing={8}>
+                                                            {
+                                                                this.state.team.atletas.map((athlt) => {
+                                                                    // console.log(athlt);
+                                                                    // console.log(this.state)
+                                                                    return (
+                                                                        <ListItem key={athlt.atleta_id}>
+                                                                            <Jogador
+                                                                                id={athlt.atleta_id}
+                                                                                apelido={athlt.apelido}
+                                                                                foto={athlt.foto}
+                                                                                clube={this.getPlayerClub(athlt.clube_id)}
+                                                                                pos={this.getPlayerPos(athlt.posicao_id)}
+                                                                                status={this.getPlayerStat(athlt.status_id)}
+                                                                                media={athlt.media_num}
+                                                                                ult={athlt.pontos_num}
+                                                                                variacao={athlt.variacao_num}
+                                                                                preco={athlt.preco_num}
+                                                                                scout_mean={this.state.ia.weightedAverageScouts(athlt)}
+                                                                                inTeam={this.state.team.atletas.includes(athlt)}
+                                                                                inNewTeam={this.state.new_team.atletas.includes(athlt.atleta_id)}
+                                                                                timeAtual={true}
+                                                                            />
+                                                                        </ListItem>
+                                                                    )
+                                                                })}
+                                                        </List>
+                                                    </Grid>
+                                                    <Grid item xs={6}>
+                                                        <Typography className={classes.title} variant='title' align='left'>
+                                                            Sugestão para próxima rodada
+                                                </Typography>
+                                                        <br />
+                                                        <PanelMyTeam />
+                                                        <List spacing={8}>
+                                                            {this.state.new_team_view.map((athlt) => {
+                                                                // console.log(athlt);
+                                                                return (
+                                                                    <ListItem key={athlt.atleta_id}>
+                                                                        <Jogador
+                                                                            id={athlt.atleta_id}
+                                                                            apelido={athlt.apelido}
+                                                                            foto={athlt.foto}
+                                                                            clube={this.getPlayerClub(athlt.clube_id)}
+                                                                            pos={this.getPlayerPos(athlt.posicao_id)}
+                                                                            status={this.getPlayerStat(athlt.status_id)}
+                                                                            media={athlt.media_num}
+                                                                            ult={athlt.pontos_num}
+                                                                            variacao={athlt.variacao_num}
+                                                                            preco={athlt.preco_num}
+                                                                            scout_mean={this.state.ia.weightedAverageScouts(athlt)}
+                                                                            inTeam={this.state.team.atletas.includes(athlt)}
+                                                                            inNewTeam={this.state.new_team.atletas.includes(athlt.atleta_id)}
+                                                                            timeAtual={false}
+                                                                        />
+                                                                    </ListItem>
+                                                                )
+                                                            })}
+                                                        </List>
+                                                    </Grid>
+                                                </Grid>
+                                            </Fragment>
+                                        :
+                                            null
+                                    }
+                                </CardContent>
+                            </Card>
+                        </Grid>
                     </Grid>
                 </Fragment>
             )
-        } else {
-            return (
-                <Fragment>
-                    <Card>
-                        <CardHeader
-                            title="Meu Time"
-                            subtitle="Vejamos como estamos"
-                            actAsExpander={true}
-                        />
-                        <CardActions>
-                            <Button variant='raised' color="primary" onClick={this.handleClick = this.getMyProfile.bind(this)}>
-                                Ver Time
-                            </Button>
-                        </CardActions>
-                    </Card>
-                </Fragment>
-            )
-        }
+        // }
     }
 }
 export default withStyles(styles)(MyTeam);

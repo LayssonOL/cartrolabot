@@ -13,7 +13,7 @@ const styles = {
     card: {
         position: 'relative',
         top: '10%',
-        left: '25%',
+        left: '30%',
         width: '37%',
         bottom: '20%',
         padding: '10',
@@ -121,25 +121,7 @@ class Auth extends Component {
         if (this.state.connected) {
             return (
                 <Fragment>
-                    <Grid container spacing={12}>
-                        <Grid item xs={6}>
-                            <BuscarJogMaisEscalados className={classes.searchMostScaled}/>
-                        </Grid>
-                        <Grid item xs={6}>
-                            <BuscarJogador className={classes.secondCard}/>
-                        </Grid>
-                        <Grid item xs={12}>
-                            <MyTeam className={classes.myTeam}/>
-                        </Grid>
-                    </Grid>
-                        {/* <div className="col-sm">
-                            <ClubsPerformance />
-                        </div> */}
-                    {/* <div className="row">
-                        <div className="col-sm">
-                            <BuyPlayer />
-                        </div>
-                    </div> */}
+                    <MyTeam className={classes.myTeam}/>
                 </Fragment>
             )
         } else {

@@ -3,13 +3,17 @@ import { withStyles, Paper, Grid, Typography } from '@material-ui/core';
 
 const styles = {
     paper:{
-        
+        borderStyle: 'outset',
     },
     gridContainer:{
 
     },
     titles:{
         fontWeight: 'bold',
+        fontSize: 'x-large',
+    },
+    valores:{
+        fontSize: '1.25rem',
     },
 }
 
@@ -31,7 +35,7 @@ class TeamInfo extends Component{
                             <Typography className={classes.titles} variant='subheading' align='center'>
                                 Patrimônio
                             </Typography>
-                            <Typography variant='body2' align='center'>
+                            <Typography classesName={classes.valores} variant='body2' align='center'>
                                 {this.props.patrimonio.toFixed(2)}
                             </Typography>
                         </Grid>
@@ -39,7 +43,7 @@ class TeamInfo extends Component{
                             <Typography className={classes.titles} variant='subheading' align='center'>
                                 Pontos
                             </Typography>
-                            <Typography variant='body2' align='center'>
+                            <Typography classesName={classes.valores} variant='body2' align='center'>
                                 {this.props.pontos.toFixed(2)}
                             </Typography>
                         </Grid>
@@ -47,7 +51,7 @@ class TeamInfo extends Component{
                             <Typography className={classes.titles} variant='subheading' align='center'>
                                 Valor do Time
                             </Typography>
-                            <Typography variant='body2' align='center'>
+                            <Typography classesName={classes.valores} variant='body2' align='center'>
                                 {this.props.valor_time.toFixed(2)}
                             </Typography>
                         </Grid>

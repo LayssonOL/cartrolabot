@@ -4,12 +4,18 @@ import { withStyles, Grid, Paper, Typography } from "@material-ui/core";
 const styles = {
     paper:{
         width: '100%',
-        height: '5%',
+        height: '3%',
     },
     gridContainer:{
         position: 'relative',
         top: '25%',
         width: '100%',
+        height: 'auto',
+    },
+    text:{
+        position: 'relative',
+        align: 'center',
+        fontWeight: 'bold',
         height: 'auto',
     },
 }
@@ -29,34 +35,34 @@ class PanelMyTeam extends Component{
                 <Paper className={classes.paper}>
                     <Grid className={classes.gridContainer} container spacing={0}>
                         <Grid item xs={2}>
-                            <Typography variant='subheading' align='center'>
+                            <Typography className={classes.text} variant='title' align='center'>
                                 Time
                             </Typography>
                         </Grid>
                         <Grid item xs={2}>
-                            <Typography variant='subheading' align='center'>
+                            <Typography className={classes.text} variant='title' align='center'>
                                 Jogador
                             </Typography>
                         </Grid>
                         <Grid item xs={2}>
-                            <Typography variant='subheading' align='center'>
+                            <Typography className={classes.text} variant='title' align='center'>
                                 Última
                             </Typography>
                         </Grid>
                         <Grid item xs={2}>
-                            <Typography variant='subheading' align='center'>
+                            <Typography className={classes.text} variant='title' align='center'>
                                 Média
                             </Typography>
                         </Grid>
                         <Grid item xs={2}>
-                            <Typography variant='subheading' align='center'>
-                                Confronto
-                            </Typography>
-                        </Grid>
-                        <Grid item xs={2}>
-                            <Typography variant='subheading' align='center'>
+                            <Typography className={classes.text} variant='title' align='center'>
                                 Preço
                             </Typography>
+                        <Grid item xs={2}>
+                            <Typography variant='title' align='center'>
+                                
+                            </Typography>
+                        </Grid>
                         </Grid>
                     </Grid>
                 </Paper>
