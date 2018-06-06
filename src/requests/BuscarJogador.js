@@ -58,10 +58,10 @@ class BuscarJogador extends Component {
                     status: res.data.status,
                     jogadores: res.data.atletas
                 });
-                console.log(this.state.status);
-                console.log(this.state.clubes);
-                console.log(Object.values(this.state.posicoes));
-                console.log(this.state.jogadores);
+                // console.log(this.state.status);
+                // console.log(this.state.clubes);
+                // console.log(Object.values(this.state.posicoes));
+                // console.log(this.state.jogadores);
             }).catch(err => {
                 if (err) {
                     window.alert(err);
@@ -139,6 +139,8 @@ class BuscarJogador extends Component {
                                         posicoes={this.state.posicoes}
                                         status={this.state.status}
                                         newTeam={this.props.new_team}
+                                        addPlayerToNewTeam={this.props.addPlayerToNewTeam}
+                                        removePlayerFromNewTeam={this.props.removePlayerFromNewTeam}
                                          />
                                 </Grid>
                                 <Grid item xs={12}>
@@ -152,6 +154,8 @@ class BuscarJogador extends Component {
                                         posicoes={this.state.posicoes}
                                         status={this.state.status}
                                         newTeam={this.props.new_team}
+                                        addPlayerToNewTeam={this.props.addPlayerToNewTeam}
+                                        removePlayerFromNewTeam={this.props.removePlayerFromNewTeam}
                                          />
                                 </Grid>
                                 <Grid item xs={12}>
@@ -165,6 +169,8 @@ class BuscarJogador extends Component {
                                         posicoes={this.state.posicoes}
                                         status={this.state.status}
                                         newTeam={this.props.new_team}
+                                        addPlayerToNewTeam={this.props.addPlayerToNewTeam}
+                                        removePlayerFromNewTeam={this.props.removePlayerFromNewTeam}
                                          />
                                 </Grid>
                                 <Grid item xs={12}>
@@ -178,6 +184,8 @@ class BuscarJogador extends Component {
                                         posicoes={this.state.posicoes}
                                         status={this.state.status}
                                         newTeam={this.props.new_team}
+                                        addPlayerToNewTeam={this.props.addPlayerToNewTeam}
+                                        removePlayerFromNewTeam={this.props.removePlayerFromNewTeam}
                                          />
                                 </Grid>
                                 <Grid item xs={12}>
@@ -190,6 +198,8 @@ class BuscarJogador extends Component {
                                         clubes={this.state.clubes} posicoes={this.state.posicoes}
                                         status={this.state.status}
                                         newTeam={this.props.new_team}
+                                        addPlayerToNewTeam={this.props.addPlayerToNewTeam}
+                                        removePlayerFromNewTeam={this.props.removePlayerFromNewTeam}
                                          />
                                 </Grid>
                                 <Grid item xs={12}>
@@ -203,6 +213,8 @@ class BuscarJogador extends Component {
                                         posicoes={this.state.posicoes}
                                         status={this.state.status}
                                         newTeam={this.props.new_team}
+                                        addPlayerToNewTeam={this.props.addPlayerToNewTeam}
+                                        removePlayerFromNewTeam={this.props.removePlayerFromNewTeam}
                                          />
                                 </Grid>
                             </Grid>

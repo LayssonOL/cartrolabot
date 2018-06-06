@@ -4,6 +4,9 @@ import { withStyles, Paper, Grid, Typography } from '@material-ui/core';
 const styles = {
     paper:{
         borderStyle: 'outset',
+        position: '-webkitSticky',
+        position: 'sticky',
+        top: 0,
     },
     gridContainer:{
 

@@ -329,9 +329,11 @@ class IAlgorithms extends Component {
         //lista tuplas de jogadores com o [id, scout_mean]
         var peers = jogadores.map(
             (jog) => {
-                return [jog.atleta_id,
-                (((this.weightedAverageAttackScouts(jog) * 3) + (jog.media_num * 2) - (jog.variacao_num)) / 6)
-                ]
+                if(jog){
+                    return [jog.atleta_id,
+                    (((this.weightedAverageAttackScouts(jog) * 3) + (jog.media_num * 2) - (jog.variacao_num)) / 6)
+                    ]
+                }
             }
         );
 
@@ -348,15 +350,19 @@ class IAlgorithms extends Component {
         // console.log(jogadores)
         peers.map(
             (p) => {
-                jogadores.map(plr => {
-                    if (plr.atleta_id === p[0]) {
-                        plrs_ordered.push(plr)
-                    }
-                });
+                if(p){
+                    jogadores.map(plr => {
+                        if(plr){
+                            if (plr.atleta_id === p[0]) {
+                                plrs_ordered.push(plr)
+                            }
+                        }
+                    });
+                }
             }
         );
-        console.log('MELHORES JOGADORES DE ATAQUE')
-        console.log(plrs_ordered)
+        // console.log('MELHORES JOGADORES DE ATAQUE')
+        // console.log(plrs_ordered)
         return plrs_ordered;
     }
 
@@ -390,8 +396,8 @@ class IAlgorithms extends Component {
                 });
             }
         );
-        console.log('MELHORES JOGADORES DE DEFESA')
-        console.log(plrs_ordered)
+        // console.log('MELHORES JOGADORES DE DEFESA')
+        // console.log(plrs_ordered)
         return plrs_ordered;
     }
 
@@ -425,8 +431,8 @@ class IAlgorithms extends Component {
                 });
             }
         );
-        console.log('MELHORES JOGADORES DE MEIO')
-        console.log(plrs_ordered)
+        // console.log('MELHORES JOGADORES DE MEIO')
+        // console.log(plrs_ordered)
         return plrs_ordered;
     }
 

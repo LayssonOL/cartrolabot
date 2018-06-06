@@ -5,17 +5,17 @@ import CardHeader from '@material-ui/core/CardHeader';
 import CardContent from '@material-ui/core/CardContent';
 import Button from '@material-ui/core/Button'
 import Avatar from '@material-ui/core/Avatar';
-// import AddIcon from '@material-ui/icons/Add';
-// import ClearIcon from '@material-ui/icons/Clear';
+import AddIcon from '@material-ui/icons/Add';
+import RemoveIcon from '@material-ui/icons/Remove';
 import Typography from '@material-ui/core/Typography';
 import { withStyles, Paper, Grid, ListItemText } from '@material-ui/core';
 
 const styles = {
     img: {
-        width: "100%",
+        maxWidth: "100%",
         height: 'auto',
         position: 'relative',
-        top: '4%',
+        bottom: '0%',
     },
     escudo: {
         position: 'relative',
@@ -40,7 +40,7 @@ const styles = {
     gridContainer: {
         position: 'relative',
         top: '25%',
-        width: '100%',
+        maxWidth: '100%',
         height: 'auto',
     },
     data: {
@@ -50,11 +50,32 @@ const styles = {
     },
     jogador_nome: {
         position: 'relative',
+        left: '30%',
+        fontWeight: 'bold',
+    },
+    jogador_pos: {
+        position: 'relative',
         left: '30%'
     },
-    button:{
+    add_button:{
         position: 'relative',
-        top: '25%',
+        top: '55%',
+        backgroundColor: 'green',
+    },
+    remove_button:{
+        position: 'relative',
+        top: '55%',
+        backgroundColor: 'red',
+    },
+    add_icon:{
+        color: 'white',
+    },
+    remove_icon:{
+        color: 'white'
+    },
+    abrv_club:{
+        position: 'relative',
+        left: '20%',
     },
 }
 
@@ -63,37 +84,22 @@ class Jogador extends Component {
         super(props)
     }
 
-    addPlayer(){
-        var team = sessionStorage.getItem('newTeam')
-        console.log(team)
-        if(!team.atletas.includes(this.props.id) && team.atletas.length < 12){
-            for (let i = 0; i < team.atletas.length; i++) {
-                if(team.atletas[i] === null){
-                    team.atletas[i] = this.props.id
-                }
-            }
-            sessionStorage.setItem('newTeam', team)
-        }else{
-            window.alert('Jogador já consta no time ou time cheio!');
-        }
-    }
-
-    removePlayer(){
-        var team = sessionStorage.getItem('newTeam')
-        console.log(team)
-        if(team.atletas.includes(this.props.id)){
-            team.atletas[team.atletas.indexOf(this.props.id)] = null
-            sessionStorage.setItem('newTeam', team)
-        }else{
-            window.alert('Jogador não consta no time!');
-        }
-    }
-
+    // addPlayerToTeam(){
+    //     console.log('ADD PLAYER AT JOGADOR')
+    //     // console.log(this.props.jog)
+    //     this.props.addPlayerToNewTeam(this.props.jog)
+    // }
+    
+    // removePlayerFromTeam(){
+    //     console.log('REMOVE PLAYER AT JOGADOR')
+    //     // console.log(this.props.jog)
+    //     this.props.removePlayerFromNewTeam(this.props.jog)
+    // }
 
     render() {
         var foto = null;
-        if (this.props.foto) {
-            foto = this.props.foto.replace('FORMATO', '140x140');
+        if (this.props.jog.foto) {
+            foto = this.props.jog.foto.replace('FORMATO', '140x140');
         }
         const { classes } = this.props
         // console.log('POSICAO: '+this.props.pos);
@@ -104,26 +110,28 @@ class Jogador extends Component {
                     <Grid className={classes.gridContainer} container spacing={0}>
                         <Grid item xs={2}>
                             <img className={classes.escudo} src={Object.values(this.props.clube.escudos)[0]} alt={this.props.clube.nome} title={this.props.clube.nome} />
-                            {/* <ListItemText
-                                primary={   <Typography variant="subheading" align='justify' gutterBottom>
-                                                {this.props.clube.nome}
+                            <ListItemText
+                                className={classes.abrv_club}
+                                secondary={   <Typography variant="body2" align='justify' gutterBottom>
+                                                {this.props.clube.abreviacao}
+                                                {/* {this.props.inNewTeam ? 'YES' : 'NO'} */}
                                             </Typography>
                                 }
                                 >
-                            </ListItemText> */}
+                            </ListItemText>
                         </Grid>
                         <Grid item xs={2}>
                             <Grid container>
                                 <Grid item xs={6}>
-                                    <img className={classes.img} src={foto} alt={this.props.apelido} title={this.props.apelido} />
+                                    <img className={classes.img} src={foto} alt={this.props.jog.apelido} title={this.props.jog.apelido} />
                                 </Grid>
                                 <Grid item xs={6}>
-                                    <ListItemText className={classes.jogador_nome}
-                                        primary={<Typography variant="title" align='justify' gutterBottom>
-                                            {this.props.apelido}
+                                    <ListItemText 
+                                        primary={<Typography className={classes.jogador_nome} variant="subheading" align='justify' gutterBottom>
+                                            {this.props.jog.apelido}
                                         </Typography>
                                         }
-                                        secondary={<Typography variant="subheading" align='justify' gutterBottom>
+                                        secondary={<Typography className={classes.jogador_pos} variant="subheading" align='justify' gutterBottom>
                                             {this.props.pos.nome}
                                         </Typography>
                                         }
@@ -133,17 +141,17 @@ class Jogador extends Component {
                         </Grid>
                         <Grid item xs={2}>
                             <Typography className={classes.data} variant='title' align='center'>
-                                {this.props.ult}
+                                {this.props.jog.pontos_num}
                             </Typography>
                         </Grid>
                         <Grid item xs={2}>
                             <Typography className={classes.data} variant='title' align='center'>
-                                {this.props.media}
+                                {this.props.jog.media_num}
                             </Typography>
                         </Grid>
                         <Grid item xs={2}>
                             <Typography className={classes.data} variant='title' align='center'>
-                                {this.props.preco}
+                                {this.props.jog.preco_num}
                             </Typography>
                         </Grid>
                         <Grid item xs={2}>
@@ -153,21 +161,25 @@ class Jogador extends Component {
                                 :
                                     <Grid container>
                                         <Grid item xs={6}>
-                                            <Button variant="fab" color="primary" aria-label="add" className={classes.button}
-                                                disabled={this.props.inNewTeam || this.props.inTeam}
-                                                // onClick={this.addPlayer(this)}
+                                           {/* {(this.props.inNewTeam || this.props.inTeam) ? */}
+                                            <Button variant="fab" mini aria-label="add" className={classes.add_button}
+                                                disabled={this.props.inNewTeam}
+                                                onClick={() => {this.props.addPlayerToNewTeam(this.props.jog)}}
                                                 >
                                                 {/* <AddIcon /> */}
-                                                A
+                                                <AddIcon  className={classes.add_icon} />
                                             </Button> 
+                                            {/* : */}
+                                            {/* null */}
+                                           {/* } */}
                                         </Grid>
                                         <Grid item xs={6}>
-                                            <Button variant="fab" color="secondary" aria-label="remove" className={classes.button}
-                                                disabled={!this.props.inNewTeam || !this.props.inNewTeam}
-                                                // onClick={this.removePlayer(this)}
+                                            <Button variant="fab" mini aria-label="remove" className={classes.remove_button}
+                                                disabled={!this.props.inNewTeam}
+                                                onClick={() => {this.props.removePlayerFromNewTeam(this.props.jog)}}
                                                 >
                                                 {/* <ClearIcon /> */}
-                                                R
+                                                <RemoveIcon   className={classes.remove_icon} />
                                             </Button>
                                         </Grid>
                                     </Grid>
@@ -179,9 +191,9 @@ class Jogador extends Component {
                 </Paper>
                 {/* <Card>
                     <CardHeader
-                        title={this.props.apelido}
+                        title={this.props.jog.apelido}
                         subtitle={this.props.pos.nome}
-                        avatar={<Avatar alt={this.props.apelido} src={foto}/>}
+                        avatar={<Avatar alt={this.props.jog.apelido} src={foto}/>}
                         actAsExpander={true}>
                     </CardHeader> */}
                 {/* <CardActions>
@@ -189,10 +201,10 @@ class Jogador extends Component {
                     </CardActions> */}
                 {/* <CardContent>
                         <Typography variant="body2">
-                            Media = {this.props.media}
+                            Media = {this.props.jog.media_num}
                         </Typography>
                         <Typography variant="body2">
-                            Variacao = {this.props.variacao}
+                            Variacao = {this.props.jog.variacao_num}
                         </Typography>
                         <Typography variant="body2">
                             Media Scout = {this.props.scout_mean}

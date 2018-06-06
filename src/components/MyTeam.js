@@ -10,7 +10,7 @@ import ClubsPerformance from "../control/ClubsPerformance";
 import Button from '@material-ui/core/Button';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
-import { withStyles, Grid, Typography } from "@material-ui/core";
+import { withStyles, Grid, Typography, Toolbar, AppBar, Avatar } from "@material-ui/core";
 import PanelMyTeam from './Panel_Jogadores_My_Team';
 import Team_Info from "./Team_Info";
 import BuscarJogMaisEscalados from "../requests/BuscarJogMaisEscalados";
@@ -24,6 +24,18 @@ const styles = {
     },
     title: {
         fontWeight: 'bold',
+    },
+    buttonSaveTeam:{
+        position: 'relative',
+        left: '86%',
+    },
+    brasao:{
+        position: 'relative',
+        left: '44%',
+    },
+    pageTitle:{
+        position: 'absolute',
+        left: '47%',
     },
 }
 
@@ -40,8 +52,8 @@ class MyTeam extends Component {
             status: [],
             esquemas: [],
             team: {},
-            new_team_view: {},
-            new_team: { esquema: 3, atletas: [], capitao: 0 },
+            team_to_submit: {},
+            new_team: { esquema: {esquema_id: 0, posicoes: []}, atletas: [], capitao: {} },
             jogadores: [],
             token: sessionStorage.getItem('token')
         };
@@ -165,13 +177,6 @@ class MyTeam extends Component {
             });
     }
 
-    // isInTeam(atleta_id){
-    //     if(this.state.new_team.atletas.includes(atleta_id)){
-    //         return true
-    //     }else{
-
-    //     }
-    // }
 
     componentDidMount() {
         // this.state.clubes_throughput.render()
@@ -186,20 +191,6 @@ class MyTeam extends Component {
         //     }, 1000
         // )
     }
-
-    // getData(){
-    //     setTimeout(
-    //         () => {
-    //             var self = this;
-    //             this.getMyProfile()
-    //         }, 1000
-    //     )
-    // }
-
-
-    // componentDidMount() {
-    //     this.getData()
-    // }
 
 
     // method to choose a list of goalkeepers
@@ -592,7 +583,11 @@ class MyTeam extends Component {
         var attas = [];
         atletas.map(
             (atleta) => {
-                attas.push(atleta.atleta_id)
+                if(atleta !== null && atleta !== undefined){
+                    attas.push(atleta.atleta_id)
+                }else{
+                    attas.push(null)
+                }
             }
         );
         return attas;
@@ -608,6 +603,109 @@ class MyTeam extends Component {
             }
         );
         return count
+    }
+
+    thereIsSpace(pos_id){
+        var pos = this.state.posicoes.find(
+            (position) => {
+                return (position.id === pos_id)
+            }
+        )
+        var pos_name = pos.abreviacao
+        console.log(pos_name)
+        var needed = this.state.new_team.esquema.posicoes[pos_name];
+        // retorna a quantidade de jogadores da posicao que existem no time
+        var thereis = this.state.new_team.atletas.filter(
+            (jogador) => {
+                if(jogador !== null &&  jogador !== undefined){
+                    return (jogador.posicao_id === pos_id)
+                }
+            }
+        ).length
+        console.log(thereis)
+        console.log(needed)
+
+        return (needed - thereis) > 0 ? true : false
+    }
+
+    qntPlayers(){
+        var count = 0
+        this.state.new_team.atletas.map(
+            (atleta) => {
+                if(atleta !== null &&  atleta !== undefined){
+                    count++
+                }
+            }
+        )
+        return count
+    }
+
+    addPlayer = (player) => {
+        this.state.new_team.atletas.map(
+            (atleta) => {
+                if(atleta){
+
+                }else{
+                    this.state.new_team.atletas[this.state.new_team.atletas.indexOf(atleta)] = player
+                    this.setState({new_team: this.state.new_team})
+                    this.configTeamToSubmit(this.state.new_team)
+                }
+            }
+        )
+    }
+
+    addPlayerToNewTeam = (newPlayer) => {
+        console.log('ADICIONAR JOGADOR AO TIME PROPOSTO')
+        console.log(newPlayer)
+        console.log(this)
+        // console.log('QNT DE JOGADORES:')
+        // console.log(this.qntPlayers())
+        var qntP = this.qntPlayers() 
+        if(this.state.team.patrimonio >= newPlayer.preco_num){
+            if(qntP < 12){
+                if(this.thereIsSpace(newPlayer.posicao_id)){
+                    this.addPlayer(newPlayer)
+                }else{
+                    window.alert('Time com o máximo de jogadores para a posição!')
+                }
+            }else{
+                window.alert('Time já está completo!')
+            }
+        }else{
+            window.alert('Você não possui dinheiro suficiente!')
+        }
+    }
+    // parei na necessidade de aplicar essa funcao de conversao sempre apos a insercao de um jogador no time
+    // depois tem que verificar se, no ato de submeter o time o time possui 12 atletas e um capitao definido
+    configTeamToSubmit = (team) => {
+        var ordered_ply_captain = this.state.ia.calculatePlayerAllMetricsAttack(team.atletas);
+        var capita = null;
+        // this.state.new_team.atletas = atletas;
+        if (ordered_ply_captain.pop().posicao_id !== 6) {
+            capita = ordered_ply_captain.pop();
+            // capita = ordered_ply_captain.pop().atleta_id;
+        } else {
+            capita = ordered_ply_captain.pop();
+            // capita = ordered_ply_captain.pop().atleta_id;
+        }
+        var atletas_ids = this.convertAthletesArray(team.atletas);
+        this.setState({team_to_submit: {esquema: team.esquema.esquema_id, atletas: atletas_ids, capitao: capita.atleta_id}})
+    }
+
+    removePlayerFromNewTeam = (player) => {
+        console.log('REMOVER JOGADOR DO TIME PROPOSTO')
+        console.log(player)
+        console.log(this)
+        if(this.state.new_team.atletas.includes(player)){
+            this.state.new_team.atletas[this.state.new_team.atletas.indexOf(player)] = null
+            this.state.new_team.patrimonio += player.preco_num
+            this.setState({
+                new_team: this.state.new_team,
+            })
+            this.configTeamToSubmit(this.state.new_team)
+        }else{
+            window.alert('Jogador não está escalado!')
+        }
     }
 
     scaleTeam() {
@@ -647,28 +745,31 @@ class MyTeam extends Component {
                 this.chooseManager(esquema, patrimonio, atletas, best_clubs_to_beg,
                     this.state.rodada_atual, const_max_price);
 
+                // calculate the general score of all team
                 var ordered_ply_captain = this.state.ia.calculatePlayerAllMetricsAttack(atletas);
                 console.log('Possíveis Captães')
                 console.log(ordered_ply_captain)
 
                 console.log(atletas);
-                this.setState({ new_team_view: atletas })
                 // var athelets = atletas;
-                atletas = this.convertAthletesArray(atletas);
-
+                // this.setState({new_team: {esquema: esquema, atletas: atletas} })
+                
                 var capita = null;
                 // this.state.new_team.atletas = atletas;
                 if (ordered_ply_captain.pop().posicao_id !== 6) {
-                    capita = ordered_ply_captain.pop().atleta_id;
+                    capita = ordered_ply_captain.pop();
                     // capita = ordered_ply_captain.pop().atleta_id;
                 } else {
-                    capita = ordered_ply_captain.pop().atleta_id;
+                    capita = ordered_ply_captain.pop();
                     // capita = ordered_ply_captain.pop().atleta_id;
                 }
-                this.setState({ new_team: { esquema: 3, atletas: atletas, capitao: capita } })
-                sessionStorage.setItem('newTeam', { new_team: { esquema: 3, atletas: atletas, capitao: capita } })
+                this.setState({new_team: { esquema: esquema, atletas: atletas, capitao: capita } })
+                // sessionStorage.setItem('newTeam', { new_team: { esquema: esquema, atletas: atletas, capitao: capita } })
+                var atletas_ids = this.convertAthletesArray(atletas);
+                this.setState({team_to_submit: {esquema: esquema.esquema_id, atletas: atletas_ids, capitao: capita.atleta_id}})
                 // return Promise.resolve({ atletas: athelets, capitao: capita });
-                console.log(require('util').inspect(this.state.new_team));
+                console.log(this.state.new_team);
+                // console.log(require('util').inspect(this.state.new_team));
                 // return atle
                 // })
                 // })
@@ -697,7 +798,7 @@ class MyTeam extends Component {
             {
                 method: 'post',
                 url: this.baseURL,
-                data: this.state.new_team,
+                data: this.state.team_to_submit,
                 // headers: this.config,
                 config: this.headers
             }
@@ -706,201 +807,132 @@ class MyTeam extends Component {
         })
             .catch(err => {
                 if (err) {
-                    console.log(err.response);
+                    window.alert(err.response);
                 }
             });
     }
 
     render() {
         const { classes } = this.props
-        // if (this.state.authorized) {
-        //     return (
-        //         <Fragment>
-        //             <Button variant='raised' color='primary' onClick={this.handleClick = this.saveTeam.bind(this)}>Salvar Time</Button>
-        //             <Button variant='raised' color='primary' onClick={this.handleClick = this.hideMyTeam.bind(this)}> Esconder </Button>
-        //             <Team_Info
-        //                 patrimonio={this.state.team.patrimonio}
-        //                 valor_time={this.state.team.valor_time}
-        //                 pontos={this.state.team.pontos} />
-        //             <br />
-        //             <Grid container spacing={8}>
-        //                 <Grid item xs={6}>
-        //                     <Typography className={classes.title} variant='title' align='left'>
-        //                         Escalação Atual
-        //                     </Typography>
-        //                     <br />
-        //                     <PanelMyTeam />
-        //                     <List spacing={8}>
-        //                         {
-        //                             this.state.team.atletas.map((athlt) => {
-        //                                 // console.log(athlt);
-        //                                 // console.log(this.state)
-        //                                 return (
-        //                                     <ListItem key={athlt.atleta_id}>
-        //                                         <Jogador
-        //                                             apelido={athlt.apelido}
-        //                                             foto={athlt.foto}
-        //                                             clube={this.getPlayerClub(athlt.clube_id)}
-        //                                             pos={this.getPlayerPos(athlt.posicao_id)}
-        //                                             status={this.getPlayerStat(athlt.status_id)}
-        //                                             media={athlt.media_num}
-        //                                             ult={athlt.pontos_num}
-        //                                             variacao={athlt.variacao_num}
-        //                                             preco={athlt.preco_num}
-        //                                             scout_mean={this.state.ia.weightedAverageScouts(athlt)}
-        //                                             inTeam={true}
-        //                                             timeAtual={true}
-        //                                         />
-        //                                     </ListItem>
-        //                                 )
-        //                             })}
-        //                     </List>
-        //                 </Grid>
-        //                 <Grid item xs={6}>
-        //                     <Typography className={classes.title} variant='title' align='left'>
-        //                         Sugestão para próxima rodada
-        //                     </Typography>
-        //                     <br />
-        //                     <PanelMyTeam />
-        //                     <List spacing={8}>
-        //                         {this.state.new_team_view.map((athlt) => {
-        //                             // console.log(athlt);
-        //                             return (
-        //                                 <ListItem key={athlt.atleta_id}>
-        //                                     <Jogador
-        //                                         apelido={athlt.apelido}
-        //                                         foto={athlt.foto}
-        //                                         clube={this.getPlayerClub(athlt.clube_id)}
-        //                                         pos={this.getPlayerPos(athlt.posicao_id)}
-        //                                         status={this.getPlayerStat(athlt.status_id)}
-        //                                         media={athlt.media_num}
-        //                                         ult={athlt.pontos_num}
-        //                                         variacao={athlt.variacao_num}
-        //                                         preco={athlt.preco_num}
-        //                                         scout_mean={this.state.ia.weightedAverageScouts(athlt)}
-        //                                         inTeam={true}
-        //                                         timeAtual={false}
-        //                                     />
-        //                                 </ListItem>
-        //                             )
-        //                         })}
-        //                     </List>
-        //                 </Grid>
-        //             </Grid>
-        //         </Fragment>
-        //     )
-        // } else {
-            return (
-                <Fragment>
-                    <Grid container xs={12}>
-                        <Grid item xs={6}>
-                            <BuscarJogMaisEscalados className={classes.searchMostScaled} />
-                        </Grid>
-                        <Grid item xs={6}>
-                            <BuscarJogador className={classes.secondCard} new_team={this.state.new_team}/>
-                        </Grid>
-                        <Grid item xs={12}>
-                            <Card>
-                                <CardHeader
-                                    title="Meu Time"
-                                    subtitle="Vejamos como estamos"
-                                // actAsExpander={true}
-                                />
-                                <CardActions>
-                                    {/* <Button variant='raised' color="primary" onClick={this.handleClick = this.getMyProfile.bind(this)}>
+        return (
+            <Fragment>
+                <AppBar position="static" color="primary">
+                    <Toolbar>
+                        <Avatar className={classes.brasao} src={require('../img/cartrolaBot.png')} alt={'CartrolaBot'} />
+                        <Typography className={classes.pageTitle} variant="title" color="inherit" align='center'>
+                            CartrolaBot
+                        </Typography>
+                    </Toolbar>
+                </AppBar>
+                <Grid container xs={12}>
+                    <Grid item xs={6}>
+                        <BuscarJogMaisEscalados className={classes.searchMostScaled} />
+                    </Grid>
+                    <Grid item xs={6}>
+                        <BuscarJogador  className={classes.secondCard} 
+                                        new_team={this.state.new_team}
+                                        addPlayerToNewTeam={this.addPlayerToNewTeam}
+                                        removePlayerFromNewTeam={this.removePlayerFromNewTeam} />
+                    </Grid>
+                    <Grid item xs={12}>
+                        <Card>
+                            {/* <CardHeader
+                                title="Meu Time"
+                                subtitle="Vejamos como estamos"
+                            // actAsExpander={true}
+                            /> */}
+                            {/* <CardActions> */}
+                                {/* <Button variant='raised' color="primary" onClick={this.handleClick = this.getMyProfile.bind(this)}>
                                         Ver Time
                                     </Button> */}
-                                </CardActions>
-                                <CardContent>
-                                    {
-                                        this.state.authorized ?
-                                            <Fragment>
-                                                <Button variant='raised' color='primary' onClick={this.handleClick = this.saveTeam.bind(this)}>Salvar Time</Button>
-                                                {/* <Button variant='raised' color='primary' onClick={this.handleClick = this.hideMyTeam.bind(this)}> Esconder </Button> */}
-                                                <Team_Info
-                                                    patrimonio={this.state.team.patrimonio}
-                                                    valor_time={this.state.team.valor_time}
-                                                    pontos={this.state.team.pontos} />
-                                                <br />
-                                                <Grid container spacing={8}>
-                                                    <Grid item xs={6}>
-                                                        <Typography className={classes.title} variant='title' align='left'>
-                                                            Escalação Atual
+                            {/* </CardActions> */}
+                            <CardContent>
+                                {
+                                    this.state.authorized ?
+                                        <Fragment>
+                                            {/* <Button variant='raised' color='primary' onClick={this.handleClick = this.hideMyTeam.bind(this)}> Esconder </Button> */}
+                                            <Team_Info
+                                                patrimonio={this.state.team.patrimonio}
+                                                valor_time={this.state.team.valor_time}
+                                                pontos={this.state.team.pontos} />
+                                            <br />
+                                            <Grid container spacing={8}>
+                                                <Grid item xs={6}>
+                                                    <Typography className={classes.title} variant='title' align='left'>
+                                                        Escalação Atual
                                                 </Typography>
-                                                        <br />
-                                                        <PanelMyTeam />
-                                                        <List spacing={8}>
-                                                            {
-                                                                this.state.team.atletas.map((athlt) => {
-                                                                    // console.log(athlt);
-                                                                    // console.log(this.state)
+                                                    <br />
+                                                    <PanelMyTeam className='position: -webkit-sticky, position: sticky'/>
+                                                    <List spacing={8}>
+                                                        {
+                                                            this.state.team.atletas.map((athlt) => {
+                                                                // console.log(athlt);
+                                                                // console.log(this.state)
+                                                                if(athlt !== null && athlt !== undefined){
                                                                     return (
                                                                         <ListItem key={athlt.atleta_id}>
                                                                             <Jogador
-                                                                                id={athlt.atleta_id}
-                                                                                apelido={athlt.apelido}
-                                                                                foto={athlt.foto}
+                                                                                jog={athlt}
                                                                                 clube={this.getPlayerClub(athlt.clube_id)}
                                                                                 pos={this.getPlayerPos(athlt.posicao_id)}
                                                                                 status={this.getPlayerStat(athlt.status_id)}
-                                                                                media={athlt.media_num}
-                                                                                ult={athlt.pontos_num}
-                                                                                variacao={athlt.variacao_num}
-                                                                                preco={athlt.preco_num}
                                                                                 scout_mean={this.state.ia.weightedAverageScouts(athlt)}
                                                                                 inTeam={this.state.team.atletas.includes(athlt)}
-                                                                                inNewTeam={this.state.new_team.atletas.includes(athlt.atleta_id)}
+                                                                                inNewTeam={this.state.new_team.atletas.includes(athlt)}
                                                                                 timeAtual={true}
                                                                             />
                                                                         </ListItem>
                                                                     )
-                                                                })}
-                                                        </List>
-                                                    </Grid>
-                                                    <Grid item xs={6}>
-                                                        <Typography className={classes.title} variant='title' align='left'>
-                                                            Sugestão para próxima rodada
-                                                </Typography>
-                                                        <br />
-                                                        <PanelMyTeam />
-                                                        <List spacing={8}>
-                                                            {this.state.new_team_view.map((athlt) => {
-                                                                // console.log(athlt);
+                                                                }else{
+                                                                    // <EmptyPlayer />
+                                                                }
+                                                            })}
+                                                    </List>
+                                                </Grid>
+                                                <Grid item xs={6}>
+                                                    <Typography className={classes.title} variant='title' align='left'>
+                                                        Sugestão para próxima rodada
+                                                    </Typography>
+                                                    <br />
+                                                    <PanelMyTeam />
+                                                    <List spacing={8}>
+                                                        {this.state.new_team.atletas.map((athlt) => {
+                                                            // console.log(athlt);
+                                                            if(athlt !== null && athlt !== undefined){
                                                                 return (
                                                                     <ListItem key={athlt.atleta_id}>
                                                                         <Jogador
-                                                                            id={athlt.atleta_id}
-                                                                            apelido={athlt.apelido}
-                                                                            foto={athlt.foto}
+                                                                            jog={athlt}
                                                                             clube={this.getPlayerClub(athlt.clube_id)}
                                                                             pos={this.getPlayerPos(athlt.posicao_id)}
                                                                             status={this.getPlayerStat(athlt.status_id)}
-                                                                            media={athlt.media_num}
-                                                                            ult={athlt.pontos_num}
-                                                                            variacao={athlt.variacao_num}
-                                                                            preco={athlt.preco_num}
                                                                             scout_mean={this.state.ia.weightedAverageScouts(athlt)}
                                                                             inTeam={this.state.team.atletas.includes(athlt)}
-                                                                            inNewTeam={this.state.new_team.atletas.includes(athlt.atleta_id)}
+                                                                            inNewTeam={this.state.new_team.atletas.includes(athlt)}
                                                                             timeAtual={false}
+                                                                            addPlayerToNewTeam={this.addPlayerToNewTeam}
+                                                                            removePlayerFromNewTeam={this.removePlayerFromNewTeam}
                                                                         />
                                                                     </ListItem>
                                                                 )
-                                                            })}
-                                                        </List>
-                                                    </Grid>
+                                                            }else{
+                                                                // <EmptyPlayer />
+                                                            }
+                                                        })}
+                                                    </List>
+                                                    <Button className={classes.buttonSaveTeam} variant='raised' color='primary' onClick={this.handleClick = this.saveTeam.bind(this)}>Salvar Time</Button>
                                                 </Grid>
-                                            </Fragment>
+                                            </Grid>
+                                        </Fragment>
                                         :
-                                            null
-                                    }
-                                </CardContent>
-                            </Card>
-                        </Grid>
+                                        null
+                                }
+                            </CardContent>
+                        </Card>
                     </Grid>
-                </Fragment>
-            )
-        // }
+                </Grid>
+            </Fragment>
+        )
     }
 }
 export default withStyles(styles)(MyTeam);

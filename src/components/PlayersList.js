@@ -31,6 +31,20 @@ class PlayersList extends Component{
         this.setState({team: sessionStorage.getItem('newTeam')})
     }
 
+    checkPlayerOnTeam(team,player){
+        var achou = false
+        team.atletas.map(
+            (atl) => {
+                if(atl !== null && atl !== undefined){
+                    if(atl.atleta_id === player.atleta_id){
+                        achou = true;
+                    }
+                }
+            }
+        )
+        return achou;
+    }
+
 
     render(){
         var ia = new IAlgorithms();
@@ -43,31 +57,32 @@ class PlayersList extends Component{
         // console.log('Status')
         // console.log(this.props.status)
         // console.log(this.props.jogadores)
-
+        // console.log(this.props.newTeam)
+        
         return(
             
             <Fragment>
                 <List>
                 { this.props.jogadores.map((athlt) => {
-                    return(
-                        <ListItem key={athlt.atleta_id}>
-                            <Jogador 
-                                id={athlt.atleta_id}
-                                apelido={athlt.apelido} 
-                                foto={athlt.foto} 
-                                clube={this.getPlayerClub(athlt.clube_id)}
-                                pos={this.getPlayerPos(athlt.posicao_id)}
-                                status={this.getPlayerStat(athlt.status_id)}
-                                media={athlt.media_num}
-                                ult={athlt.pontos_num}
-                                variacao={athlt.variacao_num}
-                                preco={athlt.preco_num}
-                                scout_mean={ia.weightedAverageScouts(athlt)}
-                                inNewTeam={this.props.newTeam.atletas.includes(athlt.atleta_id)}
-                                timeAtual={false}
-                            />
-                        </ListItem>
-                    )})}
+                    if(athlt !== null && athlt !== undefined){
+                        return(
+                            <ListItem key={athlt.atleta_id}>
+                                <Jogador 
+                                    jog={athlt}
+                                    clube={this.getPlayerClub(athlt.clube_id)}
+                                    pos={this.getPlayerPos(athlt.posicao_id)}
+                                    status={this.getPlayerStat(athlt.status_id)}
+                                    scout_mean={ia.weightedAverageScouts(athlt)}
+                                    inNewTeam={this.checkPlayerOnTeam(this.props.newTeam, athlt)}
+                                    inTeam={false}
+                                    timeAtual={false}
+                                    addPlayerToNewTeam={this.props.addPlayerToNewTeam}
+                                    removePlayerFromNewTeam={this.props.removePlayerFromNewTeam}
+                                />
+                            </ListItem>
+                        )
+                    }
+                })}
                 </List>
             </Fragment>
         )
