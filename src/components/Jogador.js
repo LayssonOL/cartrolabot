@@ -102,18 +102,21 @@ class Jogador extends Component {
             foto = this.props.jog.foto.replace('FORMATO', '140x140');
         }
         const { classes } = this.props
-        // console.log('POSICAO: '+this.props.pos);
+        // console.log('CLUBE');
+        // console.log(this.props.clube)
         return (
 
             <Fragment>
                 <Paper className={classes.paper}>
                     <Grid className={classes.gridContainer} container spacing={0}>
                         <Grid item xs={2}>
-                            <img className={classes.escudo} src={Object.values(this.props.clube.escudos)[0]} alt={this.props.clube.nome} title={this.props.clube.nome} />
+                            <img className={classes.escudo} src={(this.props.clube != null && this.props.clube != undefined)  ? Object.values(this.props.clube.escudos)[0] : null} 
+                                                            alt={(this.props.clube != null && this.props.clube != undefined)  ? this.props.clube.nome : null} 
+                                                            title={(this.props.clube != null && this.props.clube != undefined)  ? this.props.clube.nome : null} />
                             <ListItemText
                                 className={classes.abrv_club}
                                 secondary={   <Typography variant="body2" align='justify' gutterBottom>
-                                                {this.props.clube.abreviacao}
+                                                {(this.props.clube != null && this.props.clube != undefined)  ? this.props.clube.abreviacao : null}
                                                 {/* {this.props.inNewTeam ? 'YES' : 'NO'} */}
                                             </Typography>
                                 }

@@ -67,6 +67,10 @@ class MyTeam extends Component {
 
     // method to choose players by club
     getPlayerClub(clube_id) {
+        // console.log(clube_id)
+        // console.log('CLUBES')
+        // console.log(Object.values(this.state.clubes).find((clube) => { return (clube.id === clube_id) }))
+        // console.log(this.state.clubes)
         return (Object.values(this.state.clubes).find((clube) => { return (clube.id === clube_id) }));
     }
 
@@ -82,7 +86,7 @@ class MyTeam extends Component {
 
     // request to get all players from brasilian championship
     getPlayers() {
-        axios.get('https://api.cartolafc.globo.com/atletas/mercado',
+        axios.get('proxy/https://api.cartolafc.globo.com/atletas/mercado',
             {
                 'X-GLB-Token': this.state.token
             }
@@ -105,7 +109,7 @@ class MyTeam extends Component {
 
     // method to get all squads from the fantasy game
     getSchemas() {
-        axios.get('https://api.cartolafc.globo.com/esquemas',
+        axios.get('proxy/https://api.cartolafc.globo.com/esquemas',
             {
                 'X-GLB-Token': this.state.token
             }
@@ -131,7 +135,7 @@ class MyTeam extends Component {
     getMyProfile() {
         const getMyTeamConfig = axios.create(
             {
-                baseURL: "https://api.cartolafc.globo.com/auth/time",
+                baseURL: "proxy/https://api.cartolafc.globo.com/auth/time",
                 headers: {
                     'X-GLB-Token': this.state.token,
                     // withCredentials: true,
@@ -783,7 +787,7 @@ class MyTeam extends Component {
     saveTeam() {
         const saveTeamConfig = axios.create(
             {
-                baseURL: "https://api.cartolafc.globo.com/auth/time/salvar",
+                baseURL: "proxy/https://api.cartolafc.globo.com/auth/time/salvar",
                 headers: {
                     'X-GLB-Token': this.state.token,
                 },
@@ -869,6 +873,7 @@ class MyTeam extends Component {
                                                                 // console.log(athlt);
                                                                 // console.log(this.state)
                                                                 if(athlt !== null && athlt !== undefined){
+                                                                    // if(this.getPlayerClub(athlt.clube_id) != null && this.getPlayerClub(athlt.clube_id) != undefined ){
                                                                     return (
                                                                         <ListItem key={athlt.atleta_id}>
                                                                             <Jogador
@@ -883,6 +888,7 @@ class MyTeam extends Component {
                                                                             />
                                                                         </ListItem>
                                                                     )
+                                                                    // }
                                                                 }else{
                                                                     // <EmptyPlayer />
                                                                 }

@@ -23,7 +23,7 @@ class Filters extends Component {
 
   getFilters() {
     axios
-    .get("https://api.cartolafc.globo.com/atletas/mercado")
+    .get("proxy/https://api.cartolafc.globo.com/atletas/mercado")
     .then(res => {
       this.setState({
         clubes: res.data.clubes,
@@ -43,7 +43,7 @@ class Filters extends Component {
 
   getPartidas(){
     axios
-    .get("https://api.cartolafc.globo.com/partidas/"+this.state.rodada)
+    .get("proxy/https://api.cartolafc.globo.com/partidas/"+this.state.rodada)
     .then(res => {
       this.setState({
         partidas: res.data.partidas

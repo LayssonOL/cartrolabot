@@ -12,7 +12,7 @@ class CartolaFC extends Component{
     }
 
     getMarketStatus(){
-        axios.get('https://api.cartolafc.globo.com/mercado/status')
+        axios.get(`proxy/https://api.cartolafc.globo.com/mercado/status`)
                     .then((res) => {
                               console.log(res);
                                 // this.setState({
@@ -25,7 +25,7 @@ class CartolaFC extends Component{
                               });
     }
     getAllPlayers(){
-        axios.get('https://api.cartolafc.globo.com/atletas/mercado')
+        axios.get(`proxy/https://api.cartolafc.globo.com/atletas/mercado`)
                     .then((res) => {
                               console.log(res);
                                 // this.setState({
@@ -38,7 +38,7 @@ class CartolaFC extends Component{
                               });
     }
     getMostPickedPlayers(){
-        axios.get('https://api.cartolafc.globo.com/mercado/destaques')
+        axios.get(`proxy/https://api.cartolafc.globo.com/mercado/destaques`)
                     .then((res) => {
                               console.log(res);
                                 // this.setState({
@@ -51,7 +51,7 @@ class CartolaFC extends Component{
                               });
     }
     getTeams(){
-        axios.get('https://api.cartolafc.globo.com/times?q=%5Bnome')
+        axios.get(`proxy/https://api.cartolafc.globo.com/times?q=%5Bnome`)
                     .then((res) => {
                               console.log(res);
                                 // this.setState({
@@ -64,7 +64,7 @@ class CartolaFC extends Component{
                               });
     }
     getClubs(){
-        axios.get('https://api.cartolafc.globo.com/clubes')
+        axios.get(`proxy/https://api.cartolafc.globo.com/clubes`)
                     .then((res) => {
                               console.log(res);
                                 // this.setState({

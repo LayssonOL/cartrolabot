@@ -33,3 +33,5 @@ import Auth from './posts/Auth';
     )
     }
   }
+  // criar uma funcao que chama a BaseURL
+  // window.location.origin

@@ -7,53 +7,8 @@ import MyTeam from '../components/MyTeam';
 import BuyPlayer from './BuyPlayer';
 import ClubsPerformance from '../control/ClubsPerformance';
 import { withStyles } from '@material-ui/core/styles';
+import "./auth_styles.css";
 
-
-const styles = {
-    card: {
-        position: 'relative',
-        top: '10%',
-        left: '30%',
-        width: '37%',
-        bottom: '20%',
-        padding: '10',
-    },
-    email:{
-        position: 'relative',
-        top: '-25%',
-        left: '-2%',
-    },
-    password:{
-        position: 'relative',
-        top: '-25%',
-        left: '15%',
-    },
-    media: {
-        position: 'relative',
-        width: '50%',
-        left: '28%',
-        height: 'auto',
-        paddingTop: '56.25%', // 16:9
-    },
-    myTeam: {
-        position: 'relative',
-        height: '25%',
-        width: '50%',
-    },
-    searchMostScaled:{
-        position: 'relative',
-        height: '25%',
-        width: '50%',
-    },
-    firstCard:{
-
-    },
-    secondCard:{
-
-    }
-
-
-}
 
 class Auth extends Component {
     constructor(props) {
@@ -62,18 +17,19 @@ class Auth extends Component {
             email: '',
             password: '',
             serviceId: 438,
+            baseURL: window.location.origin,
             headers: {
                 "Content-Type": "application/json; charset=UTF-8",
-                "Host": "login.globo.com",
-                "Origin": "https://login.globo.com",
+                //"Host": "login.globo.com",
+                //"Origin": "https://login.globo.com",
                 "Accept": "application/json, text/javascript",
-                "Referer": "https://login.globo.com/login/438?url=https://cartolafc.globo.com",
-                "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/50.0.2661.94 Safari/537.36"
+                //"Referer": "https://login.globo.com/login/438?url=https://cartolafc.globo.com",
+              //  "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/50.0.2661.94 Safari/537.36"
 
             },
-            url: 'https://login.globo.com/api/authentication',
+            url: `${window.location.origin}/proxy/https://login.globo.com/api/authentication`,
             token: '',
-            connected: false
+            connected: false,
         }
     }
     componentWillMount() {
@@ -110,6 +66,11 @@ class Auth extends Component {
         )
     }
 
+    submit = event => {
+        event.preventDefault();
+        this.getAuthentication();
+        console.log("CHAMOU")
+    };
     handleChange = name => event => {
         this.setState({
             [name]: event.target.value,
@@ -117,46 +78,56 @@ class Auth extends Component {
     };
 
     render() {
-        const { classes } = this.props
+        // const { classes } = this.props
         if (this.state.connected) {
             return (
                 <Fragment>
-                    <MyTeam className={classes.myTeam}/>
+                    <MyTeam className="myTeam"/>
                 </Fragment>
             )
         } else {
             return (
-                <div >
-                    <Card className={classes.card}>
+                <div className="panel" >
+                    <Card className="card">
                         <CardMedia
-                            className={classes.media}
+                            className="media"
                             image={require('./../img/cartrolaBot.png')}
                             title="CartrolaBot"
                         />
-                        <CardContent>
+                        <form onSubmit={this.submit.bind(this)}>
+                        <CardContent className="card_content">
                             <TextField id="email"
                                 label="Email"
-                                className={classes.email}
+                                className="email"
                                 value={this.state.email}
                                 onChange={this.handleChange('email')}
                                 margin="normal" />
                             <TextField id="psswd"
                                 label="Password"
-                                className={classes.password}
+                                className="password"
                                 value={this.state.password}
                                 type="password"
                                 onChange={this.handleChange('password')}
                                 margin="normal" />
+                                {/* <form onSubmit={this.handleSubmit}>
+                                    <label>
+                                    Name:
+                                    <input type="text" value="Nada" onChange={this.handleChange} />
+                                    </label>
+                                    <input type="submit" value="Submit" />
+                                </form> */}
                         </CardContent>
-                        <CardActions>
-                            <Button variant="raised" color="primary" onClick={this.handleClick = this.getAuthentication.bind(this)}>
+                        <CardActions className="card_actions">
+                            <Button type="submit" variant="raised" color="primary">
                                 Conectar
                             </Button>
                         </CardActions>
+                        </form>
                     </Card>
                 </div>
             );
         }
     }
 }
-export default withStyles(styles)(Auth);
+// export default withStyles(styles)(Auth);
+export default Auth;

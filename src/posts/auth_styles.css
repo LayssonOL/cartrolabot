@@ -1,0 +1,83 @@
+.card {
+    display: flex;
+    flex-grow: 0;
+    flex-basis: auto;
+    flex-direction: column;
+    justify-content: center;
+    position: absolute;
+    width: 50%;
+    height: 70%;
+    /* position: 'relative';
+    top: '10%';
+    left: '30%';
+    width: '37%';
+    bottom: '20%';
+    padding: '10'; */
+}
+.email{
+    display: flex;
+    flex-grow: 1;
+    flex-basis: auto;
+    justify-content: flex-start;
+    align-content: space-around;
+    
+}
+.password{
+    display: flex;
+    flex-grow: 1;
+    flex-basis: auto;
+    justify-content: flex-end;
+    align-content: space-around;
+}
+.media {
+    display: flex;
+    flex-grow: 1;
+    flex-basis: auto;
+    justify-content: center;]
+    width: 60%;
+    height: 70%;
+    /* position: 'relative';
+    width: '50%';
+    left: '28%';
+    height: 'auto';
+    paddingTop: '56.25%'; 16:9 */
+}
+.myTeam {
+    position: 'relative';
+    height: '25%';
+    width: '50%';
+}
+.searchMostScaled{
+    position: 'relative';
+    height: '25%';
+    width: '50%';
+}
+.panel{
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+
+}
+.card_content {
+    display: flex;
+    flex-grow: 1;
+    flex-basis: auto;
+    flex-wrap: nowrap;
+    flex-direction: row;
+    justify-content: center;
+
+}
+.card_actions{
+    display: flex;
+    flex-grow: 2;
+    flex-basis: auto;
+    flex-direction: row;
+    justify-content: center;
+}
