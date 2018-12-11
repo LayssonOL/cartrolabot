@@ -1,12 +1,7 @@
 import React, { Component, Fragment } from 'react'
 import axios from 'axios'
-import { Card, CardHeader, CardActions, Button, TextField, CardText, ActionLabel, CardMedia, CardContent, Grid } from '@material-ui/core';
-import BuscarJogador from '../requests/BuscarJogador';
-import BuscarJogMaisEscalados from '../requests/BuscarJogMaisEscalados';
+import { Card, CardActions, Button, TextField, CardMedia, CardContent } from '@material-ui/core';
 import MyTeam from '../components/MyTeam';
-import BuyPlayer from './BuyPlayer';
-import ClubsPerformance from '../control/ClubsPerformance';
-import { withStyles } from '@material-ui/core/styles';
 import "./auth_styles.css";
 
 
@@ -69,7 +64,7 @@ class Auth extends Component {
     submit = event => {
         event.preventDefault();
         this.getAuthentication();
-        console.log("CHAMOU")
+        // console.log("CHAMOU")
     };
     handleChange = name => event => {
         this.setState({
@@ -118,7 +113,7 @@ class Auth extends Component {
                                 </form> */}
                         </CardContent>
                         <CardActions className="card_actions">
-                            <Button type="submit" variant="raised" color="primary">
+                            <Button className="connect_button" type="submit" variant="raised" color="primary">
                                 Conectar
                             </Button>
                         </CardActions>
