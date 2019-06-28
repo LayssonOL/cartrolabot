@@ -137,8 +137,8 @@ class MyTeam extends Component {
             {
                 baseURL: "proxy/https://api.cartolafc.globo.com/auth/time",
                 headers: {
-                    'X-GLB-Token': this.state.token,
-                    // withCredentials: true,
+                    "X-GLB-Token": this.state.token,
+                    withCredentials: true,
                     // id: "Authenticated",
                     // timeout: 10000,
                     // responseType: 'json',
@@ -175,6 +175,7 @@ class MyTeam extends Component {
                 this.scaleTeam();
             })
             .catch(err => {
+                console.log(err)
                 if (err) {
                     console.log(err.response);
                 }

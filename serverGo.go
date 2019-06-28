@@ -11,17 +11,22 @@ import (
 )
 
 func main() {
+	// here i get an instance of iris
+	// an IRIS Application
 	app := iris.New()
 
+	// Configuring the Headers to any request received
 	crs := func(ctx iris.Context) {
 		ctx.Header("Access-Control-Allow-Origin", "*")
-		ctx.Header("Content-Type", "application/json")
+		ctx.Header("Content-Type", "application/json; charset=UTF-8")
 		// ctx.Header("Access-Control-Allow-Credentials", "true")/
 		// ctx.Header("Access-Control-Allow-Headers", "Access-Control-Allow-Origin,Content-Type")
 		ctx.Next()
 	}
 
-	app.StaticServe("./build", "/")
+	// Function to stablish from where this web application will begin.
+	// This way my root route is referencing the build of the React App CartrolaBot
+	app.StaticWeb("/", "./build")
 
 	app.Handle("ANY", "/proxy/{path:path}", crs, func(ctx iris.Context) {
 
@@ -33,27 +38,28 @@ func main() {
 			err          error
 			arr          []byte
 			corpo        string
+			token        string
 		)
-		//uri := &uri.URIBuilder{}
 
 		path := ctx.Params().Get("path")
 
-		fmt.Println("requesto to ", path, ctx.Method())
-
-		// data := url.Values{}
-		// data.Set("name", "foo")
-		// data.Add("surname", "bar")
-		//uri.ServerAddr(h.remoteHandlerURL).ClientURI(ctx.Request().URL.RequestURI()).ClientMethod(ctx.Request().Method)
+		fmt.Println("request to ", path, ctx.Method())
 
 		// set the full url here because below we have other issues, probably net/http bugs
 
 		arr, err = ioutil.ReadAll(ctx.Request().Body)
 		if err == nil {
 			corpo = string(arr)
-			// println("CORPO => ", corpo)
+			println("CORPO => ", corpo)
 		} else {
 			ctx.Write(arr)
 			return
+		}
+
+		if token = ctx.Request().Header.Get("X-GLB-Token"); token == "" {
+
+		} else {
+			fmt.Println("Token Header => ", token)
 		}
 
 		if request, err = http.NewRequest(ctx.Method(), path, strings.NewReader(corpo)); err != nil {
@@ -63,11 +69,13 @@ func main() {
 			panic(err)
 		}
 
-		request.Header.Add("Content-Type", "application/json")
+		request.Header.Add("Content-Type", "application/json; charset=UTF-8")
+		request.Header.Add("X-GLB-Token", token)
 
-		// println("GET Do to the remote cache service with the url: " + request.URL.String())
+		fmt.Println("HEADER TO CARTOLA API = ", request.Header)
+
 		if response, err = Client.Do(request); err != nil {
-
+			panic(err)
 		}
 
 		if responseBody, err = ioutil.ReadAll(response.Body); err != nil {
@@ -76,40 +84,12 @@ func main() {
 
 		if err != nil || response.StatusCode == cfg.FailStatus {
 
-			fmt.Println("DEu errro", response.StatusCode)
+			fmt.Println("Deu erro", response.StatusCode)
 
 			if err != nil {
 				fmt.Println(err.Error())
 			}
 
-			// if not found on cache, then execute the handler and save the cache to the remote server
-			// recorder := ctx.Recorder()
-			// h.bodyHandler(ctx)
-
-			// // check if it's a valid response, if it's not then just return.
-			// if !h.rule.Valid(ctx) {
-			// 	return
-			// }
-			// // save to the remote cache
-			// // we re-create the request for any case
-			// body := recorder.Body()[0:]
-			// if len(body) == 0 {
-			// 	//// println("Request: len body is zero, do nothing")
-			// 	return
-			// }
-			// uri.StatusCode(recorder.StatusCode())
-			// uri.Lifetime(h.life)
-			// uri.ContentType(recorder.Header().Get(cfg.ContentTypeHeader))
-
-			// request, err = http.NewRequest(methodPost, uri.String(), bytes.NewBuffer(body)) // yes new buffer every time
-
-			// // println("POST Do to the remote cache service with the url: " + request.URL.String())
-			// if err != nil {
-			// 	//// println("Request: error on method Post of request to the remote: " + err.Error())
-			// 	return
-			// }
-			// // go Client.Do(request)
-			// Client.Do(request)
 		} else {
 			fmt.Println("Deu certo")
 
@@ -120,7 +100,7 @@ func main() {
 			ctx.Write(responseBody)
 		}
 
-		fmt.Println("response", string(responseBody))
+		// fmt.Println("response", string(responseBody))
 	})
 
 	withoutParse := iris.WithConfiguration(
