@@ -66,18 +66,6 @@ class EmptyPlayer extends Component {
         super(props)
     }
 
-    // addPlayerToTeam(){
-    //     console.log('ADD PLAYER AT JOGADOR')
-    //     // console.log(this.props.jog)
-    //     this.props.addPlayerToNewTeam(this.props.jog)
-    // }
-    
-    // removePlayerFromTeam(){
-    //     console.log('REMOVE PLAYER AT JOGADOR')
-    //     // console.log(this.props.jog)
-    //     this.props.removePlayerFromNewTeam(this.props.jog)
-    // }
-
     render() {
         var foto = null;
         if (this.props.jog.foto) {

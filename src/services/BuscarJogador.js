@@ -47,6 +47,7 @@ class BuscarJogador extends Component {
 
     getPlayers() {
         axios.get(`proxy/https://api.cartolafc.globo.com/atletas/mercado`,
+        // axios.get(`https://api.cartolafc.globo.com/atletas/mercado`,
             {
                 'X-GLB-Token': this.state.token
             }

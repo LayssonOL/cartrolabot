@@ -3,6 +3,10 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@types/jest": "^24.0.15",
+    "@types/node": "^12.0.10",
+    "@types/react": "^16.8.22",
+    "@types/react-dom": "^16.8.4",
     "axios": "^0.18.0",
     "cartolajs": "0.0.3",
     "gulp": "^3.9.1",
@@ -13,7 +17,6 @@
     "react-dom": "^16.2.0",
     "react-foursquare": "^1.0.3",
     "react-scripts": "1.1.4",
-    "react-tap-event-plugin": "^3.0.2",
     "react-toolbox-themr": "^1.0.2",
     "yargs": "^11.0.0"
   },
@@ -23,5 +26,14 @@
     "test": "react-scripts test --env=jsdom",
     "toolbox": "react-toolbox-themr",
     "eject": "react-scripts eject"
+  },
+  "main": "index.js",
+  "repository": "https://Laysson@bitbucket.org/Laysson/cartrolabot.git",
+  "author": "LayssonOL <layssonoliveir4@gmail.com>",
+  "license": "MIT",
+  "devDependencies": {
+    "@material-ui/core": "^4.1.3",
+    "@material-ui/icons": "^4.2.1",
+    "typescript": "^3.5.2"
   }
 }

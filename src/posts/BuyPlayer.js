@@ -22,6 +22,7 @@ class BuyPlayer extends Component {
   getMarketStatus() {
     axios
       .get("proxy/https://api.cartolafc.globo.com/mercado/status",
+      // .get("https://api.cartolafc.globo.com/mercado/status",
         )
       .then(res => {
         this.setState({
@@ -41,6 +42,7 @@ class BuyPlayer extends Component {
   postTeam() {
     axios
       .post("proxy/https://api.cartolafc.globo.com/auth/time/salvar",
+      // .post("https://api.cartolafc.globo.com/auth/time/salvar",
         )
       .then(res => {
         this.setState({

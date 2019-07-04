@@ -13,8 +13,8 @@ import ListItem from '@material-ui/core/ListItem';
 import { withStyles, Grid, Typography, Toolbar, AppBar, Avatar } from "@material-ui/core";
 import PanelMyTeam from './Panel_Jogadores_My_Team';
 import Team_Info from "./Team_Info";
-import BuscarJogMaisEscalados from "../requests/BuscarJogMaisEscalados";
-import BuscarJogador from "../requests/BuscarJogador";
+import BuscarJogMaisEscalados from "../services/BuscarJogMaisEscalados";
+import BuscarJogador from "../services/BuscarJogador";
 
 const styles = {
     card_layout: {
@@ -87,6 +87,7 @@ class MyTeam extends Component {
     // request to get all players from brasilian championship
     getPlayers() {
         axios.get('proxy/https://api.cartolafc.globo.com/atletas/mercado',
+        // axios.get('https://api.cartolafc.globo.com/atletas/mercado',
             {
                 'X-GLB-Token': this.state.token
             }
@@ -110,6 +111,7 @@ class MyTeam extends Component {
     // method to get all squads from the fantasy game
     getSchemas() {
         axios.get('proxy/https://api.cartolafc.globo.com/esquemas',
+        // axios.get('https://api.cartolafc.globo.com/esquemas',
             {
                 'X-GLB-Token': this.state.token
             }
@@ -136,6 +138,7 @@ class MyTeam extends Component {
         const getMyTeamConfig = axios.create(
             {
                 baseURL: "proxy/https://api.cartolafc.globo.com/auth/time",
+                // baseURL: "https://api.cartolafc.globo.com/auth/time",
                 headers: {
                     "X-GLB-Token": this.state.token,
                     withCredentials: true,
@@ -789,6 +792,7 @@ class MyTeam extends Component {
         const saveTeamConfig = axios.create(
             {
                 baseURL: "proxy/https://api.cartolafc.globo.com/auth/time/salvar",
+                // baseURL: "https://api.cartolafc.globo.com/auth/time/salvar",
                 headers: {
                     'X-GLB-Token': this.state.token,
                 },

@@ -18,6 +18,7 @@ class ClubsPerformance extends Component {
   // método para recuperar todos os clubes 
   getClubs() {
     axios.get("proxy/https://api.cartolafc.globo.com/clubes")
+    // axios.get("https://api.cartolafc.globo.com/clubes")
       .then((res) => {
         this.setState({ clubes: Object.values(res.data) });
         // console.log(this.state.clubes);
@@ -33,6 +34,7 @@ class ClubsPerformance extends Component {
     return new Promise(
       (resolve, reject) => {
         axios.get("proxy/https://api.cartolafc.globo.com/partidas/" + rodada).then(
+        // axios.get("https://api.cartolafc.globo.com/partidas/" + rodada).then(
           (res) => {
             resolve({ rodada: rodada, partidas: res.data.partidas })
           }
@@ -57,6 +59,7 @@ class ClubsPerformance extends Component {
       (resolve, reject) => {
         // console.log('Get Rodada Atual')
         axios.get("proxy/https://api.cartolafc.globo.com/mercado/status").then(res => {
+        // axios.get("https://api.cartolafc.globo.com/mercado/status").then(res => {
           resolve(res.data.rodada_atual);
           // this.setState({
           //   // recebe a info de em que rodada se encontra

@@ -12,6 +12,7 @@ class BuscarClubes extends Component{
 
     getClubs(){
         axios.get("proxy/https://api.cartolafc.globo.com/clubes")
+        // axios.get("https://api.cartolafc.globo.com/clubes")
                     .then((res) => {
                         this.setState({
                             clubs: res.data

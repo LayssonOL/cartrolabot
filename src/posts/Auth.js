@@ -12,7 +12,7 @@ class Auth extends Component {
             email: '',
             password: '',
             serviceId: 438,
-            baseURL: window.location.origin,
+            baseURL: `${window.location.origin}`,
             headers: {
                 "Content-Type": "application/json; charset=UTF-8",
                 //"Host": "login.globo.com",
@@ -23,6 +23,7 @@ class Auth extends Component {
 
             },
             url: `${window.location.origin}/proxy/https://login.globo.com/api/authentication`,
+            // url: 'https://login.globo.com/api/authentication',
             token: '',
             connected: false,
         }
@@ -34,10 +35,13 @@ class Auth extends Component {
         }
     }
     getAuthentication() {
-        axios.post(
+        let getAuth = axios.create({
+            withCredentials: false
+        })
+        getAuth.post(
             this.state.url,
             {
-                'payload':
+                "payload":
                     {
                         "email": this.state.email,
                         "password": this.state.password,
@@ -48,7 +52,9 @@ class Auth extends Component {
 
         ).then(
             (response) => {
-                console.log(response);
+                console.log('RESPONSE WITH TOKEN');
+                console.log(JSON.stringify(response));
+                
                 sessionStorage.setItem('token', response.data.glbId);
                 this.setState({ token: response.data.glbId });
                 this.setState({ statusText: response.statusText });

@@ -37,6 +37,7 @@ class BuscarJogMaisEscalados extends Component{
 
     getJogMaisEscalados(){
         axios.get(`proxy/https://api.cartolafc.globo.com/mercado/destaques`,
+        // axios.get(`https://api.cartolafc.globo.com/mercado/destaques`,
                     {
                         'X-GLB-Token': this.state.token
                     }

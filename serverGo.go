@@ -50,16 +50,18 @@ func main() {
 		arr, err = ioutil.ReadAll(ctx.Request().Body)
 		if err == nil {
 			corpo = string(arr)
-			println("CORPO => ", corpo)
+			// println("CORPO => ", corpo)
 		} else {
 			ctx.Write(arr)
 			return
 		}
 
+		// fmt.Print("Header => ", ctx.Request().Header)
+
 		if token = ctx.Request().Header.Get("X-GLB-Token"); token == "" {
 
 		} else {
-			fmt.Println("Token Header => ", token)
+			// fmt.Println("Token Header => ", token)
 		}
 
 		if request, err = http.NewRequest(ctx.Method(), path, strings.NewReader(corpo)); err != nil {
@@ -72,7 +74,7 @@ func main() {
 		request.Header.Add("Content-Type", "application/json; charset=UTF-8")
 		request.Header.Add("X-GLB-Token", token)
 
-		fmt.Println("HEADER TO CARTOLA API = ", request.Header)
+		// fmt.Println("HEADER TO CARTOLA API = ", request.Header)
 
 		if response, err = Client.Do(request); err != nil {
 			panic(err)
@@ -91,7 +93,7 @@ func main() {
 			}
 
 		} else {
-			fmt.Println("Deu certo")
+			// fmt.Println("Deu certo")
 
 			// get the status code , content type and the write the response body
 			ctx.ContentType(response.Header.Get(cfg.ContentTypeHeader))
