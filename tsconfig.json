@@ -1,0 +1,39 @@
+{
+    "compilerOptions": {
+        "outDir": "./dist/",
+        "sourceMap": true,
+        "noImplicitAny": true,
+        "module": "commonjs",
+        "target": "es6",
+        "lib": [
+            "es2015",
+            "es2017",
+            "dom"
+        ],
+        "removeComments": true,
+        "allowSyntheticDefaultImports": false,
+        "jsx": "react",
+        "allowJs": true,
+        "baseUrl": "./",
+        "paths": {
+            "components/*":[
+                "src/components/*"
+            ],
+            "control/*":[
+                "src/control/*"
+            ],
+            "interfaces/*":[
+                "src/interfaces/*"
+            ],
+            "posts/*":[
+                "src/posts/*"
+            ],
+            "services/*":[
+                "src/services/*"
+            ],
+            "toolbox/*":[
+                "src/toolbox/*"
+            ],
+        }
+    }
+}
