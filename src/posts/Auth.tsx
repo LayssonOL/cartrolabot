@@ -1,17 +1,11 @@
-import {
-  Button,
-  Card,
-  CardActions,
-  CardContent,
-  CardMedia,
-  TextField,
-} from "@material-ui/core";
+
 import axios from "axios";
 import * as React from "react";
 import { Fragment } from "react";
+import LoginPage from "../components/loginPage";
 import MyTeam from "../components/MyTeam";
-import IAuthProps from "../interfaces/auth-interfaces";
-import IAuthState from "../interfaces/auth-interfaces";
+import IAuthProps from "../interfaces/authInterfaces";
+import IAuthState from "../interfaces/authInterfaces";
 import "./auth_styles.css";
 
 class Auth extends React.Component<IAuthProps, IAuthState> {
@@ -37,6 +31,24 @@ class Auth extends React.Component<IAuthProps, IAuthState> {
     // url: 'https://login.globo.com/api/authentication',
   };
 
+  public componentWillMount() {
+    const myToken = sessionStorage.getItem("token");
+    if (myToken) {
+      this.setState({ token: myToken, connected: true });
+    }
+  }
+
+  public submit = (event: React.FormEvent) => {
+    event.preventDefault();
+    this.getAuthentication();
+    // console.log("CHAMOU")
+  }
+
+  public handleChange = <T extends keyof IAuthState>(event: React.ChangeEvent<HTMLInputElement>) => {
+    const newState = { [event.target.name]: event.target.value };
+    this.setState( newState as { [P in T]: IAuthState[P]; });
+  }
+
   public render() {
     // const { classes } = this.props
     if (this.state.connected) {
@@ -47,62 +59,14 @@ class Auth extends React.Component<IAuthProps, IAuthState> {
       );
     } else {
       return (
-        <div className="panel">
-          <Card className="card">
-            <CardMedia
-              className="media"
-              image={require("./../img/cartrolaBot.png")}
-              title="CartrolaBot"
-            />
-            <form onSubmit={this.submit}>
-              <CardContent className="card_content">
-                <TextField
-                  id="email"
-                  label="Email"
-                  className="email"
-                  value={this.state.email}
-                  onChange={this.handleChange("email")}
-                  margin="normal"
-                />
-                <TextField
-                  id="psswd"
-                  label="Password"
-                  className="password"
-                  value={this.state.password}
-                  type="password"
-                  onChange={this.handleChange("password")}
-                  margin="normal"
-                />
-                {/* <form onSubmit={this.handleSubmit}>
-                                    <label>
-                                    Name:
-                                    <input type="text" value="Nada" onChange={this.handleChange} />
-                                    </label>
-                                    <input type="submit" value="Submit" />
-                                </form> */}
-              </CardContent>
-              <CardActions className="card_actions">
-                <Button
-                  className="connect_button"
-                  type="submit"
-                  // variant="raised"
-                  variant="outlined"
-                  color="primary"
-                >
-                  Conectar
-                </Button>
-              </CardActions>
-            </form>
-          </Card>
-        </div>
+        <LoginPage
+                   id="loginPage"
+                   email={this.state.email}
+                   password={this.state.password}
+                   submit={this.submit}
+                   handleChange={this.handleChange}
+        />
       );
-    }
-  }
-
-  public componentWillMount() {
-    const myToken = sessionStorage.getItem("token");
-    if (myToken) {
-      this.setState({ token: myToken, connected: true });
     }
   }
 
@@ -131,18 +95,6 @@ class Auth extends React.Component<IAuthProps, IAuthState> {
         window.alert(err);
       });
   }
-
-  protected submit = (event: React.FormEvent) => {
-    event.preventDefault();
-    this.getAuthentication();
-    // console.log("CHAMOU")
-  }
-
-  protected handleChange<T, K extends keyof IAuthState> = (name: K) => (event: React.ChangeEvent<HTMLInputElement>) => {
-    this.setState({
-      name: event.target.value,
-    });
-  };
 }
 
 // export default withStyles(styles)(Auth);

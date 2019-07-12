@@ -1,6 +1,6 @@
 import * as React from "react";
 import "./App.css";
-import IAppProps from "./interfaces/app-interfaces";
+import IAppProps from "./interfaces/appInterfaces";
 import Auth from "./posts/Auth";
 
 const App: React.FC<IAppProps> = () => {
@@ -13,3 +13,5 @@ const App: React.FC<IAppProps> = () => {
     </div>
   );
 };
+
+export default App;
