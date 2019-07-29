@@ -18,6 +18,7 @@
     "react-foursquare": "^1.0.3",
     "react-scripts": "1.1.4",
     "react-toolbox-themr": "^1.0.2",
+    "rxjs": "^6.5.2",
     "source-map-loader": "^0.2.4",
     "ts-loader": "^6.0.4",
     "yargs": "^11.0.0"
@@ -29,8 +30,8 @@
     "test": "react-scripts test --env=jsdom",
     "toolbox": "react-toolbox-themr",
     "eject": "react-scripts eject",
-    "build:webpack": "webpack --mode production",
-    "start:webpack": "webpack --mode development"
+    "build:webpack": "webpack-dev-server --mode production",
+    "start:webpack": "webpack-dev-server --mode development --open --hot"
   },
   "main": "index.js",
   "repository": "https://Laysson@bitbucket.org/Laysson/cartrolabot.git",
@@ -39,10 +40,14 @@
   "devDependencies": {
     "@material-ui/core": "^4.1.3",
     "@material-ui/icons": "^4.2.1",
+    "css-loader": "^3.1.0",
+    "file-loader": "^4.1.0",
+    "style-loader": "^0.23.1",
     "tslint": "^5.18.0",
     "tslint-react": "^4.0.0",
     "typescript": "^3.5.2",
     "webpack": "^4.35.3",
-    "webpack-cli": "^3.3.5"
+    "webpack-cli": "^3.3.5",
+    "webpack-dev-server": "^3.7.2"
   }
 }

@@ -1,11 +1,10 @@
 const path = require('path');
 
 module.exports = {
-    mode: "production",
+    devtool: "source-map",
 
     entry: './src/index.tsx',
     // Enable sourcemaps for debugging webpack's output.
-    devtool: "source-map",
 
     resolve: {
         // Add '.ts' and '.tsx' as resolvable extensions.
@@ -29,7 +28,20 @@ module.exports = {
                 enforce: "pre",
                 test: /\.js(x?)$/,
                 loader: "source-map-loader"
-            }
+            },
+            {
+                test: /\.(s?)css$/,
+                use:[
+                    'style-loader',
+                    'css-loader',
+                ],
+            },
+            {
+                test: /\.(png|svg|jpg|gif)$/,
+                use: [
+                    'file-loader',
+                ],
+            },
         ]
     },
 
