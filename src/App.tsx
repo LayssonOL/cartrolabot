@@ -1,7 +1,7 @@
 import * as React from "react";
 import "./App.css";
-import IAppProps from "./interfaces/appInterfaces";
-import Auth from "./posts/Auth";
+import IAppProps from "./interfaces/AppInterfaces";
+import Auth from "./posts/Auth/Auth";
 
 const App: React.FC<IAppProps> = () => {
   return (

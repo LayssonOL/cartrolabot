@@ -2,10 +2,10 @@
 import axios from "axios";
 import * as React from "react";
 import { Fragment } from "react";
-import LoginPage from "../components/loginPage";
-import MyTeam from "../components/MyTeam";
-import IAuthProps from "../interfaces/authInterfaces";
-import IAuthState from "../interfaces/authInterfaces";
+import LoginPage from "../../components/Login/Login";
+import MyTeam from "../../components/MyTeam/MyTeam";
+import IAuthProps from "../../interfaces/AuthInterfaces";
+import IAuthState from "../../interfaces/AuthInterfaces";
 import "./auth_styles.css";
 
 class Auth extends React.Component<IAuthProps, IAuthState> {

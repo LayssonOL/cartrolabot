@@ -4,6 +4,20 @@ import { Observable } from "rxjs";
 const baseURL = "proxy/https://api.cartolafc.globo.com";
 
 const requests = {
+  // coleta todos os jogadores de um mesmo clube
+  getPlayersFromAClub: (jogadores: any, clubeId: number) => {
+    return jogadores.filter((player: any) => player.clube.id === clubeId);
+  },
+
+  // coleta todos os jogadores de uma mesma posicao
+  getPlayersFromAPos: (jogadores: any, posicaoId: number) => {
+    return jogadores.filter((player: any) => player.posicao.id === posicaoId);
+  },
+
+  // coleta todos os jogadores com um mesmo status(provavel, duvida, nulo,...)
+  getPlayersFromAStat: (jogadores: any, statusId: number) => {
+    return jogadores.filter((player: any) => player.status_id === statusId);
+  },
   // method to choose players by club
   getPlayerClub: (clubes: any[], clubeId: number) => {
     // console.log(clube_id)
@@ -109,6 +123,21 @@ const requests = {
             .catch((err: any) => {
               observer.error(err);
             });
+    });
+  },
+
+  // method to get the available clubs
+  getClubs: (): Observable<any> => {
+    return Observable.create((observer: any) => {
+      axios.get(`${baseURL}/clubes`)
+    // axios.get("https://api.cartolafc.globo.com/clubes")
+                .then((res: any) => {
+                    // console.log(this.state.clubs);
+                    observer.next(res.data);
+                    observer.complete();
+                }).catch((err) => {
+                    observer.error();
+                });
     });
   },
 };

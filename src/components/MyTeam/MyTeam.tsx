@@ -16,15 +16,14 @@ import {
 import axios from "axios";
 import * as React from "react";
 import { Component, Fragment } from "react";
-import ClubsPerformance from "../control/ClubsPerformance";
-import IAlgorithms from "../control/IAlgorithms";
-import BuscarJogador from "../services/BuscarJogador";
-import BuscarJogMaisEscalados from "../services/BuscarJogMaisEscalados";
-import requests from "../services/requests";
-import Jogador from "./Jogador";
-import PanelMyTeam from "./Panel_Jogadores_My_Team";
-import Team_Info from "./Team_Info";
-
+import ClubsPerformance from "../../control/ClubsPerformance";
+import IAlgorithms from "../../control/IAlgorithms";
+import BuscarJogador from "../SearchPlayers/BuscarJogador";
+import BuscarJogMaisEscalados from "../../services/BuscarJogMaisEscalados";
+import requests from "../../services/Requests";
+import PanelMyTeam from "../MyTeamPlayersPanel/MyTeamPlayersPanel";
+import Jogador from "../Player/Player";
+import Team_Info from "../TeamInfo/Team_Info";
 
 const styles = {
   brasao: {
@@ -133,14 +132,13 @@ class MyTeam extends Component {
     // )
   }
 
-  // method to choose a list of goalkeepers
   public chooseGoalKeepers(
-    esquema,
-    patrimonio,
-    atletas,
-    best_clubs_to_beg,
-    rodada_atual,
-    max_price
+    atletas: any,
+    bestClubsToBeg: any,
+    esquema: any,
+    maxPrice: any,
+    rodadaAtual: any,
+    patrimonio: any,
   ) {
     let count = 0;
     let jogad = null;
@@ -148,26 +146,26 @@ class MyTeam extends Component {
     console.log("Escolhendo Goleiro");
     // return all goalkeepers that must to play in the next round passing a list of clubs that they must belong
     // and the max price they can costs
-    let goleiros = this.state.ia.calculatePlayerAllMetricsDefense(
+    const goleiros = this.state.ia.calculatePlayerAllMetricsDefense(
       // this.state.ia.getBestDefenders(
       // this.state.ia.getBestAppreciation(
       this.state.ia.getBestMeanPlayersByPosition(
         this.state.jogadores,
         1,
         10,
-        best_clubs_to_beg,
-        rodada_atual,
-        max_price
+        bestClubsToBeg,
+        rodadaAtual,
+        maxPrice,
       )
     );
-    goleiros.map(gol => {
-      console.log(gol.apelido + " - " + this.getPlayerClub(gol.clube_id).nome);
+    goleiros.map((gol: any) => {
+      console.log(gol.apelido + " - " + requests.getPlayerClub(this.state.clubes, gol.clube_id).nome);
     });
     // get the quantity of goalkeepers must be selected
     count = esquema.posicoes.gol;
     // calculate the quantity of goalkeepers still must be choosed minus that
     // just is in the team to submit
-    let jaTem = this.howMuchAthletesByPos(atletas, 1);
+    const jaTem = this.howMuchAthletesByPos(atletas, 1);
     count = count - jaTem;
     console.log("Quantos: " + count);
     while (count > 0) {
@@ -186,15 +184,15 @@ class MyTeam extends Component {
         this.removeExpensivePlayer(
           atletas,
           patrimonio,
-          rodada_atual,
-          best_clubs_to_beg,
+          rodadaAtual,
+          bestClubsToBeg,
         );
         this.chooseGoalKeepers(
           esquema,
           patrimonio,
           atletas,
-          best_clubs_to_beg,
-          rodada_atual,
+          bestClubsToBeg,
+          rodadaAtual,
           patrimonio.valor,
         );
         count--;
@@ -204,12 +202,12 @@ class MyTeam extends Component {
   }
 
   public chooseCenterDefenders(
-    esquema,
-    patrimonio,
-    atletas,
-    best_clubs_to_beg,
-    rodada_atual,
-    max_price
+    esquema: any,
+    patrimonio: any,
+    atletas: any,
+    best_clubs_to_beg: any,
+    rodada_atual: any,
+    max_price: any,
   ) {
     let count = 0;
     let jogad = null;
@@ -226,8 +224,8 @@ class MyTeam extends Component {
         max_price
       )
     );
-    zagueiros.map(zag => {
-      console.log(zag.apelido + " - " + this.getPlayerClub(zag.clube_id).nome);
+    zagueiros.map((zag: any) => {
+      console.log(zag.apelido + " - " + requests.getPlayerClub(zag.clube_id).nome);
     });
 
     count = esquema.posicoes.zag;
@@ -251,7 +249,7 @@ class MyTeam extends Component {
           atletas,
           patrimonio,
           rodada_atual,
-          best_clubs_to_beg
+          best_clubs_to_beg,
         );
         this.chooseCenterDefenders(
           esquema,
@@ -259,7 +257,7 @@ class MyTeam extends Component {
           atletas,
           best_clubs_to_beg,
           rodada_atual,
-          patrimonio.valor
+          patrimonio.valor,
         );
         count--;
       }
@@ -879,7 +877,7 @@ class MyTeam extends Component {
           this.state.rodada_atual,
           const_max_price
         );
-        this.chooseGoalKeepers(
+        Goalkeeper.chooseGoalKeepers(
           esquema,
           patrimonio,
           atletas,

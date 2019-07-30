@@ -1,4 +1,4 @@
-import IAuthState from "./authInterfaces";
+import IAuthState from "./AuthInterfaces";
 
 export default interface ILoginPageProps {
     id?: string;

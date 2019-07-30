@@ -6,7 +6,7 @@ import {
     CardMedia,
     TextField,
 } from "@material-ui/core";
-import ILoginPageProps from "interfaces/loginPageInterfaces";
+import ILoginPageProps from "interfaces/LoginPageInterfaces";
 import * as React from "react";
 
 const loginPage = (props: ILoginPageProps) => {

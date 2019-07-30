@@ -1,7 +1,7 @@
 import React, {Component, Fragment} from 'react';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
-import Jogador from './Jogador';
+import Jogador from './Player/Player';
 import IAlgorithms from '../control/IAlgorithms';
 import Typography from '@material-ui/core/Typography';
 

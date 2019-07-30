@@ -6,8 +6,8 @@ import {
   withStyles,
 } from "@material-ui/core";
 import axios from "axios";
-import IBuyPlayerProps from "interfaces/buyPlayerInterfaces";
-import IBuyPlayerState from "interfaces/buyPlayerInterfaces";
+import IBuyPlayerProps from "interfaces/BuyPlayerInterfaces";
+import IBuyPlayerState from "interfaces/BuyPlayerInterfaces";
 import * as React from "react";
 import { useState } from "react";
 
