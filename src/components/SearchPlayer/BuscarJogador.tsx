@@ -10,6 +10,8 @@ import {
 } from "@material-ui/core";
 import Typography from "@material-ui/core/Typography";
 import axios from "axios";
+import ISearchPlayerProps from "interfaces/ISearchPlayer";
+import ISearchPlayerState from "interfaces/ISearchPlayer";
 import * as React from "react";
 import ClubsPerformance from "../../control/ClubsPerformance";
 import IAlgorithms from "../../control/IAlgorithms";
@@ -21,59 +23,64 @@ import PlayersList from "../PlayersList";
 const styles = {
   card_layout: {
     position: "relative",
-    width: "100%",
+    width: "100%"
   },
   filter_button: {
-    float: "right",
+    float: "right"
   },
   titles: {
-    fontWeight: "bold",
-  },
+    fontWeight: "bold"
+  }
 };
 
-class BuscarJogador extends React.Component<{}, {}> {
-  constructor(props: any) {
+class BuscarJogador extends React.Component<
+  ISearchPlayerProps,
+  ISearchPlayerState
+> {
+    readonly state = {
+        best_clubs: [],
+        clubes: {},
+        clubesThroughput: new ClubsPerformance(),
+        expanded: false,
+        ia: new IAlgorithms(),
+        jogadores: [],
+        posicoes: {},
+        rodada_atual: null,
+        status: {},
+        token: sessionStorage.getItem("token"),
+      };
+  constructor(props: ISearchPlayerProps) {
     super(props);
-    this.state = {
-      ia: new IAlgorithms(),
-      clubes: {},
-      clubesThroughput: new ClubsPerformance(),
-      posicoes: {},
-      status: {},
-      jogadores: [],
-      rodada_atual: null,
-      best_clubs: [],
-      token: sessionStorage.getItem("token"),
-      expanded: false,
-    };
+    
   }
 
   public getPlayers() {
     const players$ = requests.getPlayers(this.state.token);
-    const playersSubscription = players$.subscribe((data: any) => {
+    const playersSubscription = players$
+      .subscribe((data: any) => {
         this.setState({
-            clubes: data.clubes,
-            jogadores: data.atletas,
-            posicoes: data.posicoes,
-            status: data.status,
-          });
-    })
-    .add(() => {
+          clubes: data.clubes,
+          jogadores: data.atletas,
+          posicoes: data.posicoes,
+          status: data.status,
+        });
+      })
+      .add(() => {
         this.setState({
           expanded: !this.state.expanded,
         });
-    });
+      });
     playersSubscription.unsubscribe();
   }
 
   public componentDidMount() {
-    this.state.clubesThroughput.getRodadaAtual().then((resolve) => {
+    this.state.clubesThroughput.getRodadaAtual().then((resolve: any) => {
       this.setState({ rodada_atual: resolve });
     });
 
-    this.state.best_clubs = this.state.clubes_throughput
+    this.state.clubesThroughput
       .orderingChoiceByPosition()
-      .then((resolve) => {
+      .then((resolve: any) => {
         this.setState({ best_clubs: resolve });
       });
   }
@@ -94,14 +101,14 @@ class BuscarJogador extends React.Component<{}, {}> {
           />
           <CardActions>
             <Button
-              variant="raised"
+              variant="outlined"
               color="primary"
               onClick={(this.handleClick = this.getPlayers.bind(this))}
             >
               Jogadores
             </Button>
             <Button
-              variant="raised"
+              variant="outlined"
               color="primary"
               onClick={(this.handleClick = this.hidePlayers.bind(this))}
             >
@@ -113,7 +120,7 @@ class BuscarJogador extends React.Component<{}, {}> {
               <Grid container={true} spacing={8}>
                 <Grid item={true} xs={12} />
                 <Grid item={true} xs={12}>
-                  <Typography className={classes.titles} variant="title">
+                  <Typography className={classes.titles} variant="h4">
                     Goleiros
                   </Typography>
                   <PanelMyTeam />
@@ -124,8 +131,8 @@ class BuscarJogador extends React.Component<{}, {}> {
                         1,
                         10,
                         this.state.best_clubs,
-                        this.state.rodada_atual,
-                      ),
+                        this.state.rodada_atual
+                      )
                     )}
                     clubes={this.state.clubes}
                     posicoes={this.state.posicoes}
@@ -136,7 +143,7 @@ class BuscarJogador extends React.Component<{}, {}> {
                   />
                 </Grid>
                 <Grid item={true} xs={12}>
-                  <Typography className={classes.titles} variant="title">
+                  <Typography className={classes.titles} variant="h4">
                     Laterais
                   </Typography>
                   <PanelMyTeam />
@@ -147,8 +154,8 @@ class BuscarJogador extends React.Component<{}, {}> {
                         2,
                         10,
                         this.state.best_clubs,
-                        this.state.rodada_atual,
-                      ),
+                        this.state.rodada_atual
+                      )
                     )}
                     clubes={this.state.clubes}
                     posicoes={this.state.posicoes}
@@ -159,7 +166,7 @@ class BuscarJogador extends React.Component<{}, {}> {
                   />
                 </Grid>
                 <Grid item={true} xs={12}>
-                  <Typography className={classes.titles} variant="title">
+                  <Typography className={classes.titles} variant="h4">
                     Zagueiros
                   </Typography>
                   <PanelMyTeam />
@@ -170,8 +177,8 @@ class BuscarJogador extends React.Component<{}, {}> {
                         3,
                         10,
                         this.state.best_clubs,
-                        this.state.rodada_atual,
-                      ),
+                        this.state.rodada_atual
+                      )
                     )}
                     clubes={this.state.clubes}
                     posicoes={this.state.posicoes}
@@ -182,7 +189,7 @@ class BuscarJogador extends React.Component<{}, {}> {
                   />
                 </Grid>
                 <Grid item={true} xs={12}>
-                  <Typography className={classes.titles} variant="title">
+                  <Typography className={classes.titles} variant="h4">
                     Meio-Campistas
                   </Typography>
                   <PanelMyTeam />
@@ -193,8 +200,8 @@ class BuscarJogador extends React.Component<{}, {}> {
                         4,
                         10,
                         this.state.best_clubs,
-                        this.state.rodada_atual,
-                      ),
+                        this.state.rodada_atual
+                      )
                     )}
                     clubes={this.state.clubes}
                     posicoes={this.state.posicoes}
@@ -205,7 +212,7 @@ class BuscarJogador extends React.Component<{}, {}> {
                   />
                 </Grid>
                 <Grid item={true} xs={12}>
-                  <Typography className={classes.titles} variant="title">
+                  <Typography className={classes.titles} variant="h4">
                     Atacantes
                   </Typography>
                   <PanelMyTeam />
@@ -216,8 +223,8 @@ class BuscarJogador extends React.Component<{}, {}> {
                         5,
                         10,
                         this.state.best_clubs,
-                        this.state.rodada_atual,
-                      ),
+                        this.state.rodada_atual
+                      )
                     )}
                     clubes={this.state.clubes}
                     posicoes={this.state.posicoes}
@@ -228,7 +235,7 @@ class BuscarJogador extends React.Component<{}, {}> {
                   />
                 </Grid>
                 <Grid item={true} xs={12}>
-                  <Typography className={classes.titles} variant="title">
+                  <Typography className={classes.titles} variant="h4">
                     Técnicos
                   </Typography>
                   <PanelMyTeam />
@@ -239,8 +246,8 @@ class BuscarJogador extends React.Component<{}, {}> {
                         6,
                         10,
                         this.state.best_clubs,
-                        this.state.rodada_atual,
-                      ),
+                        this.state.rodada_atual
+                      )
                     )}
                     clubes={this.state.clubes}
                     posicoes={this.state.posicoes}
