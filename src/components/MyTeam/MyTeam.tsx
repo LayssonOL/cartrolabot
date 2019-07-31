@@ -18,8 +18,8 @@ import * as React from "react";
 import { Component, Fragment } from "react";
 import ClubsPerformance from "../../control/ClubsPerformance";
 import IAlgorithms from "../../control/IAlgorithms";
-import BuscarJogador from "../SearchPlayers/BuscarJogador";
-import BuscarJogMaisEscalados from "../../services/BuscarJogMaisEscalados";
+import SearchPlayer from "../SearchPlayer/SearchPlayer";
+import BuscarJogMaisEscalados from "../../components/MostScaledPlayers/MostScaledPlayers";
 import requests from "../../services/Requests";
 import PanelMyTeam from "../MyTeamPlayersPanel/MyTeamPlayersPanel";
 import Jogador from "../Player/Player";
@@ -1018,7 +1018,7 @@ class MyTeam extends Component {
             <BuscarJogMaisEscalados className={classes.searchMostScaled} />
           </Grid>
           <Grid item={true} xs={6}>
-            <BuscarJogador
+            <SearchPlayer
               className={classes.secondCard}
               new_team={this.state.new_team}
               addPlayerToNewTeam={this.addPlayerToNewTeam}

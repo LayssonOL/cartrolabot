@@ -135,9 +135,43 @@ const requests = {
                     // console.log(this.state.clubs);
                     observer.next(res.data);
                     observer.complete();
-                }).catch((err) => {
+                }).catch((err: any) => {
                     observer.error();
                 });
+    });
+  },
+
+  getFilters: (): Observable<any> => {
+    return Observable.create((observer: any) => {
+      axios.get(`${baseURL}/atletas/mercado`)
+      // .get("https://api.cartolafc.globo.com/atletas/mercado")
+      .then((res: any) => {
+          observer.next(res.data.clubes);
+          observer.next(res.data.posicoes);
+          observer.next(res.data.status);
+          observer.complete();
+        // console.log(this.state.clubes)
+      })
+      .catch((err: any) => {
+        observer.error();
+      });
+      // this.getPartidas();
+      // this.handleOpen();
+
+    });
+  },
+
+  getPartidas: (rodada: number): Observable<any> => {
+    return Observable.create((observer: any) => {
+      axios.get(`${baseURL}/partidas/${rodada}`)
+    // .get("https://api.cartolafc.globo.com/partidas/"+this.state.rodada)
+      .then((res: any) => {
+        observer.next(res.data.partidas);
+        observer.complete();
+      })
+      .catch((err: any) => {
+        observer.error();
+      });
     });
   },
 };

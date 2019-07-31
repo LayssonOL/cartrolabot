@@ -4,7 +4,7 @@ import { useState } from "react";
 import requests from "../../services/Requests";
 import Club from "../Club/Club";
 
-const BuscarClubes = () => {
+const SearchClubs = () => {
   const [clubs, setClubs] = useState([]);
 
   const handleClick = () => {
@@ -67,4 +67,4 @@ const BuscarClubes = () => {
     </div>
   );
 };
-export default BuscarClubes;
+export default SearchClubs;

@@ -5,13 +5,14 @@ import {
   CardContent,
   CardHeader,
   Collapse,
+  createStyles,
   Grid,
   withStyles,
 } from "@material-ui/core";
 import Typography from "@material-ui/core/Typography";
 import axios from "axios";
-import ISearchPlayerProps from "interfaces/ISearchPlayer";
-import ISearchPlayerState from "interfaces/ISearchPlayer";
+import IProps from "interfaces/ISearchPlayer";
+import IState from "interfaces/ISearchPlayer";
 import * as React from "react";
 import ClubsPerformance from "../../control/ClubsPerformance";
 import IAlgorithms from "../../control/IAlgorithms";
@@ -20,38 +21,34 @@ import Filters from "../Filters/Filters";
 import PanelMyTeam from "../MyTeamPlayersPanel/MyTeamPlayersPanel";
 import PlayersList from "../PlayersList";
 
-const styles = {
+const styles = createStyles({
   card_layout: {
     position: "relative",
-    width: "100%"
+    width: "100%",
   },
   filter_button: {
-    float: "right"
+    float: "right",
   },
   titles: {
-    fontWeight: "bold"
-  }
-};
+    fontWeight: "bold",
+  },
+});
 
-class BuscarJogador extends React.Component<
-  ISearchPlayerProps,
-  ISearchPlayerState
-> {
-    readonly state = {
-        best_clubs: [],
-        clubes: {},
-        clubesThroughput: new ClubsPerformance(),
-        expanded: false,
-        ia: new IAlgorithms(),
-        jogadores: [],
-        posicoes: {},
-        rodada_atual: null,
-        status: {},
-        token: sessionStorage.getItem("token"),
-      };
-  constructor(props: ISearchPlayerProps) {
+class SearchPlayer extends React.Component<IProps, IState> {
+  constructor(props: IProps) {
     super(props);
-    
+    this.state = {
+      best_clubs: [],
+      clubes: {},
+      clubesThroughput: new ClubsPerformance(),
+      expanded: false,
+      ia: new IAlgorithms(),
+      jogadores: [],
+      posicoes: {},
+      rodada_atual: null,
+      status: {},
+      token: sessionStorage.getItem("token"),
+    };
   }
 
   public getPlayers() {
@@ -97,20 +94,20 @@ class BuscarJogador extends React.Component<
         <Card className={classes.card_layout}>
           <CardHeader
             title="Boas Opções"
-            subtitle="Estatísticas de cada Jogador"
+            subheader="Estatísticas de cada Jogador"
           />
           <CardActions>
             <Button
               variant="outlined"
               color="primary"
-              onClick={(this.handleClick = this.getPlayers.bind(this))}
+              onClick={this.getPlayers}
             >
               Jogadores
             </Button>
             <Button
               variant="outlined"
               color="primary"
-              onClick={(this.handleClick = this.hidePlayers.bind(this))}
+              onClick={this.hidePlayers}
             >
               Esconder
             </Button>
@@ -131,8 +128,8 @@ class BuscarJogador extends React.Component<
                         1,
                         10,
                         this.state.best_clubs,
-                        this.state.rodada_atual
-                      )
+                        this.state.rodada_atual,
+                      ),
                     )}
                     clubes={this.state.clubes}
                     posicoes={this.state.posicoes}
@@ -154,8 +151,8 @@ class BuscarJogador extends React.Component<
                         2,
                         10,
                         this.state.best_clubs,
-                        this.state.rodada_atual
-                      )
+                        this.state.rodada_atual,
+                      ),
                     )}
                     clubes={this.state.clubes}
                     posicoes={this.state.posicoes}
@@ -177,8 +174,8 @@ class BuscarJogador extends React.Component<
                         3,
                         10,
                         this.state.best_clubs,
-                        this.state.rodada_atual
-                      )
+                        this.state.rodada_atual,
+                      ),
                     )}
                     clubes={this.state.clubes}
                     posicoes={this.state.posicoes}
@@ -200,8 +197,8 @@ class BuscarJogador extends React.Component<
                         4,
                         10,
                         this.state.best_clubs,
-                        this.state.rodada_atual
-                      )
+                        this.state.rodada_atual,
+                      ),
                     )}
                     clubes={this.state.clubes}
                     posicoes={this.state.posicoes}
@@ -223,8 +220,8 @@ class BuscarJogador extends React.Component<
                         5,
                         10,
                         this.state.best_clubs,
-                        this.state.rodada_atual
-                      )
+                        this.state.rodada_atual,
+                      ),
                     )}
                     clubes={this.state.clubes}
                     posicoes={this.state.posicoes}
@@ -246,8 +243,8 @@ class BuscarJogador extends React.Component<
                         6,
                         10,
                         this.state.best_clubs,
-                        this.state.rodada_atual
-                      )
+                        this.state.rodada_atual,
+                      ),
                     )}
                     clubes={this.state.clubes}
                     posicoes={this.state.posicoes}
@@ -265,4 +262,4 @@ class BuscarJogador extends React.Component<
     );
   }
 }
-export default withStyles(styles)(BuscarJogador);
+export default withStyles(styles)(SearchPlayer);

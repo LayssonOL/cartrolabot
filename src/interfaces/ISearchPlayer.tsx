@@ -1,7 +1,5 @@
-import ClubsPerformance from "control/ClubsPerformance";
-import IAlgorithms from "control/IAlgorithms";
-
-export default interface ISearchPlayerProps {
+export default interface IProps {
+  classes: any;
   new_team: {
     atletas: any[];
     capitao: object;
@@ -14,10 +12,10 @@ export default interface ISearchPlayerProps {
   removePlayerFromNewTeam: (newPlayer: any) => void;
 }
 
-export default interface ISearchPlayerState {
-  ia?: IAlgorithms;
+export default interface IState {
+  ia?: any;
   clubes?: object;
-  clubesThroughput?: ClubsPerformance;
+  clubesThroughput?: any;
   posicoes?: object;
   status?: object;
   jogadores?: any[];
